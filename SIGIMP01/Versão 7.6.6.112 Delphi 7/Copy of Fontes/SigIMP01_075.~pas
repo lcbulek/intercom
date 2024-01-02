@@ -1,0 +1,2153 @@
+unit SigIMP01_075;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Excel2000, OleServer, ActnList, StdCtrls, Buttons, ExtCtrls,
+  JvExControls, JvComponent, JvDBLookup, DB, IBCustomDataSet, IBQuery, Spin, AniThread, DateUtils,
+  IBStoredProc;
+
+type
+  TfrmPagamentosEfetuados = class(TForm)
+    Clientes: TIBQuery;
+    Clientescod_cliente: TIBStringField;
+    ds_Clientes: TDataSource;
+    Fornecedores: TIBQuery;
+    Fornecedorescod_fornecedor: TIntegerField;
+    Fornecedoresraz_social_reduz: TIBStringField;
+    ds_Fornecedores: TDataSource;
+    Label1: TLabel;
+    dbcClientes: TJvDBLookupCombo;                                                            
+    Label2: TLabel;
+    dbcFornecedores: TJvDBLookupCombo;
+    Panel1: TPanel;
+    btnGerar: TBitBtn;
+    btnAbrir: TBitBtn;                                                         
+    BitBtn3: TBitBtn;
+    panGauge: TPanel;
+    ActionList1: TActionList;
+    actGerar: TAction;
+    actAbrir: TAction;
+    ExcelApplication: TExcelApplication;                                                          
+    ExcelWorksheet: TExcelWorksheet;
+    OpenDialog: TOpenDialog;
+    Pedidos: TIBQuery;
+    pedido_pagamento: TIBQuery;
+    pedido_pagamentocod_empresa: TSmallintField;
+    pedido_pagamentonum_pedido: TLargeintField;
+    pedido_pagamentonum_sequencia: TSmallintField;
+    pedido_pagamentovlr_pagamento: TIBBCDField;
+    pedido_pagamentovlr_pagamento_esp: TIBBCDField;
+    pedido_pagamentodat_pagamento: TDateField;
+    pedido_pagamentotxt_pagamento: TMemoField;
+    pedido_pagamentotot_pagamentos: TIBBCDField;
+    pedido_pagamentotot_pagamentos_esp: TIBBCDField;
+    pedido_pagamentotxt_pagamento_esp: TStringField;
+    Label3: TLabel;
+    seAno: TSpinEdit;
+    pedido_adic_desc: TIBQuery;
+    pedido_adic_desccod_empresa: TSmallintField;
+    pedido_adic_descnum_pedido: TLargeintField;
+    pedido_adic_descnum_sequencia: TSmallintField;
+    pedido_adic_descies_tipo: TIBStringField;
+    pedido_adic_descvlr_adic_desc: TIBBCDField;
+    pedido_adic_descvlr_adic_desc_esp: TIBBCDField;
+    pedido_adic_desctxt_descricao: TMemoField;
+    pedido_adic_descnum_nota_fiscal: TIntegerField;
+    pedido_adic_descserie: TIBStringField;
+    pedido_adic_descies_faturado: TIBStringField;
+    parametro_comercial: TIBQuery;
+    parametro_comercialcod_empresa: TSmallintField;
+    parametro_comercialies_modelo: TIntegerField;
+    parametro_comercialdir_planilhas: TIBStringField;
+    parametro_comercialdias_inspecao: TSmallintField;
+    parametro_comercialmod_plan_excel: TBlobField;
+    Pedidoscod_empresa: TSmallintField;
+    Pedidosnum_pedido: TLargeintField;
+    Pedidosnum_pedido_cli: TIBStringField;
+    Pedidosnum_pedido_for: TIBStringField;
+    Pedidosdat_pedido: TDateField;
+    Pedidosden_tip_condicao: TIBStringField;
+    Pedidosvlr_liquido: TIBBCDField;
+    Pedidosvlr_liquido_esp: TIBBCDField;
+    rgSaldo: TRadioGroup;
+    cby_pedido_faturados: TIBQuery;
+    spr_faturas_pedido: TIBQuery;
+    spr_faturas_pedidonum_nota_fiscal: TIntegerField;
+    spr_faturas_pedidoserie: TIBStringField;
+    spr_faturas_pedidodat_emissao: TDateTimeField;
+    spr_faturas_pedidonum_fatura: TIBStringField;
+    spr_faturas_pedidonum_ref_volume: TIBStringField;
+    spr_faturas_pedidonum_romaneio: TIntegerField;
+    spr_faturas_pedidovlr_total: TIBBCDField;
+    spr_faturas_pedidovlr_total_esp: TIBBCDField;
+    spr_faturas_pedidovolume: TIBBCDField;
+    spr_faturas_pedidoqtd_caixas: TIntegerField;
+    spr_faturas_pedidopes_liquido: TIBBCDField;
+    spr_faturas_pedidopes_bruto: TIBBCDField;
+    rgPago: TRadioGroup;
+    Faturas: TIBQuery;
+    Faturasnum_nota_fiscal: TIntegerField;
+    Faturasserie: TIBStringField;
+    Faturasnum_fatura: TIBStringField;
+    Faturasdat_emissao: TDateTimeField;
+    Faturasnum_ref_volume: TIBStringField;
+    Faturascod_fornecedor: TSmallintField;
+    Faturasvlr_liquido: TIBBCDField;
+    Faturasvlr_liquido_esp: TIBBCDField;
+    Faturasvlr_pendente: TIBBCDField;
+    Faturasvlr_pendente_esp: TIBBCDField;
+    Faturasvlr_pago: TIBBCDField;
+    Faturasvlr_pago_esp: TIBBCDField;
+    Faturasvlr_saldo: TIBBCDField;
+    Faturasvlr_saldo_esp: TIBBCDField;
+    spr_saldo_confirmacao: TIBQuery;
+    spr_saldo_confirmacaonum_pedido: TLargeintField;
+    spr_saldo_confirmacaonum_pedido_for: TIBStringField;
+    spr_saldo_confirmacaonum_pedido_cli: TIBStringField;
+    spr_saldo_confirmacaodat_liberacao: TDateField;
+    spr_saldo_confirmacaovlr_pedido: TIBBCDField;
+    spr_saldo_confirmacaovlr_pedido_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_produtos: TIBBCDField;
+    spr_saldo_confirmacaovlr_produtos_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_faturado: TIBBCDField;
+    spr_saldo_confirmacaovlr_faturado_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_adicional: TIBBCDField;
+    spr_saldo_confirmacaovlr_adicional_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_desconto: TIBBCDField;
+    spr_saldo_confirmacaovlr_desconto_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_tot_faturado: TIBBCDField;
+    spr_saldo_confirmacaovlr_tot_faturado_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_pagamento: TIBBCDField;
+    spr_saldo_confirmacaovlr_pagamento_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_saldo: TIBBCDField;
+    spr_saldo_confirmacaovlr_saldo_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_saldo_fat: TIBBCDField;
+    spr_saldo_confirmacaovlr_saldo_fat_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_saldo_ant: TIBBCDField;
+    spr_saldo_confirmacaovlr_saldo_ant_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_pendente: TIBBCDField;
+    spr_saldo_confirmacaovlr_pendente_esp: TIBBCDField;
+    spr_saldo_confirmacaovlr_condicao: TIBBCDField;
+    fatura_pagamento: TIBQuery;
+    fatura_pagamentocod_empresa: TSmallintField;
+    fatura_pagamentonum_nota_fiscal: TIntegerField;
+    fatura_pagamentoserie: TIBStringField;
+    fatura_pagamentonum_sequencia: TSmallintField;
+    fatura_pagamentovlr_pagamento: TIBBCDField;
+    fatura_pagamentovlr_pagamento_esp: TIBBCDField;
+    fatura_pagamentodat_pagamento: TDateField;
+    fatura_pagamentotxt_pagamento: TMemoField;
+    fatura_pagamentonum_pedido: TLargeintField;
+    Pedidoscod_cliente: TIBStringField;
+    Pedidosraz_social_reduz: TIBStringField;
+    Faturascod_cliente: TIBStringField;
+    Faturasraz_social_reduz: TIBStringField;
+    Label4: TLabel;
+    pedido_pagamentonum_fatura: TIBStringField;
+    pedido_pagamentonum_nota_fiscal: TIntegerField;
+    cby_pedido_faturadosvlr_bruto: TIBBCDField;
+    cby_pedido_faturadosvlr_adicional: TIBBCDField;
+    cby_pedido_faturadosvlr_desconto: TIBBCDField;
+    cby_pedido_faturadosvlr_liquido: TIBBCDField;
+    cby_pedido_faturadosvlr_bruto_esp: TIBBCDField;
+    cby_pedido_faturadosvlr_adicional_esp: TIBBCDField;
+    cby_pedido_faturadosvlr_desconto_esp: TIBBCDField;
+    cby_pedido_faturadosvlr_liquido_esp: TIBBCDField;
+    cby_pedido_faturadosvlr_total_fat: TIBBCDField;
+    cby_pedido_faturadosvlr_total_fat_esp: TIBBCDField;
+    cby_pedido_faturadosvlr_total_pend: TIBBCDField;
+    cby_pedido_faturadosvlr_total_pend_esp: TIBBCDField;
+    cby_pedido_faturadosvlr_total_canc: TIBBCDField;
+    cby_pedido_faturadosvlr_total_canc_esp: TIBBCDField;
+    cby_pedido_faturadostot_pagamento_real: TIBBCDField;
+    cby_pedido_faturadostot_pagamento_esp: TIBBCDField;
+    cby_pedido_faturadossaldo_real: TIBBCDField;
+    cby_pedido_faturadossaldo_esp: TIBBCDField;
+    cby_pedido_faturadosvolume: TIBBCDField;
+    cby_pedido_faturadosqtd_caixas: TIntegerField;
+    cby_pedido_faturadospes_liquido: TIBBCDField;
+    cby_pedido_faturadospes_bruto: TIBBCDField;
+    Pedidosies_preco_esp: TIBStringField;
+    spr_faturas_pedidopend_pag_real: TIBBCDField;
+    spr_faturas_pedidopend_pag_esp: TIBBCDField;
+    procedure AbrirExcel(Caminho: String);
+    procedure FecharExcel;
+    Procedure AbrirPlanilha(FileName: String);
+
+    procedure AbrirPedidos;
+    procedure HeaderExcelPedidos;
+    procedure GravarLinhaPedidos;
+
+    procedure AbrirFaturas;
+    procedure HeaderExcelFaturas;
+    procedure GravarLinhaFaturas;
+    
+    procedure actGerarExecute(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure dbcClientesChange(Sender: TObject);
+    procedure actAbrirExecute(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmPagamentosEfetuados: TfrmPagamentosEfetuados;
+  FileName : String;
+  DIR_PLANILHAS : String;
+  Linha, LinAnt, LinFat, LinPgt, LinAdc : Integer;
+
+implementation
+
+uses unConnection, unMenuCompl, SigIMP01_045, Math;
+
+{$R *.dfm}
+
+
+Procedure TfrmPagamentosEfetuados.AbrirPlanilha(FileName: String);
+Var
+  Caminho : String;
+  lcid : Cardinal;
+  WkBk : _Workbook;
+begin
+  Caminho := FileName;
+ try
+  lcid := GetUserDefaultLCID;
+  ExcelApplication.Visible[lcid] := True;
+  ExcelApplication.DisplayAlerts[lcid] := False;
+  WkBk := ExcelApplication.Workbooks.Open(Caminho, EmptyParam, EmptyParam, EmptyParam, EmptyParam,
+                                                   EmptyParam, EmptyParam, EmptyParam, EmptyParam,
+                                                   EmptyParam, EmptyParam, EmptyParam, EmptyParam, lcid);
+
+  ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
+  ExcelWorksheet.Activate(LCID);
+ except
+    Application.MessageBox('Problemas na abertura da planilha Excel', 'Erro', MB_ICONERROR+MB_OK);
+    FecharExcel;
+    Abort;
+ end;
+end;
+
+procedure TfrmPagamentosEfetuados.AbrirExcel(Caminho: String);
+Var
+  lcid : Cardinal;
+  WkBk : _Workbook;
+
+begin
+  { Selecionar a planilha e chamar o  Excel }
+  if trim(Caminho) = '' then
+  begin
+    if (OpenDialog.Execute) then
+       Caminho := OpenDialog.FileName
+    else begin
+      Application.MessageBox('Operação cancelada', 'Informação', MB_ICONINFORMATION+MB_OK);
+      FecharExcel;
+      Abort;
+    end;                                                                
+  end;
+  FileName := Caminho;
+
+  try
+  lcid := GetUserDefaultLCID;
+  WkBk := ExcelApplication.Workbooks.Open(Caminho, EmptyParam, EmptyParam, EmptyParam, EmptyParam,
+                                                   EmptyParam, EmptyParam, EmptyParam, EmptyParam,
+                                                   EmptyParam, EmptyParam, EmptyParam, EmptyParam, lcid);
+
+  ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
+  ExcelWorksheet.Activate(LCID);
+  ExcelApplication.Visible[lcid] := False;
+  ExcelApplication.DisplayAlerts[lcid] := False;
+  except
+    Application.MessageBox('Problemas na abertura da planilha Excel', 'Erro', MB_ICONERROR+MB_OK);
+    FecharExcel;
+    Abort;
+  end;
+end;
+
+Procedure TfrmPagamentosEfetuados.FecharExcel;
+begin
+  { caso esteja fechada, evita fechar novamente para não gerar erro }
+  if Not(Assigned(ExcelApplication)) then Exit;
+  ExcelWorkSheet.Disconnect;
+  ExcelApplication.Quit;
+  ExcelApplication.Disconnect;
+  Screen.Cursor := crDefault;
+end;
+
+
+procedure TfrmPagamentosEfetuados.AbrirFaturas;
+begin
+  (* Selecionar as faturas conforme os parâmetros indicados no form *)
+  with Faturas do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select a."cod_cliente", c."raz_social_reduz", a."dat_emissao",                       ');
+    SQL.Add('       a."num_nota_fiscal", a."serie", b."num_fatura",                               ');
+    SQL.Add('       b."num_ref_volume", b."cod_fornecedor", a."vlr_liquido", a."vlr_liquido_esp", ');
+    SQL.Add('       a."vlr_pendente", a."vlr_pendente_esp", a."vlr_pago", a."vlr_pago_esp",       ');
+    SQL.Add('       a."vlr_saldo", a."vlr_saldo_esp"                                              ');
+    SQL.Add('from "nota_fiscal_saida" a, "nf_saida_complemento" b, "fornecedor" c                 ');
+    SQL.Add('where a."cod_empresa" =:cod_empresa                                                  ');
+
+    if (trim(seAno.Text) <> '') then
+    begin
+      SQL.Add('  and substr(a."dat_emissao", 1,4) = :ano');
+      ParamByName('ano').AsString := seAno.Text;
+    end;                                                                                                               
+
+    if (dbcClientes.Value <> '0') then
+    begin
+      SQL.Add('   and a."cod_cliente" = :"cod_cliente"                                               ');
+      ParamByName('cod_cliente').AsString := Clientescod_cliente.AsString;
+    end;
+
+    if (dbcFornecedores.Value <> '0') then
+    begin
+      SQL.Add('   and b."cod_fornecedor" = :"cod_fornecedor"                                         ');
+      ParamByName('cod_fornecedor').AsString := Fornecedorescod_fornecedor.AsString;
+    end;
+
+    SQL.Add('  and b."cod_empresa" = a."cod_empresa"                          ');
+    SQL.Add('  and b."num_nota_fiscal" = a."num_nota_fiscal"                  ');
+    SQL.Add('  and b."serie" = a."serie"                                      ');
+    SQL.Add('  and c."cod_fornecedor" = b."cod_fornecedor"                    ');
+
+    if (dbcClientes.Value = '0') and
+       (dbcFornecedores.Value <> '0') then
+    begin
+      SQL.Add(' order by 1, 3 descending ');
+    end else
+    if (dbcClientes.Value <> '0') and
+       (dbcFornecedores.Value = '0') then
+    begin
+      SQL.Add(' order by 2, 3 descending ');
+    end else
+      SQL.Add(' order by 1,2, 3 descending ');
+
+    ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+
+    Open;
+  end;
+end;
+
+procedure TfrmPagamentosEfetuados.AbrirPedidos;
+begin
+  (* Selecionar os pedidos conforme os parâmetros indicados no form *)
+  with Pedidos do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select  a."cod_empresa", a."num_pedido", b."num_pedido_cli", b."num_pedido_for",  ');
+    SQL.Add('        a."cod_cliente", c."raz_social_reduz",                                    ');
+    SQL.Add('        case when a."ies_tip_pedido" = ''O'' then cast(a."dat_emissao"  as DATE)  ');
+    SQL.Add('                                           else cast(a."dat_liberacao"  as DATE)  ');
+    SQL.Add('        end "dat_pedido", d."den_tip_condicao",                                   ');
+    SQL.Add('        a."vlr_liquido", a."vlr_liquido_esp", a."ies_preco_esp"                   ');
+    SQL.Add(' from "pedido" a, "pedido_complemento" b                                          ');
+    SQL.Add('      left join "condicao_venda" d                                                ');
+    SQL.Add('      on d."cod_tip_condicao" = b."cod_cond_venda",                               ');
+    SQL.Add('      "fornecedor" c                                                              ');
+    SQL.Add(' where                                                                            ');
+    SQL.Add('       a."cod_empresa" = :"cod_empresa"                                           ');
+
+    if (trim(seAno.Text) <> '') then
+    begin
+      SQL.Add('  and substr(a."dat_emissao", 1,4) = :ano');
+      ParamByName('ano').AsString := seAno.Text;
+    end;
+
+    if (dbcClientes.Value <> '0') then
+    begin
+      SQL.Add('   and a."cod_cliente" = :"cod_cliente"                                               ');
+      ParamByName('cod_cliente').AsString := Clientescod_cliente.AsString;
+    end;
+
+    if (dbcFornecedores.Value <> '0') then
+    begin
+      SQL.Add('   and b."cod_fornecedor" = :"cod_fornecedor"                                         ');
+      ParamByName('cod_fornecedor').AsString := Fornecedorescod_fornecedor.AsString;
+    end;
+
+    SQL.Add('   and b."cod_empresa" = a."cod_empresa"                                              ');
+    SQL.Add('   and b."num_pedido" = a."num_pedido"                                                ');
+    SQL.Add('   and c."cod_fornecedor" = b."cod_fornecedor"                                        ');
+
+    if (dbcClientes.Value = '0') and
+       (dbcFornecedores.Value <> '0') then
+    begin
+      SQL.Add(' order by 5, 7 descending ');
+    end else
+    if (dbcClientes.Value <> '0') and
+       (dbcFornecedores.Value = '0') then
+    begin
+      SQL.Add(' order by 6, 7 descending ');
+    end else
+      SQL.Add(' order by 5,6, 7 descending ');
+
+    ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+
+    Open;
+  end;
+end;
+
+procedure TfrmPagamentosEfetuados.HeaderExcelPedidos;
+Var
+  s, t : String;
+begin
+    if (trim(seAno.Text) <> '') then t := seAno.Text
+                                else t := ' TODOS';
+
+    with ExcelWorksheet.Range['A' + IntToStr(Linha),'T' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 40;
+
+      if (dbcClientes.Value <> '0') and
+         (dbcFornecedores.Value <> '0') then
+      begin
+        s := 'PAGAMENTOS EFETUADOS POR PEDIDOS: ' + trim(Clientescod_cliente.AsString) + ' - ' + trim(Fornecedoresraz_social_reduz.AsString) + ' ANO: ' + t;
+      end else
+      if (dbcClientes.Value <> '0') and
+         (dbcFornecedores.Value = '0') then
+      begin
+        s := 'PAGAMENTOS EFETUADOS POR PEDIDOS: TODOS OS FORNECEDORES DO CLIENTE ' + trim(Clientescod_cliente.AsString) + ' ANO: ' + t;
+      end else
+      if (dbcClientes.Value = '0') and
+         (dbcFornecedores.Value <> '0') then
+      begin
+        s := 'PAGAMENTOS EFETUADOS POR PEDIDOS: TODOS OS CLIENTE DO FORNECEDOR ' + trim(Fornecedoresraz_social_reduz.AsString) + ' ANO: ' + t;
+      end else
+      if (dbcClientes.Value = '0') and
+         (dbcFornecedores.Value = '0') then
+      begin
+        s := 'PAGAMENTOS EFETUADOS POR PEDIDOS: TODOS OS CLIENTES TODOS OS FORNECEDORES' + ' ANO: ' + t;
+      end;
+
+      case (rgSaldo.ItemIndex) of
+        0 : s := s + '   (SALDO: PENDENTE)';
+        1 : s := s + '   (SALDO: PAGO)';
+        2 : s := s + '   (SALDO: PENDENTES E PAGOS)';
+      end;
+      Value := s;
+      HorizontalAlignment := xlLeft;                                  
+      VerticalAlignment := xlTop;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    Inc(Linha);
+
+    with ExcelWorksheet.Range['A' + IntToStr(Linha),'G' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 40;
+      Value := 'ORDERS/PEDIDOS';
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    with ExcelWorksheet.Range['H' + IntToStr(Linha),'N' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 6;
+      Value := 'INVOICES/FATURAS';
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    with ExcelWorksheet.Range['O' + IntToStr(Linha),'R' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 35;
+      Value := 'PAYMENTS/PAGAMENTOS';
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    with ExcelWorksheet.Range['S' + IntToStr(Linha),'T' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 34;
+      Value := 'BALANCE PAYMENTS OF THE ORDER SALDOS DE PAGAMENTO DO PEDIDO';
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+      Rows.RowHeight := 57.75;
+    end;
+
+    Inc(Linha);
+
+    { PEDIDOS }
+    with ExcelWorksheet.Range['A' + IntToStr(Linha),'A' + IntToStr(Linha)] do
+    begin
+      Value := 'ORDER                                              PEDIDO';
+      ColumnWidth := 12.00;
+      Interior.ColorIndex := 40;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['B' + IntToStr(Linha),'B' + IntToStr(Linha)] do
+    begin
+      Value := ' S/C DATE                                                 S/C DATA';
+      ColumnWidth := 20.00;
+      Interior.ColorIndex := 40;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;                                           
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['C' + IntToStr(Linha),'C' + IntToStr(Linha)] do
+    begin
+      Value := 'TOTAL USD (REAL VALUE)  TOTAL PEDIDO REAL';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 40;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    { ADICIONAIS E DESCONTOS }
+    with ExcelWorksheet.Range['D' + IntToStr(Linha),'D' + IntToStr(Linha)] do
+    begin
+      Value := 'ADDITIONAL VALUE VALORES ADICIONAIS';
+      ColumnWidth := 9.00;
+      Interior.ColorIndex := 40;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['E' + IntToStr(Linha),'E' + IntToStr(Linha)] do
+    begin
+      Value := 'DISCOUNTS VALORES DESCONTOS';
+      ColumnWidth := 9.00;
+      Interior.ColorIndex := 40;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['F' + IntToStr(Linha),'F' + IntToStr(Linha)] do
+    begin
+      Value := 'DESCRIPTION                                                      DESCRIÇÃO A/D';
+      ColumnWidth := 35.00;
+      Interior.ColorIndex := 40;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['G' + IntToStr(Linha),'G' + IntToStr(Linha)] do
+    begin
+      Value := 'TOTAL USD (SPECIAL  VALUE) TOTAL PEDIDO ESPECIAL';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 40;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    { FATURAS }
+    with ExcelWorksheet.Range['H' + IntToStr(Linha),'H' + IntToStr(Linha)] do
+    begin
+      Value := 'INVOICE DATE                                                DATA DA FATURA';
+      ColumnWidth := 22.00;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['I' + IntToStr(Linha),'I' + IntToStr(Linha)] do
+    begin
+      Value := 'USD REAL';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['J' + IntToStr(Linha),'J' + IntToStr(Linha)] do
+    begin
+      Value := 'USD ESP';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['K' + IntToStr(Linha),'K' + IntToStr(Linha)] do
+    begin
+      Value := 'USD TOTAL REAL VALUE INVOICED  FATURADO REAL';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['L' + IntToStr(Linha),'L' + IntToStr(Linha)] do
+    begin
+      Value := 'USD TOTAL SPECIAL VALUE INVOICED FATURADO ESPECIAL';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+
+    with ExcelWorksheet.Range['M' + IntToStr(Linha),'M' + IntToStr(Linha)] do
+    begin
+      Value := 'PENDING PAYMENT (REAL VALUE) PAGAMENTO PENDENTE NA FATURA REAL';
+      ColumnWidth := 9.57;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['N' + IntToStr(Linha),'N' + IntToStr(Linha)] do
+    begin
+      Value := 'PENDING PAYMENT (SPECIAL VALUE)  PAGAMENTO PENDENTE NA FATURA ESPECIAL';
+      ColumnWidth := 9.57;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    { PAGAMENTOS DO PEDIDO }
+    with ExcelWorksheet.Range['O' + IntToStr(Linha),'O' + IntToStr(Linha)] do
+    begin
+      Value := 'DATE  DATA';
+      ColumnWidth := 6.29;
+      Interior.ColorIndex := 35;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['P' + IntToStr(Linha),'P' + IntToStr(Linha)] do
+    begin
+      Value := 'USD REAL VALUE VALOR REAL';
+      ColumnWidth := 8.00;
+      Interior.ColorIndex := 35;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['Q' + IntToStr(Linha),'Q' + IntToStr(Linha)] do
+    begin
+      Value := 'USD SPECIAL VALUE VALOR ESPECIAL';
+      ColumnWidth := 8.00;
+      Interior.ColorIndex := 35;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['R' + IntToStr(Linha),'R' + IntToStr(Linha)] do
+    begin
+      Value := 'DESCRIPTION OF PAYMENT                                         DESCRIÇÃO DO PAGAMENTO';
+      ColumnWidth := 35.00;
+      Interior.ColorIndex := 35;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    { SALDOS DE PAGAMENTO NO PEDIDO }
+    with ExcelWorksheet.Range['S' + IntToStr(Linha),'S' + IntToStr(Linha)] do
+    begin
+      Value := 'USD REAL VALUE SALDO REAL';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 34;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['T' + IntToStr(Linha),'T' + IntToStr(Linha)] do
+    begin
+      Value := 'USD SPECIAL VALUE  SALDO ESPECIAL';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 34;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+
+    { Bordas no cabeçalho }
+    with ExcelWorkSheet.Range['A1', 'T'+IntToStr(Linha)] do
+    begin
+      with Borders[xlEdgeTop] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeRight] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeLeft] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeBottom] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlInsideVertical] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlInsideHorizontal] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      Font.Size := 8;
+      //HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+    end;
+
+    Inc(Linha);
+end;
+
+procedure TfrmPagamentosEfetuados.HeaderExcelFaturas;
+Var
+  s,t : String;
+begin
+    if (trim(seAno.Text) <> '') then t := seAno.Text
+                                else t := ' TODOS';
+
+    with ExcelWorksheet.Range['A' + IntToStr(Linha),'M' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;                                            
+      Interior.ColorIndex := 40;
+      if (dbcClientes.Value <> '0') and
+         (dbcFornecedores.Value <> '0') then
+      begin
+        s := 'PAGAMENTOS EFETUADOS POR FATURAS: ' + trim(Clientescod_cliente.AsString) + ' - ' + trim(Fornecedoresraz_social_reduz.AsString) + ' ANO: ' + t;
+      end else
+      if (dbcClientes.Value <> '0') and
+         (dbcFornecedores.Value = '0') then
+      begin
+        s := 'PAGAMENTOS EFETUADOS POR FATURAS: TODOS OS FORNECEDORES DO CLIENTE ' + trim(Clientescod_cliente.AsString) + ' ANO: ' + t;
+      end else
+      if (dbcClientes.Value = '0') and
+         (dbcFornecedores.Value <> '0') then
+      begin
+        s := 'PAGAMENTOS EFETUADOS POR FATURAS: TODOS OS CLIENTE DO FORNECEDOR ' + trim(Fornecedoresraz_social_reduz.AsString) + ' ANO: ' + t;
+      end else
+      if (dbcClientes.Value = '0') and
+         (dbcFornecedores.Value = '0') then
+      begin
+        s := 'PAGAMENTOS EFETUADOS POR FATURAS: TODOS OS CLIENTES TODOS OS FORNECEDORES' + ' ANO: ' + t;
+      end;
+
+      case (rgSaldo.ItemIndex) of
+        0 : s := s + '   (SALDO: PENDENTE)';
+        1 : s := s + '   (SALDO: PAGO)';
+        2 : s := s + '   (SALDO: PENDENTES E PAGOS)';
+      end;
+      Value := s;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlTop;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    Inc(Linha);
+
+    with ExcelWorksheet.Range['A' + IntToStr(Linha),'C' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 4;
+      Value := 'FATURAS';
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    with ExcelWorksheet.Range['D' + IntToStr(Linha),'G' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 6;
+      Value := 'PEDIDOS';
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    { Pagamentos Fatura }
+    with ExcelWorksheet.Range['H' + IntToStr(Linha),'K' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 35;
+      Value := 'PAGAMENTOS FATURA';
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    { Saldo Fatura }
+    with ExcelWorksheet.Range['L' + IntToStr(Linha),'M' + IntToStr(Linha)] do
+    begin
+      Font.Size := 10;
+      Interior.ColorIndex := 3;
+      Value := 'SALDO FATURA';
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      ShrinkToFit := False;
+      MergeCells := True;
+      Font.Bold := True;
+    end;
+
+    Inc(Linha);
+
+    { Faturas }
+    with ExcelWorksheet.Range['A' + IntToStr(Linha),'A' + IntToStr(Linha)] do
+    begin
+      Value := 'FATURA / LOTE / DATA EMISSÃO';
+      ColumnWidth := 42.00;
+      Interior.ColorIndex := 4;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['B' + IntToStr(Linha),'B' + IntToStr(Linha)] do
+    begin
+      Value := 'VALOR REAL';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 4;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['C' + IntToStr(Linha),'C' + IntToStr(Linha)] do
+    begin
+      Value := 'VALOR    ESP';
+      ColumnWidth := 8.29;
+      Interior.ColorIndex := 4;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    { Pedidos }
+    with ExcelWorksheet.Range['D' + IntToStr(Linha),'D' + IntToStr(Linha)] do
+    begin
+      Value := 'PEDIDO';
+      ColumnWidth := 12.00;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['E' + IntToStr(Linha),'E' + IntToStr(Linha)] do
+    begin
+      Value := 'CONFIRMAÇÃO/DATA';
+      ColumnWidth := 22.00;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['F' + IntToStr(Linha),'F' + IntToStr(Linha)] do
+    begin
+      Value := 'PENDENTE REAL';
+      ColumnWidth := 8.43;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['G' + IntToStr(Linha),'G' + IntToStr(Linha)] do
+    begin
+      Value := 'PENDENTE ESP';
+      ColumnWidth := 8.43;
+      Interior.ColorIndex := 6;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    { Pagamentos da Fatura }
+    with ExcelWorksheet.Range['H' + IntToStr(Linha),'H' + IntToStr(Linha)] do
+    begin
+      Value := 'DATA';
+      ColumnWidth := 6.29;
+      Interior.ColorIndex := 35;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['I' + IntToStr(Linha),'I' + IntToStr(Linha)] do
+    begin
+      Value := 'DESCRIÇÃO PAGTO';
+      ColumnWidth := 35.00;
+      Interior.ColorIndex := 35;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['J' + IntToStr(Linha),'J' + IntToStr(Linha)] do
+    begin
+      Value := 'VALOR REAL';
+      ColumnWidth := 8.00;
+      Interior.ColorIndex := 35;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['K' + IntToStr(Linha),'K' + IntToStr(Linha)] do
+    begin
+      Value := 'VALOR ESP';
+      ColumnWidth := 8.00;
+      Interior.ColorIndex := 35;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    { Saldo Fatura }
+    with ExcelWorksheet.Range['L' + IntToStr(Linha),'L' + IntToStr(Linha)] do
+    begin
+      Value := 'SALDO REAL';
+      ColumnWidth := 8.57;
+      Interior.ColorIndex := 3;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    with ExcelWorksheet.Range['M' + IntToStr(Linha),'M' + IntToStr(Linha)] do
+    begin
+      Value := 'SALDO    ESP';
+      ColumnWidth := 8.57;
+      Interior.ColorIndex := 3;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+      Font.Bold := False;
+    end;
+
+    { Bordas no cabeçalho }
+    with ExcelWorkSheet.Range['A1', 'M'+IntToStr(Linha)] do
+    begin
+      with Borders[xlEdgeTop] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeRight] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeLeft] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeBottom] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlInsideVertical] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlInsideHorizontal] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlMedium;
+         ColorIndex := xlAutomatic;
+      end;
+      Font.Size := 8;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+      WrapText := True;
+    end;
+
+    Inc(Linha);
+end;
+
+procedure TfrmPagamentosEfetuados.GravarLinhaFaturas;
+Var
+  xlCorBloco : integer;
+  fFatura : boolean;
+begin
+  fFatura := True;
+  while Not(Faturas.Eof) do
+  begin
+    { Gerar Excel para Saldo Pendente, Pagos ou Ambos }
+    if (rgSaldo.ItemIndex = 0) and (Faturasvlr_saldo.AsFloat <= 0) then
+    begin
+      Faturas.Next;
+      Continue;
+    end;                                                                    
+    if (rgSaldo.ItemIndex = 1) and (Faturasvlr_saldo.AsFloat > 0) then                                  
+    begin
+      Faturas.Next;
+      Continue;
+    end;
+
+    { A - Fatura/Data }
+    with ExcelWorksheet.Range['A' + IntToStr(Linha),'A' + IntToStr(Linha)] do
+    begin
+      Value := trim(Faturasnum_fatura.AsString) + ' / ' + trim(Faturasnum_ref_volume.AsString) + ' - '
+               + FormatDateTime('DD.MM.YY', Faturasdat_emissao.AsDateTime);
+      Font.Size := 8;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlTop;
+    end;
+    with ExcelWorksheet.Range['A' + IntToStr(Linha+1),'A' + IntToStr(Linha+1)] do
+    begin
+      Value := trim(Faturascod_cliente.AsString) + ' / ' + trim(Faturasraz_social_reduz.AsString);
+      Font.Size := 8;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlTop;
+    end;
+    { B - Total Real }
+    with ExcelWorksheet.Range['B' + IntToStr(Linha),'B' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_liquido.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { C - Total Esp }
+    with ExcelWorksheet.Range['C' + IntToStr(Linha),'C' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_liquido_esp.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { L - Saldo Real }
+    with ExcelWorksheet.Range['L' + IntToStr(Linha),'L' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_saldo.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { M - Saldo Esp }
+    with ExcelWorksheet.Range['M' + IntToStr(Linha),'M' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_saldo_esp.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;                                                
+      NumberFormat := '#.##0,00';
+    end;
+
+    { Pedidos da Fatura }
+    LinAnt := Linha;  { salvar linha inicial da fatura }
+
+    with spr_saldo_confirmacao do
+    begin
+      Close;
+      ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+      ParamByName('num_nota_fiscal').AsInteger := Faturasnum_nota_fiscal.AsInteger;
+      ParamByName('serie').AsString := Faturasserie.AsString;
+      Open;
+      while Not(EOF) do
+      begin
+        { D - Pedido }
+        with ExcelWorksheet.Range['D' + IntToStr(Linha),'D' + IntToStr(Linha)] do
+        begin
+          Value := trim(FieldByName('num_pedido_cli').AsString);
+          Font.Size := 8;
+          HorizontalAlignment := xlLeft;
+          VerticalAlignment := xlTop;
+          WrapText := True;
+        end;
+        { E - Confirmação/Data }
+        with ExcelWorksheet.Range['E' + IntToStr(Linha),'E' + IntToStr(Linha)] do
+        begin
+          Value := trim(FieldByName('num_pedido_for').AsString) + ' - ' + FormatDateTime('DD.MM.YY', FieldByName('dat_liberacao').AsDateTime);
+          Font.Size := 8;
+          HorizontalAlignment := xlLeft;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+        end;
+        { F - Pendente Real }
+        with ExcelWorksheet.Range['F' + IntToStr(Linha),'F' + IntToStr(Linha)] do
+        begin
+          Value := FieldByName('vlr_saldo_fat').AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+        end;
+        { G - Pendente Esp }
+        with ExcelWorksheet.Range['G' + IntToStr(Linha),'G' + IntToStr(Linha)] do
+        begin
+          Value := FieldByName('vlr_saldo_fat_esp').AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+        end;
+        Next;
+        if Not(EOF) then Inc(Linha);
+      end;
+      LinFat := Linha; { última linha das Faturas }
+    end;
+
+    Linha := LinAnt; { retornar à linha inicial dos pedidos }
+
+    { Pagamentos da Fatura }
+    with fatura_pagamento do
+    begin
+      Close;
+      ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+      ParamByName('num_nota_fiscal').AsInteger := Faturasnum_nota_fiscal.AsInteger;
+      ParamByName('serie').AsString := Faturasserie.AsString;
+      Open;
+      while Not(EOF) do
+      begin
+        { H - Data do Pagamento }
+        with ExcelWorksheet.Range['H' + IntToStr(Linha),'H' + IntToStr(Linha)] do
+        begin
+          Value := FormatDateTime('DD.MM.YY', FieldByName('dat_pagamento').AsDateTime);
+          Font.Size := 8;
+          HorizontalAlignment := xlCenter;
+          VerticalAlignment := xlTop;
+        end;
+        { I - Descrição do Pagamento }
+        with ExcelWorksheet.Range['I' + IntToStr(Linha),'I' + IntToStr(Linha)] do
+        begin
+          Value := StringReplace(trim(FieldByName('txt_pagamento').AsString), #13#10, ' ', [rfReplaceAll]);
+          Font.Size := 8;
+          HorizontalAlignment := xlLeft;
+          VerticalAlignment := xlTop;
+          WrapText := True;
+          Rows.RowHeight := 12.75;
+        end;
+        { J - Valor Pagamento Real }
+        with ExcelWorksheet.Range['J' + IntToStr(Linha),'J' + IntToStr(Linha)] do
+        begin
+          Value := FieldByName('vlr_pagamento').AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+        end;
+        { K - Valor Pagamento Esp }
+        with ExcelWorksheet.Range['K' + IntToStr(Linha),'K' + IntToStr(Linha)] do
+        begin
+          Value := FieldByName('vlr_pagamento_esp').AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+        end;
+        Next;
+        if Not(EOF) then Inc(Linha);        
+      end;
+      LinPgt := Linha; { última linha das colunas de pagamentos }
+    end;
+
+    { Atribuir à Linha, a última linha do bloco maior de colunas }
+    Linha := MaxIntValue([LinFat, LinPgt]);
+    Inc(Linha);
+
+    { Totais na Fatura }
+
+    { E - Totais }
+    (*
+    with ExcelWorksheet.Range['E' + IntToStr(Linha),'E' + IntToStr(Linha)] do
+    begin
+      Value := 'TOTAIS :';
+      Font.Size := 8;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlCenter;
+    end;
+    *)
+    { F - Pendente Real }
+    with ExcelWorksheet.Range['F' + IntToStr(Linha),'F' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_pendente.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { G - Pendente Especial }
+    with ExcelWorksheet.Range['G' + IntToStr(Linha),'G' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_pendente_esp.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { J - Valor Pago Real }
+    with ExcelWorksheet.Range['J' + IntToStr(Linha),'J' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_pago.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { K - Valor Pago Especial }
+    with ExcelWorksheet.Range['K' + IntToStr(Linha),'K' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_pago_esp.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { L - Saldo Real }
+    with ExcelWorksheet.Range['L' + IntToStr(Linha),'L' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_saldo.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { M - Saldo Especial }
+    with ExcelWorksheet.Range['M' + IntToStr(Linha),'M' + IntToStr(Linha)] do
+    begin
+      Value := Faturasvlr_saldo_esp.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+
+    if (fFatura) then xlCorBloco := 4 else xlCorBloco := 6;
+    fFatura := Not(fFatura);
+
+    with ExcelWorkSheet.Range['A'+IntToStr(LinAnt), 'M'+IntToStr(Linha)] do
+    begin
+      with Borders[xlInsideVertical] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeRight] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeLeft] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeTop] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeBottom] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      Interior.ColorIndex := xlCorBloco;
+    end;
+
+    with ExcelWorkSheet.Range['F'+IntToStr(Linha), 'M'+IntToStr(Linha)] do
+    begin
+      with Borders[xlEdgeRight] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeLeft] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeTop] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeBottom] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+    end;
+
+    Faturas.Next;
+    Inc(Linha);
+  end;
+end;
+
+procedure TfrmPagamentosEfetuados.GravarLinhaPedidos;
+Var
+  xlCorBloco : integer;
+  fPedido : boolean;
+  s, fEsp : String;
+begin
+  { PEDIDOS }
+  fPedido := True; { usado para alternar cores nos blocos das células dos pedidos }
+
+  while Not(Pedidos.Eof) do
+  begin
+    with cby_pedido_faturados do
+    begin
+      Close;
+      ParamByName('cod_empresa').AsInteger := Pedidoscod_empresa.AsInteger;
+      ParamByName('num_pedido').Value := Pedidosnum_pedido.AsLargeInt;
+      Open;
+    end;
+
+    { Gerar Excel para Saldo Pendente, Pagos ou Ambos }
+    if (rgSaldo.ItemIndex = 0) and (cby_pedido_faturadossaldo_real.AsFloat >= 0) then
+    begin
+      Pedidos.Next;
+      Continue;
+    end;
+    if (rgSaldo.ItemIndex = 1) and (cby_pedido_faturadossaldo_real.AsFloat <= 0) then
+    begin
+      Pedidos.Next;
+      Continue;
+    end;
+                                                                                  
+    if (fPedido) then xlCorBloco := 4 else xlCorBloco := 6;
+    fPedido := Not(fPedido);
+
+    { indicar se Pedido tem Preços Especiais }
+    fEsp := Pedidosies_preco_esp.AsString;
+
+    { A - PEDIDO }
+    with ExcelWorksheet.Range['A' + IntToStr(Linha),'A' + IntToStr(Linha)] do
+    begin
+      Value := trim(Pedidosnum_pedido_cli.AsString);
+      Font.Size := 8;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlTop;
+    end;
+    { A+1 - CLIENTE }
+    with ExcelWorksheet.Range['A' + IntToStr(Linha+1),'A' + IntToStr(Linha+1)] do
+    begin
+      Value := trim(Pedidoscod_cliente.AsString);
+      Font.Size := 8;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlTop;
+    end;
+    { B - CONFIRMAÇÃO / DATA }
+    with ExcelWorksheet.Range['B' + IntToStr(Linha),'B' + IntToStr(Linha)] do
+    begin
+      Value := trim(Pedidosnum_pedido_for.AsString) + ' - ' + FormatDateTime('DD.MM.YY', Pedidosdat_pedido.AsDateTime);
+      Font.Size := 8;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlTop;
+      WrapText := True;
+    end;
+    { B+1 - FORNECEDOR }
+    with ExcelWorksheet.Range['B' + IntToStr(Linha+1),'B' + IntToStr(Linha+1)] do
+    begin
+      Value := trim(Pedidosraz_social_reduz.AsString);
+      Font.Size := 8;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlTop;
+      WrapText := True;
+    end;
+    { C - TOTAL BRUTO PEDIDO REAL }
+    with ExcelWorksheet.Range['C' + IntToStr(Linha),'C' + IntToStr(Linha)] do
+    begin
+      Value := cby_pedido_faturadosvlr_bruto.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { G - TOTAL LIQUIDO PEDIDO ESPECIAL }
+    with ExcelWorksheet.Range['G' + IntToStr(Linha),'G' + IntToStr(Linha)] do
+    begin
+      Value := cby_pedido_faturadosvlr_liquido.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    LinAnt := Linha;  { salvar linha inicial do pedido }
+
+    { ADICIONAIS E DESCONTOS }
+    with pedido_adic_desc do
+    begin
+      Close;
+      ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+      ParamByName('num_pedido').Value := Pedidosnum_pedido.AsLargeInt;
+      Open;
+      while Not(EOF) do
+      begin
+        { D - Valores Adicionais  }
+        with ExcelWorksheet.Range['D' + IntToStr(Linha),'D' + IntToStr(Linha)] do
+        begin
+          if (pedido_adic_descies_tipo.AsString = 'A') then
+             Value := pedido_adic_descvlr_adic_desc.AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+        end;
+        { E - Valores Descontos  }
+        with ExcelWorksheet.Range['E' + IntToStr(Linha),'E' + IntToStr(Linha)] do
+        begin
+          if (pedido_adic_descies_tipo.AsString = 'D') then
+             Value := pedido_adic_descvlr_adic_desc.AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+        end;
+        { F - Descrição dos A/D }
+        with ExcelWorksheet.Range['F' + IntToStr(Linha),'F' + IntToStr(Linha)] do
+        begin
+          Value := StringReplace(trim(pedido_adic_desctxt_descricao.AsString), #13#10, ' ', [rfReplaceAll]);
+          Font.Size := 8;
+          HorizontalAlignment := xlLeft;
+          VerticalAlignment := xlTop;
+          WrapText := True;
+          Rows.RowHeight := 12.75;
+        end;
+        Next;
+        if Not(EOF) then Inc(Linha);
+        LinAdc := Linha; { última linha das colunas de adicionais e descontos }
+      end;
+    end;
+    Linha := LinAnt;  { retornar à linha inicial dos pedidos }
+
+    { FATURAS DAS CONFIRMAÇÕES }
+    Linha := LinAnt; { retornar à linha inicial dos pedidos }
+
+    with spr_faturas_pedido do
+    begin
+      Close;
+      ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+      ParamByName('num_pedido').Value := Pedidosnum_pedido.AsLargeInt;
+      Open;
+      while Not(EOF) do
+      begin
+        { H - Número da Fatura + Data de Emissão }
+        with ExcelWorksheet.Range['H' + IntToStr(Linha),'H' + IntToStr(Linha)] do
+        begin
+          Value := trim(FieldByName('num_fatura').AsString) + ' - ' + FormatDateTime('DD.MM.YY', FieldByName('dat_emissao').AsDateTime);
+          Font.Size := 8;
+          HorizontalAlignment := xlLeft;
+          VerticalAlignment := xlTop;
+          WrapText := True;
+        end;
+        { K - Faturado Real }
+        with ExcelWorksheet.Range['K' + IntToStr(Linha),'K' + IntToStr(Linha)] do
+        begin
+          Value := FieldByName('vlr_total').AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          if (fEsp = 'N') then Font.ColorIndex := 1
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+        { L - Faturado Especial }
+        with ExcelWorksheet.Range['L' + IntToStr(Linha),'L' + IntToStr(Linha)] do
+        begin
+          Value := FieldByName('vlr_total_esp').AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          if (fEsp = 'S') then Font.ColorIndex := 1
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+
+        { M - PAGAMENTO PENDENTE NA FATURA REAL }
+        with ExcelWorksheet.Range['M' + IntToStr(Linha),'M' + IntToStr(Linha)] do
+        begin
+          Value := FieldByName('pend_pag_real').AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          if (fEsp = 'N') then Font.ColorIndex := 1
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+        { N - PAGAMENTO PENDENTE NA FATURA ESPECIAL }
+        with ExcelWorksheet.Range['N' + IntToStr(Linha),'N' + IntToStr(Linha)] do
+        begin
+          Value := FieldByName('pend_pag_esp').AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          if (fEsp = 'S') then Font.ColorIndex := 1
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+
+        Next;
+        if Not(EOF) then Inc(Linha);
+      end;
+      { Pendente de embarque }
+      if (cby_pedido_faturadosvlr_total_pend.AsFloat > 0) or (cby_pedido_faturadosvlr_total_pend_esp.AsFloat > 0) then
+      begin
+        Inc(Linha);
+        with ExcelWorksheet.Range['H' + IntToStr(Linha),'H' + IntToStr(Linha)] do
+        begin
+          Value := 'PENDING OF SHIPMENT';
+          Font.Size := 8;
+          Font.ColorIndex := 3;
+          HorizontalAlignment := xlLeft;
+          VerticalAlignment := xlTop;
+          WrapText := True;
+        end;
+        with ExcelWorksheet.Range['I' + IntToStr(Linha),'I' + IntToStr(Linha)] do
+        begin
+          Value := cby_pedido_faturadosvlr_total_pend.AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          if (fEsp = 'N') then Font.ColorIndex := 3
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+        with ExcelWorksheet.Range['J' + IntToStr(Linha),'J' + IntToStr(Linha)] do
+        begin
+          Value := cby_pedido_faturadosvlr_total_pend_esp.AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          if (fEsp = 'S') then Font.ColorIndex := 3
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+      end;
+
+      { Quantidades Canceladas }
+      if (cby_pedido_faturadosvlr_total_canc.AsFloat > 0) or (cby_pedido_faturadosvlr_total_canc_esp.AsFloat > 0) then
+      begin
+        Inc(Linha);
+        with ExcelWorksheet.Range['H' + IntToStr(Linha),'H' + IntToStr(Linha)] do
+        begin
+          Value := 'QUANTITY CANCELLED';
+          Font.Size := 8;
+          Font.ColorIndex := 3;
+          HorizontalAlignment := xlLeft;
+          VerticalAlignment := xlTop;
+          WrapText := True;
+        end;
+        with ExcelWorksheet.Range['I' + IntToStr(Linha),'I' + IntToStr(Linha)] do
+        begin
+          Value := cby_pedido_faturadosvlr_total_canc.AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          Font.ColorIndex := 3;
+          if (fEsp = 'N') then Font.ColorIndex := 1
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+        with ExcelWorksheet.Range['J' + IntToStr(Linha),'J' + IntToStr(Linha)] do
+        begin
+          Value := cby_pedido_faturadosvlr_total_canc_esp.AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          Font.ColorIndex := 3;
+          if (fEsp = 'S') then Font.ColorIndex := 1
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+      end;
+
+      LinFat := Linha; { última linha das Faturas }
+    end;
+
+    Linha := LinAnt; { retornar à linha inicial dos pedidos }
+
+    { PAGAMENTOS }
+    with pedido_pagamento do
+    begin
+      Close;
+      ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+      ParamByName('num_pedido').Value := Pedidosnum_pedido.AsLargeInt;
+      Open;
+      while Not(EOF) do
+      begin
+        { O - DATA DO PAGAMENTO }
+        with ExcelWorksheet.Range['O' + IntToStr(Linha),'O' + IntToStr(Linha)] do
+        begin
+          Value := FormatDateTime('DD.MM.YY', pedido_pagamentodat_pagamento.AsDateTime);
+          Font.Size := 8;
+          HorizontalAlignment := xlCenter;
+          VerticalAlignment := xlTop;
+        end;
+        { P - VALOR REAL do pagamento }
+        with ExcelWorksheet.Range['P' + IntToStr(Linha),'P' + IntToStr(Linha)] do
+        begin
+          Value := pedido_pagamentovlr_pagamento.AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          if (fEsp = 'N') then Font.ColorIndex := 1
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+        { Q - VALOR ESPECIAL do pagamento }
+        with ExcelWorksheet.Range['Q' + IntToStr(Linha),'Q' + IntToStr(Linha)] do
+        begin
+          Value := pedido_pagamentovlr_pagamento_esp.AsFloat;
+          Font.Size := 8;
+          HorizontalAlignment := xlRight;
+          VerticalAlignment := xlTop;
+          NumberFormat := '#.##0,00';
+          if (fEsp = 'S') then Font.ColorIndex := 1
+                          else Font.ColorIndex := xlCorBloco;
+        end;
+        { R - DESCRIÇÃO DO PAGAMENTOS }
+        with ExcelWorksheet.Range['R' + IntToStr(Linha),'R' + IntToStr(Linha)] do
+        begin
+          s := StringReplace(trim(pedido_pagamentotxt_pagamento.AsString), #13#10, ' ', [rfReplaceAll]);
+
+          if (pedido_pagamentonum_nota_fiscal.AsInteger > 0) then
+              s:= s + ' INVOICE: ' + trim(pedido_pagamentonum_fatura.AsString);
+
+          Value := s;
+          Font.Size := 8;
+          HorizontalAlignment := xlLeft;
+          VerticalAlignment := xlTop;
+          WrapText := True;
+          Rows.RowHeight := 12.75;
+        end;
+        Next;
+        if Not(EOF) then Inc(Linha);
+      end;
+      LinPgt := Linha; { última linha das colunas de pagamentos }
+    end;
+
+    Linha := LinAnt;  { retornar à linha inicial dos pedidos }
+
+
+    Pedidos.Next;
+
+    { Atribuir à Linha, a última linha do bloco maior de colunas }
+    Linha := MaxIntValue([LinFat, LinPgt, LinAdc]);
+    Inc(Linha);
+
+    { TOTAIS DOS PEDIDOS: ADICIONAIS/DESCONTOS, FATURAS E PAGAMENTOS }
+
+    { C - TOTAL BRUTO PEDIDO REAL }
+    with ExcelWorksheet.Range['C' + IntToStr(Linha),'C' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(C'+IntTostr(LinAnt)+':C'+IntTostr(Linha-1)+')';
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { D - VALORES ADICIONAIS REAIS }
+    with ExcelWorksheet.Range['D' + IntToStr(Linha),'D' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(D'+IntTostr(LinAnt)+':D'+IntTostr(Linha-1)+')';
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { E - VALORES DESCONTOS REAIS }
+    with ExcelWorksheet.Range['E' + IntToStr(Linha),'E' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(E'+IntTostr(LinAnt)+':E'+IntTostr(Linha-1)+')';
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { G - TOTAL PEDIDO ESPECIAL }
+    with ExcelWorksheet.Range['G' + IntToStr(Linha),'G' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(G'+IntTostr(LinAnt)+':G'+IntTostr(Linha-1)+')';
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+    end;
+    { K - Total Faturado Real + Total Pendente }
+    with ExcelWorksheet.Range['K' + IntToStr(Linha),'K' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(K'+IntTostr(LinAnt)+':K'+IntTostr(Linha-1)+')';
+      //Value := cby_pedido_faturadosvlr_total_fat.AsFloat + cby_pedido_faturadosvlr_total_pend.AsFloat + cby_pedido_faturadosvlr_total_canc.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+      if (fEsp = 'N') then Font.ColorIndex := 1
+                      else Font.ColorIndex := xlCorBloco;
+    end;
+    { L - Total Faturado Especial + Pendente }
+    with ExcelWorksheet.Range['L' + IntToStr(Linha),'L' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(L'+IntTostr(LinAnt)+':L'+IntTostr(Linha-1)+')';
+      //Value := cby_pedido_faturadosvlr_total_fat_esp.AsFloat + cby_pedido_faturadosvlr_total_pend_esp.AsFloat + cby_pedido_faturadosvlr_total_canc_esp.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+      if (fEsp = 'S') then Font.ColorIndex := 1
+                      else Font.ColorIndex := xlCorBloco;
+    end;
+    { M - PAGAMENTO PENDENTE NA FATURA REAL }
+    with ExcelWorksheet.Range['M' + IntToStr(Linha),'M' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(M'+IntTostr(LinAnt)+':M'+IntTostr(Linha-1)+')';
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+      if (fEsp = 'N') then Font.ColorIndex := 1
+                      else Font.ColorIndex := xlCorBloco;
+    end;
+    { N - PAGAMENTO PENDENTE NA FATURA ESPECIAL }
+    with ExcelWorksheet.Range['N' + IntToStr(Linha),'N' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(N'+IntTostr(LinAnt)+':N'+IntTostr(Linha-1)+')';
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+      if (fEsp = 'S') then Font.ColorIndex := 1
+                      else Font.ColorIndex := xlCorBloco;
+    end;
+    { P - Total REAL do pagamento }
+    with ExcelWorksheet.Range['P' + IntToStr(Linha),'P' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(P'+IntTostr(LinAnt)+':P'+IntTostr(Linha-1)+')';
+      //Value := cby_pedido_faturadostot_pagamento_real.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+      if (fEsp = 'N') then Font.ColorIndex := 1
+                      else Font.ColorIndex := xlCorBloco;
+    end;
+    { Q - Total ESPECIAL do pagamento }
+    with ExcelWorksheet.Range['Q' + IntToStr(Linha),'Q' + IntToStr(Linha)] do
+    begin
+      Formula := '=SUM(Q'+IntTostr(LinAnt)+':Q'+IntTostr(Linha-1)+')';
+      //Value := cby_pedido_faturadostot_pagamento_esp.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '#.##0,00';
+      if (fEsp = 'S') then Font.ColorIndex := 1
+                      else Font.ColorIndex := xlCorBloco;
+    end;
+    { S - SALDO REAL }
+    with ExcelWorksheet.Range['S' + IntToStr(Linha),'S' + IntToStr(Linha)] do
+    begin
+      if (cby_pedido_faturadossaldo_real.AsFloat <= 0) then
+      begin
+        Font.Size := 8;
+        Font.Bold := False;
+        Font.ColorIndex := 0;
+      end else
+      begin
+        Font.Size := 8;
+        Font.Bold := False;
+        Font.ColorIndex := 3;
+      end;
+      Value := cby_pedido_faturadossaldo_real.AsFloat;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '+#.##0,00;-#.##0,00';
+      //if (fEsp = 'N') then Font.ColorIndex := 1
+      //                else Font.ColorIndex := xlCorBloco;
+    end;
+    { T - SALDO ESPECIAL }
+    with ExcelWorksheet.Range['T' + IntToStr(Linha),'T' + IntToStr(Linha)] do
+    begin
+      if (cby_pedido_faturadossaldo_esp.AsFloat <= 0) then
+      begin
+        Font.Size := 8;
+        Font.Bold := False;
+        Font.ColorIndex := 0;
+      end else
+      begin
+        Font.Size := 8;
+        Font.Bold := False;
+        Font.ColorIndex := 3;
+      end;
+      Value := cby_pedido_faturadossaldo_esp.AsFloat;
+      Font.Size := 8;
+      HorizontalAlignment := xlRight;
+      VerticalAlignment := xlTop;
+      NumberFormat := '+#.##0,00;-#.##0,00';
+      //if (fEsp = 'S') then Font.ColorIndex := 1
+      //                else Font.ColorIndex := xlCorBloco;
+    end;
+
+    with ExcelWorkSheet.Range['A'+IntToStr(LinAnt), 'T'+IntToStr(Linha)] do
+    begin
+      with Borders[xlInsideVertical] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeRight] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeLeft] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeTop] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeBottom] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      Interior.ColorIndex := xlCorBloco;
+    end;
+
+    with ExcelWorkSheet.Range['C'+IntToStr(Linha), 'T'+IntToStr(Linha)] do
+    begin
+      with Borders[xlEdgeRight] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;                                   
+      end;                                                      
+      with Borders[xlEdgeLeft] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeTop] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeBottom] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+    end;
+
+    Inc(Linha);
+  end;
+end;
+
+procedure TfrmPagamentosEfetuados.actGerarExecute(Sender: TObject);
+Var
+  Plan : String;
+begin
+  { Gerar planilha com Pagamentos Efetuados nos Pedidos e Faturas }
+  with parametro_comercial do
+  begin
+    Close;
+    ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+    Open;                                                               
+  end;
+
+  { Pasta onde será gravada a planilha de Pagamentos }
+  DIR_PLANILHAS := parametro_comercialdir_planilhas.AsString;
+  if trim(DIR_PLANILHAS) = '' then
+  begin
+    Application.MessageBox('Pasta para os documentos não definada nos parâmetros', 'Informação', MB_ICONINFORMATION+MB_OK);
+    Abort;
+  end;
+  if not DirectoryExists(DIR_PLANILHAS) then
+     if not CreateDir(DIR_PLANILHAS) then
+        raise Exception.Create('Não foi possível criar ' + DIR_PLANILHAS);
+
+  { diretório da Planilha, mais subpasta com código do cliente }
+  if (dbcClientes.Value <> '0') then
+     DIR_PLANILHAS := DIR_PLANILHAS + '\' + trim(clientescod_cliente.AsString);
+  if not DirectoryExists(DIR_PLANILHAS) then
+     if not CreateDir(DIR_PLANILHAS) then
+        raise Exception.Create('Não foi possível criar ' + DIR_PLANILHAS);
+
+  DIR_PLANILHAS := DIR_PLANILHAS + '\PAYMENTS';
+  if not DirectoryExists(DIR_PLANILHAS) then
+     if not CreateDir(DIR_PLANILHAS) then
+        raise Exception.Create('Não foi possível criar ' + DIR_PLANILHAS);
+
+  { inicializar progress bar }
+  Rect := panGauge.ClientRect;
+  InflateRect(Rect, - panGauge.BevelWidth, - panGauge.BevelWidth);
+  Ani := TAnimationThread.Create(panGauge, Rect, panGauge.color, clBlue, 25);
+  btnGerar.Enabled := False;
+  Application.ProcessMessages;
+
+
+  { Nome da Planilha = Código do Cliente + Plan Fornecedor Reduzido }
+  if (dbcClientes.Value <> '0') and (dbcFornecedores.Value <> '0') then
+     Plan := trim(Clientescod_cliente.AsString) + '-' + trim(Fornecedoresraz_social_reduz.AsString)
+  else if (dbcClientes.Value <> '0') and (dbcFornecedores.Value = '0') then
+     Plan := ' TODOS FORNECEDORES DO CLIENTE-' + trim(Clientescod_cliente.AsString)
+  else if (dbcClientes.Value = '0') and (dbcFornecedores.Value <> '0') then
+     Plan := ' TODOS CLIENTES DO FORNECEDOR-' + trim(Fornecedoresraz_social_reduz.AsString)
+  else if (dbcClientes.Value = '0') and (dbcFornecedores.Value = '0') then
+     Plan := ' TODOS OS CLIENTES TODOS OS FORNECEDORES';
+
+  Plan := StringReplace(Plan, '/', '-', [rfReplaceAll]);
+  Plan := StringReplace(Plan, '\', '-', [rfReplaceAll]);
+  case (rgPago.ItemIndex) of
+    0: FileName := DIR_PLANILHAS + '\' + trim(Plan) + '-PAYMENTS ORDERS-';
+    1: FileName := DIR_PLANILHAS + '\' + trim(Plan) + '-PAYMENTS INVOICES-';
+  end;
+
+  { acrescentar o Ano escolhido ao nome da planilha }
+  if (seAno.Text <> '') then FileName := FileName + 'YEAR ' + seAno.Text + '.xls'
+                        else FileName := FileName + 'ALL YEARS.xls';
+
+  { Criar a planilha em branco }
+  parametro_comercialmod_plan_excel.SaveToFile(FileName);
+  AbrirExcel(FileName);
+
+  { Pagamentos dos Pedidos }
+  if (rgPago.ItemIndex = 0) then
+  begin
+     Linha := 1;
+     LinAnt := 0;
+     LinFat := 0;
+     LinPgt := 0;
+     LinAdc := 0;
+     { Selecionar Pedidos }
+     AbrirPedidos;
+     { Cabeçalho da planilha }
+     HeaderExcelPedidos;
+     { Ler Pedidos e enviar para Excel }
+     GravarLinhaPedidos;
+  end;
+  { Pagamentos das Faturas }
+  if (rgPago.ItemIndex = 1) then
+  begin
+     Linha := 1;
+     LinAnt := 0;
+     LinFat := 0;
+     LinPgt := 0;
+     LinAdc := 0;
+     { Selecionar Faturas }
+     AbrirFaturas;
+     { Cabeçalho da planilha }
+     HeaderExcelFaturas;
+     { Ler Faturas e enviar para Excel }
+     GravarLinhaFaturas;
+  end;
+  
+  { congelar painéis }
+  ExcelWorkSheet.Range['D4','D4'].Select;
+  ExcelApplication.ActiveWindow.FreezePanes := True;
+  { Salvar Planilha Gerada e Fechar o Excel }
+  ExcelApplication.ActiveWorkbook.SaveAs(FileName,xlNormal,'','',false,false,xlNochange,false,xlUserResolution,False,EmptyParam,0);
+  FecharExcel;
+  btnAbrir.Enabled := True;
+  Screen.Cursor := crDefault;
+
+  { finalizar progress bar }
+  btnGerar.Enabled := True;
+  Ani.Terminate;                                                             
+  AbrirPlanilha(FileName);
+end;
+
+procedure TfrmPagamentosEfetuados.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  Clientes.Close;
+  Fornecedores.Close;
+  Pedidos.Close;
+  Parametro_Comercial.Close;
+
+  Action := caFree;
+  frmPagamentosEfetuados := nil;
+end;
+
+procedure TfrmPagamentosEfetuados.FormCreate(Sender: TObject);
+begin
+  with Clientes do
+  begin
+    ParamByName('login').Value := vgLogin;
+    Open;
+  end;
+  with Fornecedores do
+  begin
+    ParamByName('cod_empresa').Value := vgCod_Empresa;
+    ParamByName('login').Value := vgLogin;
+    Open;
+  end;
+
+  seAno.Value :=  YearOf(Buscar_DateTime);
+end;
+
+procedure TfrmPagamentosEfetuados.dbcClientesChange(Sender: TObject);
+begin
+   with Fornecedores do
+   begin
+     Close;
+     SQL.Clear;
+     SQL.Add('select b."cod_fornecedor", c."raz_social_reduz"           ');
+     SQL.Add('  from "pedido" a, "pedido_complemento" b, "fornecedor" c ');
+     SQL.Add(' where                                                    ');
+     SQL.Add('       a."cod_empresa" = :cod_empresa                     ');
+
+     if (dbcClientes.Value <> '0') then
+     begin
+        SQL.Add('   and a."cod_cliente" = :cod_cliente                     ');
+        ParamByName('cod_cliente').AsString := Clientescod_cliente.AsString;
+     end else
+     begin
+        SQL.Add('  and a."cod_cliente" in (select "cod_cliente"');
+        SQL.Add('                            from "usuario_cliente"');
+        SQL.Add('                           where "login" = :login)');
+        ParamByName('login').Value := vgLogin;
+     end;
+
+     SQL.Add('   and b."cod_empresa" = a."cod_empresa"                  ');
+     SQL.Add('   and b."num_pedido"  = a."num_pedido"                   ');
+     SQL.Add('   and c."cod_fornecedor" = b."cod_fornecedor"            ');
+     SQL.Add('group by 1,2                                              ');
+     SQL.Add('order by 2                                                ');
+     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+
+     Open;
+   end;
+end;
+
+procedure TfrmPagamentosEfetuados.actAbrirExecute(Sender: TObject);
+begin
+  { Abrir a Planilha Gerada Anteriormente }
+  AbrirPlanilha(FileName);
+end;
+
+end.

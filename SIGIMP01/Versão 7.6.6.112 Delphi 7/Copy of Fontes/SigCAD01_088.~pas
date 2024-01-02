@@ -1,0 +1,107 @@
+unit SigCAD01_088;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, UnCad, IBQuery, DB, IBCustomDataSet, ActnList, UnNavigator,
+  Buttons, ExtCtrls, DBCtrls, StdCtrls, Mask, ComCtrls, ToolWin,
+  JvExControls, JvComponent, JvDBLookup, IBStoredProc;
+
+type
+  Tfr_ClienteFilial = class(Tfr_Cad)
+    Label2: TLabel;
+    dbeNomFilial: TDBEdit;
+    Label5: TLabel;
+    DBMemo1: TDBMemo;
+    IBDataSetcod_cliente: TIBStringField;
+    IBDataSetnom_filial: TIBStringField;
+    IBDataSetseq_filial: TIntegerField;
+    IBDataSetendereco_filial: TIBStringField;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure IBDataSetNewRecord(DataSet: TDataSet);
+    procedure fr_FmNavigator1acF3Execute(Sender: TObject);
+    procedure IBDataSetBeforeInsert(DataSet: TDataSet);
+    procedure IBDataSetAfterDelete(DataSet: TDataSet);
+  private
+    { Private declarations }
+  protected
+  public
+    { Public declarations }
+    procedure Set_Value; override;
+  end;
+
+var
+  fr_ClienteFilial: Tfr_ClienteFilial;
+
+implementation
+
+uses unConnection, UnMenuCompl, SigCAD01_012;
+
+{$R *.dfm}
+
+procedure Tfr_ClienteFilial.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+  Action := caFree;
+  fr_clienteFilial := nil;
+end;
+
+procedure Tfr_ClienteFilial.FormShow(Sender: TObject);
+begin
+  inherited;
+  Set_Value;
+end;
+
+procedure Tfr_ClienteFilial.IBDataSetNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+   IBDataSetseq_filial.AsInteger   := InsertCode('cliente_filial', 'seq_filial');
+   IBDataSetcod_cliente.AsString := fr_CadCliente.IBDataSetcod_cliente.AsString;
+end;
+
+procedure Tfr_ClienteFilial.fr_FmNavigator1acF3Execute(Sender: TObject);
+begin
+  inherited;
+   if IBDataSet.State in [dsBrowse] then
+   begin
+      if Pesquisar('cliente_filial', fr_CadCliente.IBDataSetcod_cliente.AsString) then
+         if AbrirPesquisa then
+            with IBDataSet do
+            try
+               Close;
+               Open;
+               DisableControls;
+               First;
+               Locate('seq_filial', dmConnection.qryPesquisa.FieldByName('campo1').AsVariant, []);
+            finally
+               EnableControls;
+            end;
+   end;
+end;
+
+procedure Tfr_ClienteFilial.Set_Value;
+begin
+  with IBDataSet do
+  begin
+    Close;
+    ParamByName('cod_cliente').Value := fr_CadCliente.IBDataSetcod_cliente.AsString;
+    Open;
+  end;
+end;
+
+procedure Tfr_ClienteFilial.IBDataSetBeforeInsert(DataSet: TDataSet);
+begin
+  inherited;
+  dbeNomFilial.SetFocus;
+end;
+
+procedure Tfr_ClienteFilial.IBDataSetAfterDelete(DataSet: TDataSet);
+begin
+  inherited;
+  dbeNomFilial.SetFocus;
+end;
+
+end.

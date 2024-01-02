@@ -1,0 +1,133 @@
+object ChinesTxt: TChinesTxt
+  Left = 600
+  Top = 212
+  Width = 995
+  Height = 670
+  Caption = 'Textos em Chin'#234's'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Memo1: TMemo
+    Left = 0
+    Top = 0
+    Width = 979
+    Height = 632
+    Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    Lines.Strings = (
+      
+        '(1)For L/C ,The Buyer shall have the covering Letter of Credit r' +
+        'each the Seller(or notify the Import License Number) before_____' +
+        '_.'
+      
+        '    Failing which the Seller reserves the right to rescind witho' +
+        'ut further notice,or to lodge a claim for losses thus sustained,' +
+        'if any.'
+      '   '
+      
+        '    Para Cartas de Cr'#233'dito, el Comprador deber'#225' hacer llegar la ' +
+        'Carta de Cr'#233'dito (o notificar el N'#250'mero de Licencia de Importaci' +
+        #243'n)'
+      '    antes ______.   '
+      
+        '    En su defecto el vendedor se reserva el derecho de rescindir' +
+        ' sin previo aviso, o de presentar un reclamo por p'#233'rdidas sufrid' +
+        'as,'
+      '    si fuere el caso.'
+      ''
+      
+        '(2)For transactions concluded on C.I.F. basis, it is understood ' +
+        'that the insurance amount will be for the 110% invoice value'
+      
+        '    against the risk specified in the Sales Confirmation,if addi' +
+        'tional insurance amount or coverage is required,the buyer must'
+      
+        '    have the consent of the seller before Shipment, and the addi' +
+        'tional premium is to be borne by the Buyer.'
+      ''
+      
+        '    Para las operaciones realizadas en base C.I.F, se entender'#225' ' +
+        'que el monto del seguro ser'#225' por el 110% del valor de la factura'
+      
+        '    frente al riesgo especificado en la Confirmaci'#243'n de ventas, ' +
+        'si se requiere la cantidad de seguro adicional o cobertura, '#9' '
+      
+        '    el comprador debe tener el consentimiento del vendedor antes' +
+        ' del env'#237'o, y la adicional prima es a cargo del comprador.'
+      '  '
+      
+        '(3)QUALITY/QUANTITY DISCREPANCY: in case of quality discrepancy,' +
+        'claim should be filed by the Buyer within 3 months'
+      
+        '    after the arrival of goods. Quantity discrepancy claim shoul' +
+        'd be filled by the Buyer within 15 days after the arrival of goo' +
+        'ds.'
+      ''
+      
+        '    DISCREPANCIA CALIDAD/CANTIDAD: en caso de discrepancia de ca' +
+        'lidad,el reclamo debe ser presentado por el comprador'
+      
+        '    dentro de los 3 meses despu'#233's de la llegada de las mercader'#237 +
+        'as. El reclamo por discrepancia de Cantidad debe ser'
+      
+        '    llenado por el comprador dentro de los 15 d'#237'as despu'#233's de la' +
+        ' llegada de las mercanc'#237'as.'#9
+      ''
+      
+        '(4)The Seller shall not be responsible for the failure or delay ' +
+        'in delivery of the entire lot or a portion of the goods under th' +
+        'is'
+      
+        '    Sales Confirmation in consequence of any Force Majeure Incid' +
+        'ents.'
+      ''
+      
+        '    El vendedor no ser'#225' responsable de la falla o retraso en la ' +
+        'entrega de todo el lote o una parte de las mercanc'#237'as '
+      
+        '    bajo esta Confirmaci'#243'n de ventas como consecuencia de cualqu' +
+        'ier incidente de fuerza mayor.   '
+      ''
+      
+        '(5)All disputes arising out of the performance of, or relating t' +
+        'o this SALES CONFIRMATION, shall be settled amicably through'
+      '    negotiation.'
+      
+        '    In case no settlement can be reached through negotiation the' +
+        ' case shall then be submitted to the China International Economi' +
+        'c'
+      
+        '    and Trade Arbitration Commission, Shanghai Sub-Commission, C' +
+        'hina, for arbitration in accordance with its rules of Arbitratio' +
+        'n.'
+      '    The arbitral award  is final and binding upon both parties.'
+      #9
+      
+        '    Todas las disputas que surjan de la ejecuci'#243'n, o relacionado' +
+        's con esta CONFIRMACI'#211'N DE VENTAS, se resolver'#225' amistosamente'
+      '    mediante la negociaci'#243'n.'#9
+      
+        '    En caso de que ning'#250'n acuerdo pueda ser alcanzado a trav'#233's d' +
+        'e la negociaci'#243'n, el caso se someter'#225' a la Comisi'#243'n de Arbitraje'
+      
+        '    Econ'#243'mico y Comercio Internacional de China, Shanghai Subcom' +
+        'isi'#243'n, China, por arbitraje de acuerdo con sus reglas de arbitra' +
+        'je.'
+      
+        '    La sentencia arbitral es definitiva y vinculante para ambas ' +
+        'partes.')
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 0
+  end
+end

@@ -1,0 +1,381 @@
+inherited fr_CadContainers: Tfr_CadContainers
+  Left = 568
+  Top = 255
+  HelpType = htKeyword
+  HelpKeyword = '038'
+  Caption = 'Tipos de Containers'
+  ClientHeight = 259
+  ClientWidth = 380
+  OldCreateOrder = True
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 14
+  inherited Panel1: TPanel
+    Width = 380
+    Height = 222
+    object Label1: TLabel [0]
+      Left = 8
+      Top = 8
+      Width = 42
+      Height = 14
+      Caption = 'C'#243'digo'
+      FocusControl = DBEdit1
+    end
+    object Label2: TLabel [1]
+      Left = 8
+      Top = 48
+      Width = 77
+      Height = 14
+      Caption = 'Denomina'#231#227'o'
+      FocusControl = DBEdit2
+    end
+    object Label3: TLabel [2]
+      Left = 8
+      Top = 88
+      Width = 70
+      Height = 14
+      Caption = 'Altura (m)'
+      FocusControl = DBEdit3
+    end
+    object Label4: TLabel [3]
+      Left = 120
+      Top = 88
+      Width = 77
+      Height = 14
+      Caption = 'Largura (m)'
+      FocusControl = DBEdit4
+    end
+    object Label5: TLabel [4]
+      Left = 232
+      Top = 88
+      Width = 105
+      Height = 14
+      Caption = 'Comprimento (m)'
+      FocusControl = DBEdit5
+    end
+    object Label6: TLabel [5]
+      Left = 8
+      Top = 168
+      Width = 112
+      Height = 14
+      Caption = 'Peso m'#225'ximo (Kg)'
+      FocusControl = DBEdit6
+    end
+    object Label7: TLabel [6]
+      Left = 8
+      Top = 128
+      Width = 161
+      Height = 14
+      Caption = 'Cubagem dispon'#237'vel (m'#179')'
+      FocusControl = DBEdit7
+    end
+    object Label8: TLabel [7]
+      Left = 200
+      Top = 128
+      Width = 161
+      Height = 14
+      Caption = 'Cubagem utiliz'#225'vel (m'#179')'
+      FocusControl = DBEdit8
+    end
+    object Label9: TLabel [8]
+      Left = 56
+      Top = 8
+      Width = 28
+      Height = 14
+      Caption = 'Tipo'
+      FocusControl = DBEdit9
+    end
+    inherited Button1: TButton
+      Left = 224
+      Width = 142
+      Hint = 'Procurar outros tipos de containers'
+      Action = fr_FmNavigator1.acF3
+      Caption = 'Procurar Containers'
+      TabOrder = 8
+    end
+    object DBEdit1: TDBEdit
+      Left = 8
+      Top = 24
+      Width = 45
+      Height = 22
+      DataField = 'cod_container'
+      DataSource = dsIBDataSet
+      TabOrder = 0
+    end
+    object DBEdit2: TDBEdit
+      Left = 8
+      Top = 64
+      Width = 335
+      Height = 22
+      DataField = 'den_container'
+      DataSource = dsIBDataSet
+      TabOrder = 2
+    end
+    object DBEdit3: TDBEdit
+      Left = 8
+      Top = 104
+      Width = 110
+      Height = 22
+      DataField = 'altura'
+      DataSource = dsIBDataSet
+      TabOrder = 3
+    end
+    object DBEdit4: TDBEdit
+      Left = 120
+      Top = 104
+      Width = 110
+      Height = 22
+      DataField = 'largura'
+      DataSource = dsIBDataSet
+      TabOrder = 4
+    end
+    object DBEdit5: TDBEdit
+      Left = 232
+      Top = 104
+      Width = 110
+      Height = 22
+      DataField = 'comprimento'
+      DataSource = dsIBDataSet
+      TabOrder = 5
+    end
+    object DBEdit6: TDBEdit
+      Left = 8
+      Top = 184
+      Width = 110
+      Height = 22
+      DataField = 'peso_maximo'
+      DataSource = dsIBDataSet
+      TabOrder = 7
+    end
+    object DBEdit7: TDBEdit
+      Left = 8
+      Top = 144
+      Width = 158
+      Height = 22
+      TabStop = False
+      Color = 7453128
+      DataField = 'area_disp'
+      DataSource = dsIBDataSet
+      ReadOnly = True
+      TabOrder = 9
+    end
+    object DBEdit8: TDBEdit
+      Left = 200
+      Top = 144
+      Width = 144
+      Height = 22
+      DataField = 'area_util'
+      DataSource = dsIBDataSet
+      TabOrder = 6
+    end
+    object DBEdit9: TDBEdit
+      Left = 56
+      Top = 24
+      Width = 45
+      Height = 22
+      DataField = 'tip_container'
+      DataSource = dsIBDataSet
+      TabOrder = 1
+    end
+  end
+  inherited fr_FmNavigator1: Tfr_FmNavigator
+    Top = 222
+    Width = 380
+    inherited ToolBar1: TToolBar
+      Width = 380
+      inherited ToolButton9: TToolButton
+        Left = 3
+        Wrap = True
+      end
+      inherited ToolButton5: TToolButton
+        Left = 3
+        Top = 36
+      end
+      inherited ToolButton6: TToolButton
+        Left = 41
+        Top = 36
+      end
+      inherited ToolButton7: TToolButton
+        Left = 79
+        Top = 36
+      end
+      inherited ToolButton8: TToolButton
+        Left = 117
+        Top = 36
+      end
+      inherited ToolButton11: TToolButton
+        Left = 155
+        Top = 36
+      end
+      inherited ToolButton10: TToolButton
+        Left = 158
+        Top = 36
+      end
+      inherited ToolButton13: TToolButton
+        Left = 196
+        Top = 36
+      end
+      inherited ToolButton12: TToolButton
+        Left = 234
+        Top = 36
+      end
+    end
+    inherited ActionList1: TActionList
+      inherited acFirst: TDataSetFirst
+        DataSource = dsIBDataSet
+      end
+      inherited acPrior: TDataSetPrior
+        DataSource = dsIBDataSet
+      end
+      inherited acNext: TDataSetNext
+        DataSource = dsIBDataSet
+      end
+      inherited acLast: TDataSetLast
+        DataSource = dsIBDataSet
+      end
+      inherited acInsert: TDataSetInsert
+        DataSource = dsIBDataSet
+      end
+      inherited acDelete: TDataSetDelete
+        DataSource = dsIBDataSet
+      end
+      inherited acEdit: TDataSetEdit
+        DataSource = dsIBDataSet
+      end
+      inherited acPost: TDataSetPost
+        DataSource = dsIBDataSet
+      end
+      inherited acCancel: TDataSetCancel
+        DataSource = dsIBDataSet
+      end
+      inherited acRefresh: TDataSetRefresh
+        DataSource = dsIBDataSet
+      end
+    end
+  end
+  inherited ActionList1: TActionList
+    Left = 136
+    Top = 16
+  end
+  inherited IBDataSet: TIBDataSet
+    CachedUpdates = True
+    DeleteSQL.Strings = (
+      'delete from "containers"'
+      'where'
+      '  "containers"."cod_container" = :"OLD_cod_container"')
+    InsertSQL.Strings = (
+      'insert into "containers"'
+      
+        '  ("containers"."cod_container", "containers"."den_container", "' +
+        'containers"."comprimento", '
+      
+        '   "containers"."largura", "containers"."altura", "containers"."' +
+        'area_util", '
+      '   "containers"."peso_maximo", "containers"."tip_container")'
+      'values'
+      
+        '  (:"cod_container", :"den_container", :"comprimento", :"largura' +
+        '", :"altura", '
+      '   :"area_util", :"peso_maximo", :"tip_container")')
+    RefreshSQL.Strings = (
+      'Select '
+      '  "containers"."cod_container",'
+      '  "containers"."den_container",'
+      '  "containers"."comprimento",'
+      '  "containers"."largura",'
+      '  "containers"."altura",'
+      '  "containers"."area_disp",'
+      '  "containers"."area_util",'
+      '  "containers"."peso_maximo",'
+      '  "containers"."tip_container"'
+      'from "containers" '
+      'where'
+      '  "containers"."cod_container" = :"cod_container"')
+    SelectSQL.Strings = (
+      'select * from "containers"')
+    ModifySQL.Strings = (
+      'update "containers"'
+      'set'
+      '  "containers"."cod_container" = :"cod_container",'
+      '  "containers"."den_container" = :"den_container",'
+      '  "containers"."comprimento" = :"comprimento",'
+      '  "containers"."largura" = :"largura",'
+      '  "containers"."altura" = :"altura",'
+      '  "containers"."area_util" = :"area_util",'
+      '  "containers"."peso_maximo" = :"peso_maximo",'
+      '  "containers"."tip_container" = :"tip_container"'
+      'where'
+      '  "containers"."cod_container" = :"OLD_cod_container"')
+    Left = 168
+    Top = 16
+    object IBDataSetcod_container: TIntegerField
+      FieldName = 'cod_container'
+      Origin = '"containers"."cod_container"'
+      Required = True
+    end
+    object IBDataSetden_container: TIBStringField
+      FieldName = 'den_container'
+      Origin = '"containers"."den_container"'
+      Size = 50
+    end
+    object IBDataSetcomprimento: TIBBCDField
+      FieldName = 'comprimento'
+      Origin = '"containers"."comprimento"'
+      DisplayFormat = '###0.0000'
+      Precision = 9
+      Size = 4
+    end
+    object IBDataSetlargura: TIBBCDField
+      FieldName = 'largura'
+      Origin = '"containers"."largura"'
+      DisplayFormat = '###0.0000'
+      Precision = 9
+      Size = 4
+    end
+    object IBDataSetaltura: TIBBCDField
+      FieldName = 'altura'
+      Origin = '"containers"."altura"'
+      DisplayFormat = '###0.0000'
+      Precision = 9
+      Size = 4
+    end
+    object IBDataSetarea_disp: TIBBCDField
+      FieldKind = fkInternalCalc
+      FieldName = 'area_disp'
+      Origin = '"containers"."area_disp"'
+      ProviderFlags = []
+      ReadOnly = True
+      DisplayFormat = '###0.00'
+      Precision = 9
+      Size = 4
+    end
+    object IBDataSetarea_util: TIBBCDField
+      FieldName = 'area_util'
+      Origin = '"containers"."area_util"'
+      DisplayFormat = '###0.00'
+      Precision = 9
+      Size = 4
+    end
+    object IBDataSetpeso_maximo: TIBBCDField
+      FieldName = 'peso_maximo'
+      Origin = '"containers"."peso_maximo"'
+      Precision = 9
+      Size = 4
+    end
+    object IBDataSettip_container: TIBStringField
+      FieldName = 'tip_container'
+      Origin = '"containers"."tip_container"'
+      Required = True
+      FixedChar = True
+      Size = 15
+    end
+  end
+  inherited dsIBDataSet: TDataSource
+    Left = 188
+    Top = 32
+  end
+  inherited QrAux: TIBQuery
+    Left = 215
+    Top = 16
+  end
+end
