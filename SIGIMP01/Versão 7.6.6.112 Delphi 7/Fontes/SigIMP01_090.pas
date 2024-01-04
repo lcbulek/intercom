@@ -1035,13 +1035,11 @@ procedure TfrmPagamentosFaturas.FormCreate(Sender: TObject);
 begin
   with Clientes do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
   with Fornecedores do
   begin
     ParamByName('cod_empresa').Value := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
 

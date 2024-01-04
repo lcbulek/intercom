@@ -1,9 +1,9 @@
 object frmProdList: TfrmProdList
-  Left = 383
-  Top = 200
+  Left = 6
+  Top = 0
   AutoScroll = False
   Caption = 'Production List'
-  ClientHeight = 682
+  ClientHeight = 614
   ClientWidth = 1350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET

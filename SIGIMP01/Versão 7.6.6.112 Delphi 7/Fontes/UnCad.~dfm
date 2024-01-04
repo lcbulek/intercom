@@ -1,6 +1,6 @@
 object fr_Cad: Tfr_Cad
-  Left = 613
-  Top = 297
+  Left = 614
+  Top = 298
   BorderStyle = bsToolWindow
   Caption = 'Cadastro'
   ClientHeight = 162

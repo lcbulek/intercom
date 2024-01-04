@@ -154,6 +154,7 @@ begin
     Close;
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
     ParamByName('cod_cliente').AsString := Clientecod_cliente.AsString;
+    ParamByName('login').Value := vgLogin;
     Open;
   end;
 end;

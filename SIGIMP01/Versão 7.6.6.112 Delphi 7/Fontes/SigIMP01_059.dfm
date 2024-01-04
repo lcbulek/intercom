@@ -1,6 +1,6 @@
 object frmProductionList: TfrmProductionList
-  Left = 754
-  Top = 265
+  Left = 755
+  Top = 232
   HelpType = htKeyword
   HelpKeyword = '059'
   BorderIcons = [biSystemMenu]
@@ -102,7 +102,7 @@ object frmProductionList: TfrmProductionList
       ParentColor = False
     end
     object ToolBar3: TToolBar
-      Left = 368
+      Left = 364
       Top = 2
       Width = 46
       Height = 40

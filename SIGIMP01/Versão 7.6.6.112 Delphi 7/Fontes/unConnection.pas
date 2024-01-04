@@ -261,7 +261,7 @@ var
   vgHost: TpHost='00';
   vgServer:string='';
   vFilPesquisa: array [0..3] of String;
-  vg_base_atual: Smallint;// 0 = Base atual e 1 = Base historico
+  vg_base_atual: Smallint;// 0 = Base atual 
   vgSerie : String ; { Número de Série Default para Notas Fiscais de Saída }
   { variaveis para o progress bar }
   Ani : TAnimationThread;

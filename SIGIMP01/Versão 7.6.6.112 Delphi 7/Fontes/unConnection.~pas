@@ -225,6 +225,7 @@ function LetraNcm(Ncm: String): String;
 
 function InserirCod(Nom_Tabela, Nom_Campo: String; Empresa: Boolean): Largeint;
 procedure SearchArquive(BasePath: String; List: TStringList; ExtFile: String = '.*');
+function UsuarioLoginDate(): String;
 procedure RecalcularPedidos(CodProduto: String);
 procedure RecalcularFaturas(CodProduto: String);
 procedure RecalcularProdList(CodProduto: String);
@@ -2140,6 +2141,27 @@ begin
   else if (trim(r) = '1') then Result := 'F/P'
   else if (trim(r) = '2') then Result := 'P'
   else Result := '';
+end;
+
+function UsuarioLoginDate() : String;
+begin
+  { Verificar se determinado programa está logado há menos de um dia }
+  with dmConnection, qryPesquisa do
+  begin
+    Close;
+    SQL.Text := 'select "dat_conexao" from "usuario_log"   ' +
+                ' where "cod_empresa" = :cod_empresa       ' +
+                '   and "nom_programa" = :nom_programa     ' +
+                '   and "login" = :login                   ';
+
+    ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+    ParamByName('login').AsString        := vgLogin;
+    ParamByName('nom_programa').AsString := vgCod_Programa;
+
+    Open;
+    Result := FormatDateTime('dd.mm.yy - hh:mm', FieldByName('dat_conexao').AsDateTime);
+    Close;
+  end;
 end;
 
 end.

@@ -1,6 +1,6 @@
 object fr_ManNF: Tfr_ManNF
-  Left = 389
-  Top = 207
+  Left = 0
+  Top = 2
   Width = 1366
   Height = 738
   HelpType = htKeyword
@@ -857,13 +857,13 @@ object fr_ManNF: Tfr_ManNF
         Left = 0
         Top = 0
         Width = 1350
-        Height = 158
+        Height = 160
         Align = alTop
         BevelInner = bvRaised
         TabOrder = 1
         object Label17: TLabel
           Left = 4
-          Top = 1
+          Top = 2
           Width = 49
           Height = 14
           Caption = 'Cliente'
@@ -871,14 +871,14 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label5: TLabel
           Left = 4
-          Top = 33
+          Top = 34
           Width = 70
           Height = 14
           Caption = 'Fornecedor'
         end
         object Label4: TLabel
           Left = 586
-          Top = 1
+          Top = 2
           Width = 91
           Height = 14
           Caption = 'N'#250'mero fatura'
@@ -886,7 +886,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label28: TLabel
           Left = 95
-          Top = 118
+          Top = 120
           Width = 77
           Height = 14
           Caption = 'Tot L'#237'quido'
@@ -903,7 +903,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label2: TLabel
           Left = 277
-          Top = 1
+          Top = 2
           Width = 49
           Height = 14
           Caption = 'Emiss'#227'o'
@@ -911,7 +911,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label35: TLabel
           Left = 792
-          Top = 1
+          Top = 2
           Width = 98
           Height = 14
           Caption = 'N'#250'mero do Lote'
@@ -919,7 +919,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label1: TLabel
           Left = 381
-          Top = 33
+          Top = 34
           Width = 70
           Height = 14
           Caption = 'Liquida'#231#227'o'
@@ -927,7 +927,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label29: TLabel
           Left = 4
-          Top = 118
+          Top = 120
           Width = 77
           Height = 14
           Caption = 'Total Bruto'
@@ -944,7 +944,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label30: TLabel
           Left = 277
-          Top = 33
+          Top = 34
           Width = 84
           Height = 14
           Caption = 'Prv Embarque'
@@ -952,7 +952,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label44: TLabel
           Left = 381
-          Top = 0
+          Top = 2
           Width = 56
           Height = 14
           Caption = 'Embarque'
@@ -960,7 +960,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label60: TLabel
           Left = 186
-          Top = 118
+          Top = 120
           Width = 91
           Height = 14
           Caption = 'Tot Bruto Esp'
@@ -977,7 +977,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label71: TLabel
           Left = 277
-          Top = 118
+          Top = 120
           Width = 77
           Height = 14
           Caption = 'Tot L'#237'q Esp'
@@ -994,7 +994,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label54: TLabel
           Left = 202
-          Top = 65
+          Top = 66
           Width = 35
           Height = 14
           Caption = 'Banco'
@@ -1002,7 +1002,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label10: TLabel
           Left = 371
-          Top = 117
+          Top = 119
           Width = 91
           Height = 14
           Caption = 'Pes bruto(Kg)'
@@ -1010,7 +1010,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label9: TLabel
           Left = 462
-          Top = 117
+          Top = 119
           Width = 77
           Height = 14
           Caption = 'Pes L'#237'q(Kg)'
@@ -1018,7 +1018,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label15: TLabel
           Left = 553
-          Top = 117
+          Top = 119
           Width = 70
           Height = 14
           Caption = 'Volume(m'#179')'
@@ -1026,7 +1026,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label22: TLabel
           Left = 624
-          Top = 117
+          Top = 119
           Width = 77
           Height = 14
           Caption = 'Caixas Tot.'
@@ -1034,7 +1034,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label94: TLabel
           Left = 709
-          Top = 118
+          Top = 120
           Width = 49
           Height = 14
           Caption = 'Cartons'
@@ -1042,7 +1042,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label97: TLabel
           Left = 809
-          Top = 118
+          Top = 120
           Width = 49
           Height = 14
           Caption = 'Pallets'
@@ -1050,21 +1050,21 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label3: TLabel
           Left = 555
-          Top = 65
+          Top = 66
           Width = 168
           Height = 14
           Caption = 'Informa'#231#245'es p/documentos'
         end
         object Label33: TLabel
           Left = 894
-          Top = 33
+          Top = 34
           Width = 70
           Height = 14
           Caption = 'Fabricante'
         end
         object Label84: TLabel
           Left = 483
-          Top = 33
+          Top = 34
           Width = 84
           Height = 14
           Caption = 'Env.Inv.Pack'
@@ -1072,7 +1072,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label85: TLabel
           Left = 1118
-          Top = 66
+          Top = 67
           Width = 70
           Height = 14
           Caption = 'Dat. Fotos'
@@ -1080,7 +1080,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object lbVerLi: TLabel
           Left = 4
-          Top = 65
+          Top = 66
           Width = 49
           Height = 14
           Caption = 'Venc LI'
@@ -1088,7 +1088,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label63: TLabel
           Left = 103
-          Top = 67
+          Top = 68
           Width = 84
           Height = 14
           Caption = 'Ver Trat Adm'
@@ -1096,7 +1096,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label51: TLabel
           Left = 483
-          Top = 0
+          Top = 2
           Width = 70
           Height = 14
           Caption = 'ETA Brasil'
@@ -1104,7 +1104,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label64: TLabel
           Left = 587
-          Top = 33
+          Top = 34
           Width = 84
           Height = 14
           Caption = 'Rec.Inv.Pack'
@@ -1112,7 +1112,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label65: TLabel
           Left = 825
-          Top = 66
+          Top = 67
           Width = 84
           Height = 14
           Caption = 'Dat. Inst BL'
@@ -1120,7 +1120,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label66: TLabel
           Left = 1021
-          Top = 66
+          Top = 67
           Width = 56
           Height = 14
           Caption = 'Mod. Doc'
@@ -1128,7 +1128,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label67: TLabel
           Left = 689
-          Top = 33
+          Top = 34
           Width = 56
           Height = 14
           Caption = 'Env. B/L'
@@ -1136,7 +1136,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label68: TLabel
           Left = 791
-          Top = 33
+          Top = 34
           Width = 56
           Height = 14
           Caption = 'Rec. B/L'
@@ -1144,7 +1144,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label69: TLabel
           Left = 923
-          Top = 66
+          Top = 67
           Width = 84
           Height = 14
           Caption = 'Dat. Apro BL'
@@ -1152,7 +1152,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label70: TLabel
           Left = 777
-          Top = 132
+          Top = 134
           Width = 10
           Height = 18
           Caption = '+'
@@ -1165,7 +1165,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label95: TLabel
           Left = 728
-          Top = 66
+          Top = 67
           Width = 56
           Height = 14
           Caption = 'I/PL Des'
@@ -1173,7 +1173,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object lpkFornecedor: TDBLookupComboBox
           Left = 4
-          Top = 47
+          Top = 48
           Width = 269
           Height = 22
           DataField = 'lkpFornecedor'
@@ -1182,7 +1182,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbeNumFatura: TDBEdit
           Left = 586
-          Top = 13
+          Top = 14
           Width = 193
           Height = 22
           CharCase = ecUpperCase
@@ -1192,7 +1192,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object edtvlr_liquido: TDBEdit
           Left = 95
-          Top = 131
+          Top = 133
           Width = 90
           Height = 22
           TabStop = False
@@ -1204,7 +1204,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbeNumRefVolume: TDBEdit
           Left = 792
-          Top = 13
+          Top = 14
           Width = 193
           Height = 22
           Hint = 'N'#250'mero do Lote = N'#250'mero de Refer'#234'ncia de Volume'
@@ -1217,7 +1217,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit2: TDBEdit
           Left = 4
-          Top = 131
+          Top = 133
           Width = 90
           Height = 22
           TabStop = False
@@ -1229,7 +1229,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit16: TDBEdit
           Left = 186
-          Top = 131
+          Top = 133
           Width = 90
           Height = 22
           TabStop = False
@@ -1241,7 +1241,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit17: TDBEdit
           Left = 277
-          Top = 131
+          Top = 133
           Width = 90
           Height = 22
           TabStop = False
@@ -1253,7 +1253,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object rgPallets: TDBRadioGroup
           Left = 997
-          Top = 1
+          Top = 2
           Width = 123
           Height = 32
           Caption = 'Pallets'
@@ -1270,7 +1270,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBLookupCombo3: TJvDBLookupCombo
           Left = 202
-          Top = 79
+          Top = 80
           Width = 351
           Height = 21
           DataField = 'cod_banco'
@@ -1283,7 +1283,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvStaticText3: TJvStaticText
           Left = 4
-          Top = 101
+          Top = 103
           Width = 362
           Height = 18
           Alignment = taCenter
@@ -1305,7 +1305,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvStaticText1: TJvStaticText
           Left = 369
-          Top = 101
+          Top = 103
           Width = 334
           Height = 18
           Alignment = taCenter
@@ -1327,7 +1327,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object edtpes_bruto: TDBEdit
           Left = 371
-          Top = 132
+          Top = 134
           Width = 90
           Height = 22
           TabStop = False
@@ -1339,7 +1339,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object edtpes_liquido: TDBEdit
           Left = 462
-          Top = 132
+          Top = 134
           Width = 90
           Height = 22
           TabStop = False
@@ -1351,7 +1351,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit1: TDBEdit
           Left = 553
-          Top = 132
+          Top = 134
           Width = 70
           Height = 22
           TabStop = False
@@ -1363,7 +1363,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit6: TDBEdit
           Left = 624
-          Top = 132
+          Top = 134
           Width = 78
           Height = 22
           TabStop = False
@@ -1375,7 +1375,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvStaticText2: TJvStaticText
           Left = 707
-          Top = 101
+          Top = 103
           Width = 153
           Height = 18
           Alignment = taCenter
@@ -1397,7 +1397,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit46: TDBEdit
           Left = 709
-          Top = 132
+          Top = 134
           Width = 51
           Height = 22
           TabStop = False
@@ -1409,7 +1409,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit49: TDBEdit
           Left = 809
-          Top = 132
+          Top = 134
           Width = 50
           Height = 22
           TabStop = False
@@ -1421,7 +1421,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit50: TDBEdit
           Left = 4
-          Top = 13
+          Top = 14
           Width = 269
           Height = 22
           CharCase = ecUpperCase
@@ -1432,7 +1432,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBRadioGroup2: TDBRadioGroup
           Left = 1125
-          Top = 1
+          Top = 2
           Width = 127
           Height = 32
           Caption = 'Pre'#231'os Especiais'
@@ -1450,7 +1450,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dtpDatEntrega: TJvDBDatePickerEdit
           Left = 381
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1465,7 +1465,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit1: TJvDBDatePickerEdit
           Left = 277
-          Top = 46
+          Top = 47
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1480,7 +1480,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit5: TJvDBDatePickerEdit
           Left = 277
-          Top = 13
+          Top = 14
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1495,7 +1495,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit2: TJvDBDatePickerEdit
           Left = 381
-          Top = 13
+          Top = 14
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1510,7 +1510,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBLookupCombo4: TJvDBLookupCombo
           Left = 555
-          Top = 79
+          Top = 80
           Width = 170
           Height = 21
           Hint = 
@@ -1527,7 +1527,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbcFabricante: TDBLookupComboBox
           Left = 894
-          Top = 47
+          Top = 48
           Width = 251
           Height = 22
           DataField = 'lkpFabricante'
@@ -1537,7 +1537,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit3: TJvDBDatePickerEdit
           Left = 483
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1552,7 +1552,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit4: TJvDBDatePickerEdit
           Left = 586
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1567,7 +1567,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbies_li: TDBRadioGroup
           Left = 1149
-          Top = 37
+          Top = 38
           Width = 123
           Height = 32
           Caption = 'Lic.Importa'#231#227'o'
@@ -1585,7 +1585,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbVerLi: TJvDBDatePickerEdit
           Left = 4
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1600,7 +1600,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit8: TJvDBDatePickerEdit
           Left = 103
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1615,7 +1615,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit7: TJvDBDatePickerEdit
           Left = 483
-          Top = 13
+          Top = 14
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1630,7 +1630,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit9: TJvDBDatePickerEdit
           Left = 1118
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1645,7 +1645,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit10: TJvDBDatePickerEdit
           Left = 825
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1660,7 +1660,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit11: TJvDBDatePickerEdit
           Left = 1021
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1675,7 +1675,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit12: TJvDBDatePickerEdit
           Left = 689
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1690,7 +1690,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit13: TJvDBDatePickerEdit
           Left = 791
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1705,7 +1705,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit14: TJvDBDatePickerEdit
           Left = 923
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1720,7 +1720,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit15: TJvDBDatePickerEdit
           Left = 728
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1736,9 +1736,9 @@ object fr_ManNF: Tfr_ManNF
       end
       object GroupBox1: TGroupBox
         Left = 0
-        Top = 431
+        Top = 433
         Width = 1350
-        Height = 166
+        Height = 164
         Align = alClient
         Caption = 'Coment'#225'rios Gerais(somente para consulta nesta tela)'
         TabOrder = 2
@@ -1746,7 +1746,7 @@ object fr_ManNF: Tfr_ManNF
           Left = 2
           Top = 16
           Width = 1346
-          Height = 148
+          Height = 146
           Align = alClient
           BevelInner = bvNone
           BevelOuter = bvNone
@@ -1758,7 +1758,7 @@ object fr_ManNF: Tfr_ManNF
       end
       object Panel9: TPanel
         Left = 0
-        Top = 158
+        Top = 160
         Width = 1350
         Height = 273
         Align = alTop
@@ -6698,11 +6698,6 @@ object fr_ManNF: Tfr_ManNF
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorcod_fornecedor: TSmallintField

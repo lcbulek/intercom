@@ -1060,7 +1060,7 @@ var
 
 implementation
 
-uses unConnection, SigIMP01_003, UnMenuCompl, SigIMP01_034, SigIMP01_045, UnMenu, SigIMP01_008,
+uses unConnection, SigIMP01_003, UnMenuCompl, SigIMP01_034, SigIMP01_045, UnMenu, 
   SigIMP01_023, SigIMP01_074;
 
 {$R *.dfm}
@@ -2233,17 +2233,13 @@ Var
   Linha1, Linha2, LinhaAux, cont, Cont_Caract : Integer;
   Tot : String;
 
-procedure ConditionPage(Pagina, Tipo: String);  {Tipo = C -> Condition Page completa P -> Parte da condition + Remarks para assinaturas }
+procedure ConditionPage(Tipo: String);
 var
-  l : Integer;
   s : String;
-  r : Double;
   ind : integer;
 
 begin
    { PÁGINA DAS CONDIÇÕES - CONDITIONS PAGE }
-   if (Pagina = 'C') or (Pagina = 'P') then  // Gerar na página de Conditions e Confirmation
-   begin
    Linha := 1;
 
    { Título da página, ORDER NUMBER quando for orçamento, ou PROFORMA INVOICE quando for pedido }
@@ -2872,10 +2868,7 @@ begin
     Borders[xlInsideVertical].LineStyle := xlNone;
     Borders[xlInsideHorizontal].LineStyle := xlNone;
    end;
-   end; { Pagina = C or P }
 
-   if (Pagina = 'C') then // Gerar apenas para página de Condition
-   begin
    Inc(Linha);
    Inc(Linha);
    LinhaAux := Linha;
@@ -3243,10 +3236,7 @@ begin
     Borders[xlInsideHorizontal].LineStyle := xlNone;
     VerticalAlignment := xlTop;
    end;
-   end; { Pagina = 'C' }
 
-   if (Pagina = 'C') or (Pagina = 'P') then
-   begin
    { início - CONTAINERS }
    Inc(Linha);
    LinhaAux := Linha;
@@ -3272,30 +3262,30 @@ begin
      end;
    end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    if (IdiomaExporter= 'I') then
-       FormulaR1C1 := 'QUANTITY AND TYPE OF CONTAINER(S): ' + s
-    else if (IdiomaExporter= 'P') then
-       FormulaR1C1 := 'QUANTIDADE E TIPO DE CONTAINER(S): ' + s
-    else if (IdiomaExporter= 'E') then
-       FormulaR1C1 := 'CANTIDAD Y TIPO DE CONTAINER(S): ' + s;
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        FormulaR1C1 := 'QUANTITY AND TYPE OF CONTAINER(S): ' + s
+     else if (IdiomaExporter= 'P') then
+        FormulaR1C1 := 'QUANTIDADE E TIPO DE CONTAINER(S): ' + s
+     else if (IdiomaExporter= 'E') then
+        FormulaR1C1 := 'CANTIDAD Y TIPO DE CONTAINER(S): ' + s;
 
-    Characters[1,35].Font.Bold := True;
-    Characters[36,20].Font.Bold := False;
-    Font.Name := 'Arial';
-    Font.Size := 10;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
+     Characters[1,35].Font.Bold := True;
+     Characters[36,20].Font.Bold := False;
+     Font.Name := 'Arial';
+     Font.Size := 10;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   {fim }
 
-  Inc(Linha);
+   Inc(Linha);
 
    { início }
    with ExcelWorksheet.Range['A'+IntToStr(Linha),'A'+IntToStr(Linha)] do
@@ -3314,18 +3304,17 @@ begin
      Font.Size := 9;
    end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
-
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    { início }
    with ExcelWorksheet.Range['D'+IntToStr(Linha),'D'+IntToStr(Linha)] do
@@ -3344,17 +3333,17 @@ begin
      Font.Name := 'Arial';
    end;
 
-  with ExcelWorkSheet.Range['D'+IntToStr(Linha),'G'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
+   with ExcelWorkSheet.Range['D'+IntToStr(Linha),'G'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    { início }
    with ExcelWorksheet.Range['H'+IntToStr(Linha),'H'+IntToStr(Linha)] do
@@ -3373,17 +3362,17 @@ begin
      Font.Name := 'Arial';
    end;
 
-  with ExcelWorkSheet.Range['H'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
+   with ExcelWorkSheet.Range['H'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    Linha := Linha + 1;
 
@@ -3404,17 +3393,17 @@ begin
      Font.Name := 'Arial';
    end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'E'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'E'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    { início }
    with ExcelWorksheet.Range['F'+IntToStr(Linha),'F'+IntToStr(Linha)] do
@@ -3433,17 +3422,17 @@ begin
      Font.Name := 'Arial';
    end;
 
-  with ExcelWorkSheet.Range['F'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;                                              
-  end;
-  { fim }
+   with ExcelWorkSheet.Range['F'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    Linha := Linha + 1;
 
@@ -3472,7 +3461,6 @@ begin
 
    Linha := Linha + 1;
 
-
    { início }
    if (IdiomaExporter= 'I') then
    begin
@@ -3493,7 +3481,6 @@ begin
      else
         s := 'FECHA ESTIMADA PARA LA ENTREGA: ' + FormatDateTime('DD/MM/YYYY', qryPedidodat_entrega.AsDateTime)
    end;
-
 
    ExcelWorkSheet.Range['A'+IntToStr(Linha),'A'+IntToStr(Linha)].FormulaR1C1 := s;
    with ExcelWorksheet.Range['A'+IntToStr(Linha),'A'+IntToStr(Linha)].Characters[1,29].Font do
@@ -3521,20 +3508,19 @@ begin
      Shadow := False;
      Underline := xlUnderlineStyleNone;
      ColorIndex := xlAutomatic;
-   end;      
+   end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
-
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    Linha := Linha + 1;
 
@@ -3592,11 +3578,7 @@ begin
     Borders[xlInsideHorizontal].LineStyle := xlContinuous;
     VerticalAlignment := xlTop;
    end;
-   end; { Pagina = 'C' or Pagina = 'P' }
 
-
-   if (Pagina = 'C') then
-   begin
    { início }
    Linha := Linha + 1;
    Linha1 := Linha;
@@ -4149,193 +4131,10 @@ begin
      BlackAndWhite := False;
      Zoom := 95;
     end;
-   end; { Pagina = 'C' }
-
-   if (Pagina = 'P') then // Gerar apenas para Página de Confirmation
-   begin
-      Linha := Linha + 2;
-      LinhaAux := Linha;
-
-      { Remarks }
-      with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := 'REMARKS:';
-        Font.Name := 'Arial';
-        Font.Bold := True;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlContinuous;
-        HorizontalAlignment := xlLeft;                 
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 15;
-      end;
-
-      Linha := Linha + 1;
-
-      { Linhas de Memo1 para Proforma Invoice }
-      for mi := 0 to ChinesTxt.Memo1.Lines.Count - 1 do
-      begin
-         with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-         begin
-          MergeCells := True;
-          Value2 := ChinesTxt.Memo1.Lines[mi];
-          Font.Bold := False;
-          Font.Name := 'Arial';
-          Font.Size := 8;
-          Interior.ColorIndex := 0;
-          HorizontalAlignment := xlLeft;
-          VerticalAlignment := xlTop;
-          WrapText := True;
-          ShrinkToFit := False;                                      
-          Borders.LineStyle := xlContinuous;
-          Rows.RowHeight := 12;
-         end;
-         Inc(Linha);                                                  
-      end;
-
-
-      Linha := Linha + 3;
-      with ExcelWorkSheet.Range['A'+IntToStr(Linha),'E'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := 'Confirmed by Buyer (Signature and stamp)';
-        Font.Name := 'Arial';
-        Font.Bold := False;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlNone;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 12;
-      end;
-      with ExcelWorkSheet.Range['F'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := 'Confirmed by Seller (Signature and stamp)';
-        Font.Name := 'Arial';
-        Font.Bold := False;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlNone;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 12;
-      end;
-
-      Inc(Linha);
-
-      with ExcelWorkSheet.Range['A'+IntToStr(Linha),'E'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := ' Confirmado por el Comprador(Firma y sello)';
-        Font.Name := 'Arial';
-        Font.Bold := False;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlNone;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 12;
-      end;
-      with ExcelWorkSheet.Range['F'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := ' Confirmado por el vendedor (Firma y sello))';
-        Font.Name := 'Arial';
-        Font.Bold := False;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlNone;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 12;
-      end;
-
-      Linha := Linha + 1;
-
-      with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-      begin
-       Borders[xlDiagonalDown].LineStyle := xlNone;
-       Borders[xlDiagonalUp].LineStyle := xlNone;
-       with Borders[xlEdgeLeft] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeTop] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeBottom] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeRight] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       Borders[xlInsideVertical].LineStyle := xlNone;
-       Borders[xlInsideHorizontal].LineStyle := xlNone;
-       VerticalAlignment := xlTop;
-      end;
-
-      Linha := Linha + 1;
-      { ajustar propriedades para impressão da página de condições }
-      ExcelWorksheet.PageSetup.PrintArea := '$A$1:$J$'+IntToStr(Linha);
-      with ExcelWorksheet.PageSetup do
-      begin
-        PrintTitleRows := '$1:$2';
-        PrintTitleColumns := '';
-        LeftHeader := '';
-        CenterHeader := '';
-        RightHeader := '';
-        LeftFooter := '';
-        LeftMargin := ExcelWorksheet.Application.InchesToPoints(0.78740157480315, GetUserDefaultLCID);
-        RightMargin := 0;
-        TopMargin := ExcelWorksheet.Application.InchesToPoints(0.590551181102362, GetUserDefaultLCID);
-        BottomMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
-        HeaderMargin := 0;
-        FooterMargin := 0;
-        PrintHeadings := False;
-        PrintGridlines := False;
-        PrintComments := xlPrintNoComments;
-        CenterHorizontally := False;
-        CenterVertically := False;
-        Orientation := xlPortrait;
-        Draft := False;
-        PaperSize := xlPaperA4;
-        FirstPageNumber := xlAutomatic;
-        Order := xlDownThenOver;
-        BlackAndWhite := False;
-        Zoom := 95;
-       end;
-
-   end;
-
   { FIM DA PÁGINA DAS CONDIÇÕES - CONDITIONS PAGE }
 end;
 
 begin
-  Application.CreateForm(TChinesTxt, ChinesTxt);
-
   { Obrigatório o número do pedido para geração dos documentos }
   if (qryPedidoies_tip_pedido.AsString = 'O') and
      (trim(pedido_complementonum_pedido_cli.AsString) = '') then
@@ -4435,14 +4234,14 @@ begin
 
    { Atenção:                                                                      }
    { Processar primeiro a página de específicações e depois a página de condições  }
-   { a fim de obter passar os totais das específicações para a página de condições }
+   { a fim de obter e passar os totais das específicações para a página de condições }
 
    { Verificar se Pedido tem produtos duplicados }
    with ProdutosDuplicados do
    begin
     Close;
     ParamByName('cod_empresa').AsInteger	:= qryPedidocod_empresa.AsInteger;
-    ParamByName('num_pedido').Value  	   := qryPedidonum_pedido.AsLargeInt;
+    ParamByName('num_pedido').Value  	    := qryPedidonum_pedido.AsLargeInt;
     Open;
    end;
 
@@ -5081,34 +4880,21 @@ begin
    ExcelWorksheet.Name := 'Conditions';
 
    { Página das Condições para Pedidos e Confirmações }
-   ConditionPage('C', Tipo);
+   ConditionPage(Tipo);
 
-   (* Removido em 01.11.2021 - não gerar mais Confirmation page
-   { Página CONFIRMATION quando o pedido for confirmado }
-   if (qryPedidoies_tip_pedido.AsString = 'P') then
-   begin
-     { Criar a página de CONFIRMATION antes da página de CONDITIONS }
-     WkBk.Worksheets.Add(WkBk.Worksheets['Conditions'], EmptyParam, 1, EmptyParam, lcid);
-     ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
-     ExcelWorksheet.Activate(lcid);
-     ExcelWorksheet.Name := 'Confirmation';
-     ConditionPage('P', Tipo);
-   end;
-   *)
+   { Salvar a planilha }
+   //ExcelApplication.ActiveWorkbook.SaveAs(FileName,xlNormal,'','',false,false,xlNochange,false, xlUserResolution,False,EmptyParam,0);
+   ExcelApplication.ActiveWorkbook.Save(lcid);
 
-  { Salvar a planilha }
-  //ExcelApplication.ActiveWorkbook.SaveAs(FileName,xlNormal,'','',false,false,xlNochange,false, xlUserResolution,False,EmptyParam,0);
-  ExcelApplication.ActiveWorkbook.Save(lcid);
+   Exportador.Close;
+   Importador.Close;
 
-  Exportador.Close;
-  Importador.Close;
+   { finalizar progress bar }
+   btnOrderProforma.Enabled := True;
+   Ani.Terminate;
 
-  { finalizar progress bar }
-  btnOrderProforma.Enabled := True;
-  Ani.Terminate;
-
-  { Fechar planilha e encerrar excel }
-  FecharExcel2;
+   { Fechar planilha e encerrar excel }
+   FecharExcel2;
 end;
 
 Procedure Tfr_ManPedido.FecharExcel2;

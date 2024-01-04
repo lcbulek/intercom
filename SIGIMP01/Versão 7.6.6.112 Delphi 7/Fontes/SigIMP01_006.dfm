@@ -1,6 +1,6 @@
 object fr_ManPedido: Tfr_ManPedido
-  Left = 21
-  Top = 37
+  Left = 8
+  Top = 25
   HelpType = htKeyword
   HelpKeyword = '006'
   AutoScroll = False

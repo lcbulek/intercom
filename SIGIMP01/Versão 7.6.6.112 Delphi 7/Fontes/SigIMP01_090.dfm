@@ -256,18 +256,9 @@ object frmPagamentosFaturas: TfrmPagamentosFaturas
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente_reduz"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 40
     Top = 8
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientescod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -292,9 +283,6 @@ object frmPagamentosFaturas: TfrmPagamentosFaturas
       '  where'
       '        b."cod_empresa" = :cod_empresa'
       '    and b."cod_fornecedor" = a."cod_fornecedor"'
-      '    and b."cod_cliente" in (select "cod_cliente"'
-      '                              from "usuario_cliente"'
-      '                             where "login" = :login)'
       'group by 1,2'
       'order by 1')
     Left = 40
@@ -303,11 +291,6 @@ object frmPagamentosFaturas: TfrmPagamentosFaturas
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorescod_fornecedor: TIntegerField

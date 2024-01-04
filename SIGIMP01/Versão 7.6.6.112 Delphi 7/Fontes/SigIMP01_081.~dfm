@@ -1,6 +1,6 @@
 object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
   Left = 705
-  Top = 332
+  Top = 205
   HelpType = htKeyword
   HelpKeyword = '071'
   BorderIcons = [biSystemMenu]

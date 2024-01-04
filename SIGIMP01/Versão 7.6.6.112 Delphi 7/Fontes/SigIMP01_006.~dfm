@@ -1,6 +1,6 @@
 object fr_ManPedido: Tfr_ManPedido
-  Left = -3
-  Top = 24
+  Left = 8
+  Top = 25
   HelpType = htKeyword
   HelpKeyword = '006'
   AutoScroll = False
@@ -1759,7 +1759,7 @@ object fr_ManPedido: Tfr_ManPedido
           end
         end
         object ToolBar1: TToolBar
-          Left = 673
+          Left = 660
           Top = 0
           Width = 682
           Height = 42
@@ -4960,9 +4960,6 @@ object fr_ManPedido: Tfr_ManPedido
       '        b."cod_empresa" = :cod_empresa'
       '    and b."ies_situacao" = '#39'A'#39
       '    and b."cod_fornecedor" = a."cod_fornecedor"'
-      '    and b."cod_cliente" in (select "cod_cliente"'
-      '                              from "usuario_cliente"'
-      '                             where "login" = :login)'
       'group by 1,2,3,4'
       'order by 2')
     Left = 530
@@ -4971,11 +4968,6 @@ object fr_ManPedido: Tfr_ManPedido
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorcod_fornecedor: TSmallintField

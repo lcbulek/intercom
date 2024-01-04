@@ -1,6 +1,6 @@
 object fr_MenuPrincipal: Tfr_MenuPrincipal
-  Left = 714
-  Top = 171
+  Left = 713
+  Top = 149
   AutoScroll = False
   Caption = 'fr_MenuPrincipal'
   ClientHeight = 446
@@ -88,7 +88,6 @@ object fr_MenuPrincipal: Tfr_MenuPrincipal
         Caption = '-'
       end
       object Ajuda1: TMenuItem
-        Action = dmConnection.acHelp
       end
     end
   end

@@ -2,12 +2,11 @@ object dmConnection: TdmConnection
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Left = 758
-  Top = 204
+  Left = 760
+  Top = 178
   Height = 463
   Width = 556
   object dbSig: TIBDatabase
-    Connected = True
     DatabaseName = 'C:\SIG\Base de Dados\DBSIG.FDB'
     Params.Strings = (
       'password=57071273'

@@ -399,9 +399,6 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
       '  and b."cod_empresa" = a."cod_empresa"'
       '  and b."num_pedido" = a."num_pedido"'
       '  and c."cod_fornecedor" = b."cod_fornecedor"'
-      '  and a."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
       'order by a."dat_emissao" descending')
     Left = 120
     Top = 8
@@ -424,11 +421,6 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
       item
         DataType = ftUnknown
         Name = 'ano'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Pedidoscod_empresa: TSmallintField

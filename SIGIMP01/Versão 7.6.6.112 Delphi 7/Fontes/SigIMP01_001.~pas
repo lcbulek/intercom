@@ -98,6 +98,8 @@ type
     PedidosregistradosnoSistemaResumo1: TMenuItem;
     actFaturasResumo: TAction;
     FaturasRegistradosnoSistemaResumo1: TMenuItem;
+    actCadUsuarios: TAction;
+    actUsuarios1: TMenuItem;
     procedure act_fr_CadComercialExecute(Sender: TObject);
     procedure act_ManPedido_NFExecute(Sender: TObject);
     procedure actContainersExecute(Sender: TObject);
@@ -134,7 +136,6 @@ type
     procedure actGrupoExecute(Sender: TObject);
     procedure actProdutosEmbExecute(Sender: TObject);
     procedure actProdutoEmbFatExecute(Sender: TObject);
-    procedure actAdcDescPendentesExecute(Sender: TObject);
     procedure actPagamentoPedidosExecute(Sender: TObject);
     procedure actNcmExecute(Sender: TObject);
     procedure actComissoesExecute(Sender: TObject);
@@ -153,6 +154,7 @@ type
     procedure actPedidosResumoExecute(Sender: TObject);
     procedure actProdutosEmbFatExecute(Sender: TObject);
     procedure actFaturasResumoExecute(Sender: TObject);
+    procedure actCadUsuariosExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -170,8 +172,8 @@ uses unConnection, SigIMP01_000, SigIMP01_002, SigIMP01_003, SigIMP01_004, SigIM
      SigCAD01_021, SigCAD01_023, SigCAD01_025, SigCAD01_026, SigCAD01_027, SigCAD01_029, SigCAD01_031,
      SigCAD01_033, SigCAD01_043, SigCAD01_046, SigCAD01_050, SigCAD01_075,
      SigCAD01_080, SigCAD01_076, SigIMP01_060, SigIMP01_062, SigIMP01_065, SigIMP01_066, SigIMP01_067,
-     SigIMP01_068, SigIMP01_071, SigIMP01_072, SigIMP01_073, SigIMP01_075, SigIMP01_076, SigIMP01_078, SigIMP01_081,
-     SigCAD01_087, SigIMP01_089, SigIMP01_090, SigIMP01_092, SigIMP01_093,
+     SigIMP01_068, SigIMP01_071, SigIMP01_072, SigIMP01_075, SigIMP01_076, SigIMP01_078, SigIMP01_081,
+     SigCAD01_087, SigIMP01_089, SigIMP01_090, SigIMP01_092, SigIMP01_093, SigADM02_006,
      UnPesquisaProduto;
 
 {$R *.dfm}
@@ -404,12 +406,6 @@ begin
   CriarForm(Tfr_FaturasRegistradas, fr_FaturasRegistradas);
 end;
 
-procedure Tfr_MenuPrincipalCOM.actAdcDescPendentesExecute(Sender: TObject);
-begin
-  inherited;
-  CriarForm(Tfr_CadAdicDescPendentes, fr_CadAdicDescPendentes);
-end;
-
 procedure Tfr_MenuPrincipalCOM.actPagamentoPedidosExecute(Sender: TObject);
 begin
   inherited;
@@ -532,6 +528,12 @@ procedure Tfr_MenuPrincipalCOM.actFaturasResumoExecute(Sender: TObject);
 begin
   inherited;
   CriarForm(Tfr_FaturasRegistradasResumo, fr_FaturasRegistradasResumo);
+end;
+
+procedure Tfr_MenuPrincipalCOM.actCadUsuariosExecute(Sender: TObject);
+begin
+  inherited;
+  CriarForm(Tfr_CadUsuario, fr_CadUsuario);
 end;
 
 end.

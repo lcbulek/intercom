@@ -261,10 +261,6 @@ object frmRelComissoes: TfrmRelComissoes
       '  and b."num_nota_fiscal" = a."num_nota_fiscal"'
       '  and b."serie" = a."serie"'
       '  and c."cod_cliente" = a."cod_cliente"'
-      '  and c."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
-      ''
       'group by 1'
       'order by 1')
     Left = 80
@@ -273,11 +269,6 @@ object frmRelComissoes: TfrmRelComissoes
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Clientescod_cliente: TIBStringField
@@ -315,12 +306,7 @@ object frmRelComissoes: TfrmRelComissoes
       
         '  and b."serie" = a."serie"                                     ' +
         '      '
-      
-        '  and c."cod_fornecedor" = b."cod_fornecedor"                   ' +
-        '      '
-      '  and a."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
+      '  and c."cod_fornecedor" = b."cod_fornecedor" '
       
         'group by 1,2                                                    ' +
         '      '
@@ -333,11 +319,6 @@ object frmRelComissoes: TfrmRelComissoes
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorescod_fornecedor: TSmallintField

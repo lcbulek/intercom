@@ -20,7 +20,6 @@ uses
   UnLayoutRelatorio in 'UnLayoutRelatorio.pas' {rl_LayoutRelatorio},
   unGrade_Selecao in 'unGrade_Selecao.pas' {fr_FmGrade_Selecao: TFrame},
   unType in 'unType.pas',
-  UnAlteraSenha in 'UnAlteraSenha.pas' {fr_AlterarSenha},
   UnMenu in 'UnMenu.pas' {fr_Menu},
   unCadGrade in 'unCadGrade.pas' {fr_CadGrade},
   unPesquisaCEP in 'unPesquisaCEP.pas' {FPesquisaCEP},
@@ -81,7 +80,6 @@ uses
 {$R *.res}
 
 begin
-   {sig sig2006 2 0 0 0 0}
   Application.Initialize;
   Application.Name	:= 'SigIMP01';
   Application.Title	:= 'Sistema de Comercio Exterior';

@@ -1,6 +1,6 @@
 object fr_PedidosRegistrados: Tfr_PedidosRegistrados
   Left = 638
-  Top = 407
+  Top = 409
   HelpType = htKeyword
   HelpKeyword = '071'
   BorderIcons = [biSystemMenu]

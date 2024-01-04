@@ -47,7 +47,6 @@ uses
   SigIMP01_005 in 'SigIMP01_005.pas' {fr_CadLista_Preco},
   SigIMP01_006 in 'SigIMP01_006.pas' {fr_ManPedido},
   SigIMP01_007 in 'SigIMP01_007.pas' {fr_ManNF},
-  SigIMP01_008 in 'SigIMP01_008.pas' {ChinesTxt},
   SigIMP01_009 in 'SigIMP01_009.pas' {dmNF: TDataModule},
   SigIMP01_011 in 'SigIMP01_011.pas' {fr_HistoricoPrecos},
   SigIMP01_017 in 'SigIMP01_017.pas' {dmNF_liquidar: TDataModule},
@@ -80,7 +79,6 @@ uses
 {$R *.res}
 
 begin
-   {sig sig2006 2 0 0 0 0}
   Application.Initialize;
   Application.Name	:= 'SigIMP01';
   Application.Title	:= 'Sistema de Comercio Exterior';

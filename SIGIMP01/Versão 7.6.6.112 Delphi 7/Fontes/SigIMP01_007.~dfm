@@ -1,6 +1,6 @@
 object fr_ManNF: Tfr_ManNF
-  Left = 389
-  Top = 207
+  Left = 370
+  Top = 188
   Width = 1366
   Height = 738
   HelpType = htKeyword
@@ -6690,9 +6690,6 @@ object fr_ManNF: Tfr_ManNF
       '        b."cod_empresa" = :cod_empresa'
       '    and b."ies_situacao" = '#39'A'#39
       '    and b."cod_fornecedor" = a."cod_fornecedor"'
-      '    and b."cod_cliente" in (select "cod_cliente"'
-      '                              from "usuario_cliente"'
-      '                             where "login" = :login)'
       'group by 1,2,3,4'
       'order by 2')
     Left = 490
@@ -6701,11 +6698,6 @@ object fr_ManNF: Tfr_ManNF
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorcod_fornecedor: TSmallintField

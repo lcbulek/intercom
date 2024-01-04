@@ -264,9 +264,6 @@ object fr_FaturasRegistradasResumo: Tfr_FaturasRegistradasResumo
       '  and b."cod_empresa" = a."cod_empresa"'
       '  and b."num_pedido"  = a."num_pedido"'
       '  and c."cod_cliente" = a."cod_cliente"'
-      '  and c."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
       'group by 1'
       'order by 1')
     Left = 40
@@ -275,11 +272,6 @@ object fr_FaturasRegistradasResumo: Tfr_FaturasRegistradasResumo
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Clientescod_cliente: TIBStringField
@@ -337,6 +329,7 @@ object fr_FaturasRegistradasResumo: Tfr_FaturasRegistradasResumo
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     OnCalcFields = FaturasCalcFields
+    Active = True
     BufferChunks = 1000
     CachedUpdates = False
     SQL.Strings = (
@@ -410,16 +403,7 @@ object fr_FaturasRegistradasResumo: Tfr_FaturasRegistradasResumo
       
         '   and b."cod_fornecedor" = :"cod_fornecedor"                   ' +
         '                      '
-      '  and substr(a."dat_emissao", 1,4) = :ano'
-      
-        '   and a."cod_cliente" in (select "cod_cliente"                 ' +
-        '                      '
-      
-        '                             from "usuario_cliente"             ' +
-        '                      '
-      
-        '                            where "login" = :login)             ' +
-        '                      '
+      '  and substr(a."dat_emissao", 1,4) = :ano                       '
       'order by a."dat_emissao" descending ')
     Left = 120
     Top = 8
@@ -442,11 +426,6 @@ object fr_FaturasRegistradasResumo: Tfr_FaturasRegistradasResumo
       item
         DataType = ftUnknown
         Name = 'ano'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Faturascod_empresa: TSmallintField

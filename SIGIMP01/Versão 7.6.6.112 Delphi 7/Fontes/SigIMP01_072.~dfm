@@ -1,6 +1,6 @@
 object fr_FaturasRegistradas: Tfr_FaturasRegistradas
   Left = 804
-  Top = 437
+  Top = 439
   HelpType = htKeyword
   HelpKeyword = '071'
   BorderIcons = [biSystemMenu]

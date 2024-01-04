@@ -2065,7 +2065,6 @@ begin
   Numromaneio := 0;                                                  
   with Clientes do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
   Fornecedores.Open;
