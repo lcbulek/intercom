@@ -1,6 +1,6 @@
 object frmProdList: TfrmProdList
-  Left = -1
-  Top = 55
+  Left = 6
+  Top = 0
   AutoScroll = False
   Caption = 'Production List'
   ClientHeight = 614
@@ -529,7 +529,7 @@ object frmProdList: TfrmProdList
     Top = 76
     Width = 1350
     Height = 265
-    ActivePage = tsPackList
+    ActivePage = tsItensPrl
     Align = alTop
     TabOrder = 5
     OnChange = pgItensProdListChange
@@ -589,7 +589,7 @@ object frmProdList: TfrmProdList
           item
             Expanded = False
             FieldName = 'calDenProduto'
-            Width = 330
+            Width = 345
             Visible = True
           end
           item
@@ -837,7 +837,7 @@ object frmProdList: TfrmProdList
           item
             Expanded = False
             FieldName = 'calDenProduto'
-            Width = 370
+            Width = 391
             Visible = True
           end
           item

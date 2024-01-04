@@ -1,0 +1,291 @@
+inherited fr_CadFornBancoInt: Tfr_CadFornBancoInt
+  Left = 453
+  Top = 436
+  HelpType = htKeyword
+  HelpKeyword = '082'
+  Caption = 'Fornecedor Banco Intermedi'#225'rio'
+  ClientHeight = 175
+  ClientWidth = 437
+  OldCreateOrder = True
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 14
+  inherited Panel1: TPanel
+    Width = 437
+    Height = 139
+    object Label1: TLabel [0]
+      Left = 4
+      Top = 5
+      Width = 63
+      Height = 14
+      Caption = 'Sequencia'
+      FocusControl = DBEdit1
+    end
+    object Label4: TLabel [1]
+      Left = 4
+      Top = 46
+      Width = 70
+      Height = 14
+      Caption = 'Fornecedor'
+    end
+    object Label5: TLabel [2]
+      Left = 4
+      Top = 88
+      Width = 133
+      Height = 14
+      Caption = 'Banco Intermedi'#225'rio'
+    end
+    inherited pnlF1: TPanel
+      Left = 380
+      inherited ToolBar1: TToolBar
+        inherited ToolButton2: TToolButton
+          Action = fr_FmNavigator1.acF3
+        end
+      end
+    end
+    object DBEdit1: TDBEdit
+      Left = 4
+      Top = 21
+      Width = 63
+      Height = 22
+      TabStop = False
+      Color = clInfoBk
+      DataField = 'sequencia'
+      DataSource = dsIBDataSet
+      ReadOnly = True
+      TabOrder = 1
+    end
+    object JvDBLookupCombo1: TJvDBLookupCombo
+      Left = 4
+      Top = 62
+      Width = 413
+      Height = 21
+      DropDownCount = 12
+      DataField = 'lkFornecedor'
+      DataSource = dsIBDataSet
+      DisplayEmpty = 'Escolha o fornecedor'
+      TabOrder = 4
+    end
+    object JvDBLookupCombo2: TJvDBLookupCombo
+      Left = 4
+      Top = 104
+      Width = 413
+      Height = 21
+      DropDownCount = 12
+      DataField = 'lkBanco'
+      DataSource = dsIBDataSet
+      DisplayEmpty = 'Escolha o Banco Intermedi'#225'rio'
+      TabOrder = 5
+    end
+    object DBCheckBox1: TDBCheckBox
+      Left = 80
+      Top = 24
+      Width = 61
+      Height = 17
+      Caption = 'Ativo'
+      DataField = 'ies_situacao'
+      DataSource = dsIBDataSet
+      TabOrder = 2
+      ValueChecked = 'A'
+      ValueUnchecked = 'I'
+    end
+    object DBCheckBox2: TDBCheckBox
+      Left = 160
+      Top = 24
+      Width = 72
+      Height = 17
+      Caption = 'Default'
+      DataField = 'ies_default'
+      DataSource = dsIBDataSet
+      TabOrder = 3
+      ValueChecked = 'S'
+      ValueUnchecked = 'N'
+    end
+  end
+  inherited fr_FmNavigator1: Tfr_FmNavigator
+    Top = 139
+    Width = 437
+    inherited ToolBar1: TToolBar
+      Width = 437
+    end
+    inherited ActionList1: TActionList
+      inherited acFirst: TDataSetFirst
+        DataSource = dsIBDataSet
+      end
+      inherited acPrior: TDataSetPrior
+        DataSource = dsIBDataSet
+      end
+      inherited acNext: TDataSetNext
+        DataSource = dsIBDataSet
+      end
+      inherited acLast: TDataSetLast
+        DataSource = dsIBDataSet
+      end
+      inherited acInsert: TDataSetInsert
+        DataSource = dsIBDataSet
+      end
+      inherited acDelete: TDataSetDelete
+        DataSource = dsIBDataSet
+      end
+      inherited acEdit: TDataSetEdit
+        DataSource = dsIBDataSet
+      end
+      inherited acPost: TDataSetPost
+        DataSource = dsIBDataSet
+      end
+      inherited acCancel: TDataSetCancel
+        DataSource = dsIBDataSet
+      end
+      inherited acRefresh: TDataSetRefresh
+        DataSource = dsIBDataSet
+      end
+    end
+  end
+  inherited IBDataSet: TIBDataSet
+    BeforePost = IBDataSetBeforePost
+    OnNewRecord = IBDataSetNewRecord
+    DeleteSQL.Strings = (
+      'delete from "banco_int_fornecedor"'
+      'where'
+      '  "banco_int_fornecedor"."sequencia" = :"OLD_sequencia"')
+    InsertSQL.Strings = (
+      'insert into "banco_int_fornecedor"'
+      
+        '  ("banco_int_fornecedor"."sequencia", "banco_int_fornecedor"."c' +
+        'od_banco", '
+      
+        '   "banco_int_fornecedor"."cod_fornecedor", "banco_int_fornecedo' +
+        'r"."ies_situacao", '
+      '   "banco_int_fornecedor"."ies_default")'
+      'values'
+      
+        '  (:"sequencia", :"cod_banco", :"cod_fornecedor", :"ies_situacao' +
+        '", :"ies_default")')
+    RefreshSQL.Strings = (
+      'Select '
+      '  "banco_int_fornecedor"."sequencia",'
+      '  "banco_int_fornecedor"."cod_banco",'
+      '  "banco_int_fornecedor"."cod_fornecedor",'
+      '  "banco_int_fornecedor"."ies_situacao",'
+      '  "banco_int_fornecedor"."ies_default"'
+      'from "banco_int_fornecedor" '
+      'where'
+      '  "banco_int_fornecedor"."sequencia" = :"sequencia"')
+    SelectSQL.Strings = (
+      'select * from "banco_int_fornecedor"')
+    ModifySQL.Strings = (
+      'update "banco_int_fornecedor"'
+      'set'
+      '  "banco_int_fornecedor"."sequencia" = :"sequencia",'
+      '  "banco_int_fornecedor"."cod_banco" = :"cod_banco",'
+      '  "banco_int_fornecedor"."cod_fornecedor" = :"cod_fornecedor",'
+      '  "banco_int_fornecedor"."ies_situacao" = :"ies_situacao",'
+      '  "banco_int_fornecedor"."ies_default" = :"ies_default"'
+      'where'
+      '  "banco_int_fornecedor"."sequencia" = :"OLD_sequencia"')
+    object IBDataSetsequencia: TIntegerField
+      DisplayLabel = 'Sequencia'
+      FieldName = 'sequencia'
+      Origin = '"banco_int_fornecedor"."sequencia"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+      Visible = False
+    end
+    object IBDataSetcod_banco: TIntegerField
+      DisplayLabel = 'Banco'
+      FieldName = 'cod_banco'
+      Origin = '"banco_int_fornecedor"."cod_banco"'
+      Visible = False
+    end
+    object IBDataSetlkBanco: TStringField
+      DisplayLabel = 'Banco Intermedi'#225'rio'
+      FieldKind = fkLookup
+      FieldName = 'lkBanco'
+      LookupDataSet = Banco_Intermediario
+      LookupKeyFields = 'cod_banco'
+      LookupResultField = 'nom_banco'
+      KeyFields = 'cod_banco'
+      Size = 75
+      Lookup = True
+    end
+    object IBDataSetcod_fornecedor: TIntegerField
+      DisplayLabel = 'Fornecedor'
+      FieldName = 'cod_fornecedor'
+      Origin = '"banco_int_fornecedor"."cod_fornecedor"'
+    end
+    object IBDataSetlkFornecedor: TStringField
+      DisplayLabel = 'Fornecedor'
+      FieldKind = fkLookup
+      FieldName = 'lkFornecedor'
+      LookupDataSet = Fornecedor
+      LookupKeyFields = 'cod_fornecedor'
+      LookupResultField = 'raz_social'
+      KeyFields = 'cod_fornecedor'
+      Size = 75
+      Lookup = True
+    end
+    object IBDataSeties_situacao: TIBStringField
+      DisplayLabel = 'Situa'#231#227'o'
+      FieldName = 'ies_situacao'
+      Origin = '"banco_int_fornecedor"."ies_situacao"'
+      Visible = False
+      FixedChar = True
+      Size = 1
+    end
+    object IBDataSeties_default: TIBStringField
+      DisplayLabel = 'Default'
+      FieldName = 'ies_default'
+      Origin = '"banco_int_fornecedor"."ies_default"'
+      Visible = False
+      FixedChar = True
+      Size = 1
+    end
+  end
+  object Fornecedor: TIBQuery
+    Database = dmConnection.dbSig
+    Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'select "cod_fornecedor", "raz_social"'
+      'from "fornecedor"'
+      'order by 2')
+    Left = 336
+    Top = 80
+    object Fornecedorcod_fornecedor: TSmallintField
+      FieldName = 'cod_fornecedor'
+      Origin = '"fornecedor"."cod_fornecedor"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object Fornecedorraz_social: TIBStringField
+      FieldName = 'raz_social'
+      Origin = '"fornecedor"."raz_social"'
+      Size = 50
+    end
+  end
+  object Banco_Intermediario: TIBQuery
+    Database = dmConnection.dbSig
+    Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      'select "cod_banco", "nom_banco"'
+      'from "banco"'
+      'where "ies_tip_banco" = '#39'I'#39
+      '  and "ies_situacao" = '#39'A'#39
+      'order by 2')
+    Left = 376
+    Top = 80
+    object Banco_Intermediariocod_banco: TSmallintField
+      FieldName = 'cod_banco'
+      Origin = '"banco"."cod_banco"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object Banco_Intermediarionom_banco: TIBStringField
+      FieldName = 'nom_banco'
+      Origin = '"banco"."nom_banco"'
+      Size = 50
+    end
+  end
+end

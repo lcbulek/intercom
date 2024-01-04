@@ -2869,12 +2869,6 @@ var
   ind : integer;
 
 begin
-   { Criar a página de CONDITIONS antes da página de SPECIFICATION }
-   WkBk.Worksheets.Add(WkBk.Worksheets['Specification'], EmptyParam, 1, EmptyParam, lcid);
-   ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
-   ExcelWorksheet.Activate(lcid);
-   ExcelWorksheet.Name := 'Conditions';
-
    { PÁGINA DAS CONDIÇÕES - CONDITIONS PAGE }
    Linha := 1;
 
@@ -4882,6 +4876,14 @@ begin
    end;
 
    EspecificationPage(Tipo);
+
+   { Criar a página de CONDITIONS antes da página de SPECIFICATION }
+   WkBk.Worksheets.Add(WkBk.Worksheets['Specification'], EmptyParam, 1, EmptyParam, lcid);
+   ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
+   ExcelWorksheet.Activate(lcid);
+   ExcelWorksheet.Name := 'Conditions';
+
+   { Página das Condições para Pedidos e Confirmações }
    ConditionPage(Tipo);
 
    { Salvar a planilha }
