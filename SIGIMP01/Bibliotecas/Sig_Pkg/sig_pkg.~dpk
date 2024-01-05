@@ -43,7 +43,6 @@ requires
   bdertl;
 
 contains
-  DBGridCheck in '..\DBGridCheck\DBGridCheck.pas',
-  dbDateTimePicker in '..\dbDateTimePicker\dbDateTimePicker.pas';
+  DBGridCheck in '..\DBGridCheck\DBGridCheck.pas';
 
 end.
