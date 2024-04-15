@@ -80,18 +80,9 @@ begin
          end;
       end;
 
-      if not Permitir_Acesso(CtSelect, Buscar_Unit(TComponentClass(pTForm).ClassName)) then
-      begin
-	      with TForm(pForm) do
-         	Close;
-
-         Exit;
-      end else
 			with TForm(pForm) do
    	   begin
          	if Existir_Formulario then
-          	//if Pos(AnsiUpperCase(Buscar_Unit(ClassName)), Caption) = 0 then
-		      //		Caption	:=  Caption + ' - ' + Buscar_Unit(ClassName);
 
       		ShowHint := True;
 

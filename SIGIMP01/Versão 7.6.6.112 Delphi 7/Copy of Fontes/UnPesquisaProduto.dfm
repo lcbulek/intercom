@@ -1,8 +1,8 @@
 object fr_PesquisaProduto: Tfr_PesquisaProduto
-  Left = 374
-  Top = 175
+  Left = 362
+  Top = 83
   Width = 1366
-  Height = 768
+  Height = 641
   ActiveControl = edtCodProd
   Caption = 'Pesquisar Produtos'
   Color = clBtnFace
@@ -22,8 +22,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 660
-    Width = 1350
+    Top = 544
+    Width = 1358
     Height = 39
     Align = alBottom
     BevelOuter = bvNone
@@ -101,8 +101,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object grdGrid: TDBGrid
     Left = 0
     Top = 295
-    Width = 1350
-    Height = 220
+    Width = 1358
+    Height = 104
     Align = alClient
     Color = clWhite
     DataSource = dtsFmGrid
@@ -156,7 +156,7 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1350
+    Width = 1358
     Height = 295
     Align = alTop
     BevelInner = bvLowered
@@ -315,7 +315,7 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
     object GroupBox4: TGroupBox
       Left = 375
       Top = 2
-      Width = 973
+      Width = 981
       Height = 291
       Align = alClient
       Caption = 'Detalhes do Produto'
@@ -993,8 +993,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   end
   object TPanel
     Left = 0
-    Top = 699
-    Width = 1350
+    Top = 583
+    Width = 1358
     Height = 31
     Align = alBottom
     BevelOuter = bvNone
@@ -1090,8 +1090,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   end
   object GroupBox6: TGroupBox
     Left = 0
-    Top = 515
-    Width = 1350
+    Top = 399
+    Width = 1358
     Height = 145
     Align = alBottom
     Caption = 'Hist'#243'rico de Compras e Embarques do Produto'
@@ -1099,7 +1099,7 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
     object DBGrid1: TDBGrid
       Left = 2
       Top = 15
-      Width = 1346
+      Width = 1354
       Height = 128
       Align = alClient
       Color = clWhite
@@ -1593,6 +1593,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
     Transaction = dmConnection.TransSig
     AfterScroll = qryProdutoAfterScroll
     OnCalcFields = qryProdutoCalcFields
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select p.*'
       'from "produto" p    '
@@ -1751,6 +1753,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object qryTipProd: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_tip_produto", "den_tip_produto"  from "tipo_produto"')
     Left = 248
@@ -1776,24 +1780,17 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object Cliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select cast('#39'*** Todos ***'#39' as CHAR(13)) "cod_cliente"'
       'from "cliente"'
       'union'
       'select cast("cod_cliente" as char(13)) "cod_cliente"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 248
     Top = 472
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientecod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Required = True
@@ -1805,6 +1802,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterOpen = FornecedorAfterOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select cast('#39'*** TODOS ***'#39' as char(50)) "raz_social_reduz", cas' +
@@ -1817,18 +1816,9 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
         'select cast(a."raz_social_reduz" as char(50)) "raz_social_reduz"' +
         ', cast(a."cod_fornecedor" as smallint) "cod_fornecedor"'
       '  from "fornecedor" a'
-      '  where "cod_fornecedor" in (select "cod_fornecedor"'
-      '                               from "usuario_fornecedor"'
-      '                              where "login" = :login)'
       'order by 1')
     Left = 288
     Top = 440
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Fornecedorraz_social_reduz: TIBStringField
       FieldName = 'raz_social_reduz'
       Required = True
@@ -1847,6 +1837,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object Embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "embalagem" a'
       'where a."cod_empresa" = :cod_empresa'
@@ -1979,6 +1971,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object UnidadeMedida: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "sigla"'
       'from "medida"'
@@ -2000,6 +1994,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object Fornecedor_Lkp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social_reduz"'
       'from "fornecedor"')
@@ -2021,6 +2017,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterOpen = tipo_produtoAfterOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select cast('#39'*** TODOS ***'#39' as varchar(128)) "den_tip_produto", ' +
@@ -2051,6 +2049,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "mod_cad_produto", "ies_modelo"'
       'from "parametro_comercial"'
@@ -2103,6 +2103,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object Produtos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select p.*'
       'from "produto" p    '
@@ -2229,22 +2231,15 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object fornecedores: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social_reduz"'
       '  from "fornecedor"'
-      'where "cod_fornecedor"  in (select "cod_fornecedor"'
-      '                          from "usuario_fornecedor"'
-      '                         where "login" = :login)'
-      '  and "ies_situacao" = '#39'A'#39
+      'where  "ies_situacao" = '#39'A'#39
       'order by 2')
     Left = 528
     Top = 354
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object SmallintField1: TSmallintField
       FieldName = 'cod_fornecedor'
       Origin = '"fornecedor"."cod_fornecedor"'
@@ -2261,22 +2256,14 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object clientes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
-      ''
       'order by 1')
     Left = 568
     Top = 352
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object IBStringField2: TIBStringField
       DisplayLabel = 'Cliente'
       FieldName = 'cod_cliente'
@@ -2289,6 +2276,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object unidades_medida: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select "cod_uni_medida", ("den_uni_medida" || '#39' - '#39' || "sigla") ' +
@@ -2317,6 +2306,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object TipoProduto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "den_tip_produto"'
       'from "tipo_produto"'
@@ -2332,6 +2323,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object BuscaTipoProduto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_tip_produto"'
       'from "tipo_produto"'
@@ -2354,6 +2347,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object BuscaUnidadeMedida: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_uni_medida"'
       'from "medida"'
@@ -2376,6 +2371,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object qryTipo_Produto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_tip_produto", "den_tip_produto"'
       'from "tipo_produto"'
@@ -2404,6 +2401,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object qryUnidade_Medida: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_uni_medida","sigla"'
       'from "medida"'
@@ -2431,6 +2430,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object qryFornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social_reduz"'
       'from "fornecedor"'
@@ -2458,6 +2459,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object EmbalagemImp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "embalagem"'
       'where "cod_empresa" = :cod_empresa'
@@ -2574,6 +2577,8 @@ object fr_PesquisaProduto: Tfr_PesquisaProduto
   object spr_produtos_embarcados: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_produtos_embarcados"(:cod_empresa, :cod_produ' +

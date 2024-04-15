@@ -230,7 +230,6 @@ begin
   inherited;
   with QrAux do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
 

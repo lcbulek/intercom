@@ -1,6 +1,6 @@
 object frmPagamentosPedidos: TfrmPagamentosPedidos
   Left = 881
-  Top = 341
+  Top = 342
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Pagamentos Efetuados por Pedido'
@@ -251,21 +251,14 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object Clientes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente_reduz"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 40
     Top = 8
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientescod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -282,15 +275,14 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object Fornecedores: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."raz_social_reduz",  a."cod_fornecedor"'
       '  from "fornecedor" a, "produto" b'
       '  where'
       '        b."cod_empresa" = :cod_empresa'
       '    and b."cod_fornecedor" = a."cod_fornecedor"'
-      '    and b."cod_cliente" in (select "cod_cliente"'
-      '                              from "usuario_cliente"'
-      '                             where "login" = :login)'
       'group by 1,2'
       'order by 1')
     Left = 40
@@ -299,11 +291,6 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorescod_fornecedor: TIntegerField
@@ -357,6 +344,7 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object Pedidos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
     CachedUpdates = True
     SQL.Strings = (
       
@@ -452,6 +440,8 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object pedido_pagamento_ad: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '   select a.*, b."num_fatura"'
       '     from "pedido_pagamento" a'
@@ -558,6 +548,8 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object pedido_adic_desc: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "pedido_adic_desc"'
       'where "cod_empresa" = :cod_empresa'
@@ -635,6 +627,8 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_comercial"'
       'where "cod_empresa" = :cod_empresa')
@@ -674,6 +668,8 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object cby_pedido_faturados: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from  "cby_pedido_faturados"(:cod_empresa, :num_pedido)' +
@@ -825,6 +821,8 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object spr_faturas_pedido: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "spr_faturas_pedido"(:cod_empresa, :num_pedido);')
     Left = 224
@@ -944,6 +942,8 @@ object frmPagamentosPedidos: TfrmPagamentosPedidos
   object pedido_pagamento_ef: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '   select a.*, b."num_fatura"'
       '     from "pedido_pagamento" a'

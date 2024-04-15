@@ -1,6 +1,6 @@
 inherited fr_CadFornecedor: Tfr_CadFornecedor
-  Left = 446
-  Top = 259
+  Left = 341
+  Top = 174
   HelpType = htKeyword
   HelpKeyword = '016'
   ActiveControl = dbedraz_social
@@ -380,10 +380,7 @@ inherited fr_CadFornecedor: Tfr_CadFornecedor
     SelectSQL.Strings = (
       'select *'
       'from "fornecedor"'
-      'where "cod_fornecedor"  in (select "cod_fornecedor"'
-      '                          from "usuario_fornecedor"'
-      '                         where "login" = :login)'
-      '  and "ies_situacao" = '#39'A'#39
+      'where  "ies_situacao" = '#39'A'#39
       'order by "raz_social"')
     ModifySQL.Strings = (
       'update "fornecedor"'
@@ -508,16 +505,11 @@ inherited fr_CadFornecedor: Tfr_CadFornecedor
       Size = 50
     end
   end
-  object spr_add_usuario_fornecedor: TIBStoredProc
-    Database = dmConnection.dbSig
-    Transaction = dmConnection.TransSig
-    StoredProcName = 'spr_add_usuario_fornecedor'
-    Left = 376
-    Top = 72
-  end
   object Moedas: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_moeda", "codigo", "den_moeda"'
       'from "moeda"'

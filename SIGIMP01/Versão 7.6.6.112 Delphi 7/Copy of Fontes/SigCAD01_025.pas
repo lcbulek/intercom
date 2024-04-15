@@ -332,8 +332,6 @@ type
       DisplayText: Boolean);
     procedure ProdutosImpBeforePost(DataSet: TDataSet);
     procedure EmbalagemBeforePost(DataSet: TDataSet);
-    procedure clienteBeforeOpen(DataSet: TDataSet);
-    procedure fornecedorBeforeOpen(DataSet: TDataSet);
     procedure EmbalagemCalcFields(DataSet: TDataSet);
     procedure EmbalagemBeforeInsert(DataSet: TDataSet);
     procedure actGerarExcelNovoExecute(Sender: TObject);
@@ -1825,18 +1823,6 @@ begin
     { Peso Unitário da Caixa (vazia) }
     DataSet.FieldByName('peso_unitario').AsFloat :=  DataSet.FieldByName('pes_bruto_cx').AsFloat - (PesUnitProd * DataSet.FieldByName('qtd_master').AsFloat);
   end;
-end;
-
-procedure Tfr_CadProduto.clienteBeforeOpen(DataSet: TDataSet);
-begin
-  inherited;
-  Cliente.ParamByName('login').Value := vgLogin;
-end;
-
-procedure Tfr_CadProduto.fornecedorBeforeOpen(DataSet: TDataSet);
-begin
-  inherited;
-  Fornecedor.ParamByName('login').Value := vgLogin;
 end;
 
 procedure Tfr_CadProduto.EmbalagemCalcFields(DataSet: TDataSet);

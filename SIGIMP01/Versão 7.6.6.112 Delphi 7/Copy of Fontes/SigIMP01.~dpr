@@ -3,9 +3,11 @@ program SigIMP01;
 uses
   ShareMem,
   Forms,
+  Controls,
   Dialogs,
   SysUtils,
   unConnection in 'unConnection.pas' {dmConnection: TDataModule},
+  unLogin in 'unLogin.pas' { fr_Login },
   UnAbout in 'UnAbout.pas' {fr_Sobre},
   UnNavigator in 'UnNavigator.pas' {fr_FmNavigator: TFrame},
   UnGrid in 'UnGrid.pas' {fr_FmGrid: TFrame},
@@ -18,13 +20,13 @@ uses
   UnLayoutRelatorio in 'UnLayoutRelatorio.pas' {rl_LayoutRelatorio},
   unGrade_Selecao in 'unGrade_Selecao.pas' {fr_FmGrade_Selecao: TFrame},
   unType in 'unType.pas',
-  UnAlteraSenha in 'UnAlteraSenha.pas' {fr_AlterarSenha},
   UnMenu in 'UnMenu.pas' {fr_Menu},
   unCadGrade in 'unCadGrade.pas' {fr_CadGrade},
   unPesquisaCEP in 'unPesquisaCEP.pas' {FPesquisaCEP},
   UnPesquisaProduto in 'UnPesquisaProduto.pas' {fr_PesquisaProduto},
   unConsulta in 'unConsulta.pas' {fr_Consultas},
   AniThread in 'AniThread.pas',
+  SigADM02_006 in 'SigADM02_006.pas' {fr_CadUsuario},
   SigCAD01_004 in 'SigCAD01_004.pas' {fr_CadBanco},
   SigCAD01_012 in 'SigCAD01_012.pas' {fr_CadCliente},
   SigCAD01_015 in 'SigCAD01_015.pas' {fr_CadFornecedor_Contato},
@@ -45,7 +47,6 @@ uses
   SigIMP01_005 in 'SigIMP01_005.pas' {fr_CadLista_Preco},
   SigIMP01_006 in 'SigIMP01_006.pas' {fr_ManPedido},
   SigIMP01_007 in 'SigIMP01_007.pas' {fr_ManNF},
-  SigIMP01_008 in 'SigIMP01_008.pas' {ChinesTxt},
   SigIMP01_009 in 'SigIMP01_009.pas' {dmNF: TDataModule},
   SigIMP01_011 in 'SigIMP01_011.pas' {fr_HistoricoPrecos},
   SigIMP01_017 in 'SigIMP01_017.pas' {dmNF_liquidar: TDataModule},
@@ -82,25 +83,21 @@ begin
   Application.Name	:= 'SigIMP01';
   Application.Title	:= 'Sistema de Comercio Exterior';
   Application.CreateForm(TdmConnection, dmConnection);
-  try
-  	if StrToInt(ParamStr(7)) = 0 then
-    begin                                                    
-		  if Conectar_FireBird then
+
+  with Tfr_Login.Create(nil) do
+   try
+      ShowModal;
+      if ModalResult = mrOk then
       begin
-			 Application.CreateForm(TdmCOM, dmCOM);
-		    Application.CreateForm(Tfr_MenuPrincipalCOM, fr_MenuPrincipalCOM);
-      end else Application.Terminate;
-    end else
-			if Conectar_FireBird(ctFireBird_Server2) then
-			begin
-			 Application.CreateForm(TdmCOM, dmCOM);
+         Conectar_FireBird;
+         Application.CreateForm(TdmCOM, dmCOM);
          Application.CreateForm(Tfr_MenuPrincipalCOM, fr_MenuPrincipalCOM);
-      end else Application.Terminate;
-
-
-  finally
-	  Application.Run;
-  end;
+      end
+      else Application.Terminate;
+   finally
+      Free;
+      Application.Run;
+   end;
 end.
 
 

@@ -1,6 +1,6 @@
 object fr_FaturasRegistradas: Tfr_FaturasRegistradas
   Left = 804
-  Top = 437
+  Top = 439
   HelpType = htKeyword
   HelpKeyword = '071'
   BorderIcons = [biSystemMenu]
@@ -267,6 +267,8 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = ClientesBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select c."cod_cliente"'
       'from "pedido" a, "pedido_complemento" b, "cliente" c'
@@ -275,9 +277,6 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
       '  and b."cod_empresa" = a."cod_empresa"'
       '  and b."num_pedido"  = a."num_pedido"'
       '  and c."cod_cliente" = a."cod_cliente"'
-      '  and c."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
       'group by 1'
       'order by 1')
     Left = 40
@@ -286,11 +285,6 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Clientescod_cliente: TIBStringField
@@ -308,6 +302,8 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = FornecedoresBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."cod_fornecedor", c."raz_social_reduz"'
       
@@ -346,6 +342,8 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterScroll = ProdutosAfterScroll
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '/* Produtos Faturas/Pedidos */'
       'select a."num_sequencia", a."cod_produto", c."den_produto",'
@@ -500,6 +498,8 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_comercial"'
       'where "cod_empresa" = :cod_empresa')
@@ -554,6 +554,8 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
   object embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "embalagem"'
       'where "cod_empresa" = :cod_empresa'
@@ -664,6 +666,8 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
   object nf_adic_desc: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "nf_adic_desc"'
       'where "cod_empresa" = :cod_empresa'
@@ -749,6 +753,8 @@ object fr_FaturasRegistradas: Tfr_FaturasRegistradas
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterScroll = FaturasAfterScroll
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select b."num_ref_volume", b."num_fatura", a."dat_embarque",  a.' +

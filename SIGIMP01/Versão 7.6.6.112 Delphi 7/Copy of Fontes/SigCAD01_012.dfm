@@ -1,6 +1,6 @@
 inherited fr_CadCliente: Tfr_CadCliente
-  Left = 468
-  Top = 234
+  Left = 466
+  Top = 71
   HelpType = htKeyword
   HelpKeyword = '012'
   ActiveControl = dbedcod_cliente
@@ -982,9 +982,6 @@ inherited fr_CadCliente: Tfr_CadCliente
     SelectSQL.Strings = (
       'select *'
       'from "cliente"'
-      'where "cod_cliente"  in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by "cod_cliente"')
     ModifySQL.Strings = (
       'update "cliente"'
@@ -1169,12 +1166,5 @@ inherited fr_CadCliente: Tfr_CadCliente
   inherited QrAux: TIBQuery
     Left = 363
     Top = 38
-  end
-  object spr_add_usuario_cliente: TIBStoredProc
-    Database = dmConnection.dbSig
-    Transaction = dmConnection.TransSig
-    StoredProcName = 'spr_add_usuario_cliente'
-    Left = 384
-    Top = 72
   end
 end

@@ -556,7 +556,6 @@ procedure TfrmProdList.FormCreate(Sender: TObject);
 begin
   with Clientes do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
   Fornecedores.Open;

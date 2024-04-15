@@ -1255,6 +1255,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object unidade_medida: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select "cod_uni_medida", ("den_uni_medida" || '#39' - '#39' || "sigla") ' +
@@ -1283,6 +1285,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object Produto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_produto"'
       'from "produto"'
@@ -1312,6 +1316,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object Tipo_Produto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "tipo_produto"'
       'where "cod_tip_produto" = :cod_tip_produto')
@@ -1327,23 +1333,15 @@ inherited fr_CadProduto: Tfr_CadProduto
   object fornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
-    BeforeOpen = fornecedorBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social_reduz", "raz_social"'
       '  from "fornecedor"'
-      'where "cod_fornecedor"  in (select "cod_fornecedor"'
-      '                          from "usuario_fornecedor"'
-      '                         where "login" = :login)'
-      '  and "ies_situacao" = '#39'A'#39
+      'where "ies_situacao" = '#39'A'#39
       'order by 2')
     Left = 160
     Top = 74
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object fornecedorcod_fornecedor: TSmallintField
       FieldName = 'cod_fornecedor'
       Origin = '"fornecedor"."cod_fornecedor"'
@@ -1365,6 +1363,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object Produto_Fornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "produto"'
       'where "cod_empresa" = :cod_empresa'
@@ -1392,23 +1392,14 @@ inherited fr_CadProduto: Tfr_CadProduto
   object cliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
-    BeforeOpen = clienteBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
-      ''
       'order by 1')
     Left = 112
     Top = 142
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object clientecod_cliente: TIBStringField
       DisplayLabel = 'Cliente'
       FieldName = 'cod_cliente'
@@ -1452,6 +1443,7 @@ inherited fr_CadProduto: Tfr_CadProduto
     BeforePost = EmbalagemBeforePost
     OnCalcFields = EmbalagemCalcFields
     OnNewRecord = EmbalagemNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "embalagem"'
@@ -1637,6 +1629,7 @@ inherited fr_CadProduto: Tfr_CadProduto
   object parametro_comercial: TIBDataSet
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "parametro_comercial"'
@@ -1687,6 +1680,7 @@ inherited fr_CadProduto: Tfr_CadProduto
     AfterPost = ProdutosImpAfterPost
     BeforePost = ProdutosImpBeforePost
     OnNewRecord = ProdutosImpNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "produto"'
@@ -1911,6 +1905,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object BuscaTipoProduto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_tip_produto"'
       'from "tipo_produto"'
@@ -1933,6 +1929,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object BuscaUnidadeMedida: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_uni_medida"'
       'from "medida"'
@@ -1955,6 +1953,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object qryUnidade_Medida: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_uni_medida","sigla"'
       'from "medida"'
@@ -1982,6 +1982,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object qryTipo_Produto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_tip_produto", "den_tip_produto"'
       'from "tipo_produto"'
@@ -2010,6 +2012,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object qryFornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social_reduz"'
       'from "fornecedor"'
@@ -2037,6 +2041,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object Produtos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select p.*'
       'from "produto" p    '
@@ -2164,6 +2170,7 @@ inherited fr_CadProduto: Tfr_CadProduto
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = Lista_PrecoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "lista_preco"'
@@ -2264,6 +2271,7 @@ inherited fr_CadProduto: Tfr_CadProduto
     Transaction = dmConnection.TransSig
     AfterDelete = ExcluirListaPrecoAfterDelete
     AfterPost = ExcluirListaPrecoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "lista_preco"'
@@ -2316,6 +2324,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object Pedidos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "num_pedido"'
       'from "pedido_produto" a'
@@ -2358,6 +2368,7 @@ inherited fr_CadProduto: Tfr_CadProduto
     Transaction = dmConnection.TransSig
     AfterPost = EmbalagemAfterPost
     OnNewRecord = EmbalagemNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "embalagem"'
@@ -2549,6 +2560,8 @@ inherited fr_CadProduto: Tfr_CadProduto
   object TipoProduto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "den_tip_produto"'
       'from "tipo_produto"'
@@ -2565,6 +2578,7 @@ inherited fr_CadProduto: Tfr_CadProduto
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = ListaAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "lista"'

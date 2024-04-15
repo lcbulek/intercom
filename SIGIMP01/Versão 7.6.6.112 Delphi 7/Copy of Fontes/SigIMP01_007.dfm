@@ -1,6 +1,6 @@
 object fr_ManNF: Tfr_ManNF
-  Left = 389
-  Top = 207
+  Left = 0
+  Top = 2
   Width = 1366
   Height = 738
   HelpType = htKeyword
@@ -32,7 +32,7 @@ object fr_ManNF: Tfr_ManNF
   object pnlCabecalho: TPanel
     Left = 0
     Top = 0
-    Width = 1350
+    Width = 1358
     Height = 43
     Align = alTop
     BevelInner = bvLowered
@@ -143,8 +143,8 @@ object fr_ManNF: Tfr_ManNF
   object pgcNF: TPageControl
     Left = 0
     Top = 43
-    Width = 1350
-    Height = 657
+    Width = 1358
+    Height = 668
     ActivePage = tbsNF
     Align = alClient
     TabOrder = 1
@@ -153,8 +153,8 @@ object fr_ManNF: Tfr_ManNF
       Caption = 'Fatura (F5)'
       object pnlNotaFiscalSaida: TPanel
         Left = 0
-        Top = 586
-        Width = 1342
+        Top = 597
+        Width = 1350
         Height = 42
         Align = alBottom
         BevelOuter = bvNone
@@ -757,7 +757,7 @@ object fr_ManNF: Tfr_ManNF
           end
         end
         object ToolBar1: TToolBar
-          Left = 601
+          Left = 609
           Top = 0
           Width = 741
           Height = 42
@@ -830,7 +830,7 @@ object fr_ManNF: Tfr_ManNF
             OnClick = tbAbrirClick
           end
           object btnValidar: TToolButton
-            Left = 644
+            Left = 642
             Top = 0
             Action = actValidar
           end
@@ -856,14 +856,14 @@ object fr_ManNF: Tfr_ManNF
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 1342
-        Height = 158
+        Width = 1350
+        Height = 160
         Align = alTop
         BevelInner = bvRaised
         TabOrder = 1
         object Label17: TLabel
           Left = 4
-          Top = 1
+          Top = 2
           Width = 49
           Height = 14
           Caption = 'Cliente'
@@ -871,14 +871,14 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label5: TLabel
           Left = 4
-          Top = 33
+          Top = 34
           Width = 70
           Height = 14
           Caption = 'Fornecedor'
         end
         object Label4: TLabel
           Left = 586
-          Top = 1
+          Top = 2
           Width = 91
           Height = 14
           Caption = 'N'#250'mero fatura'
@@ -886,7 +886,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label28: TLabel
           Left = 95
-          Top = 118
+          Top = 120
           Width = 77
           Height = 14
           Caption = 'Tot L'#237'quido'
@@ -903,7 +903,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label2: TLabel
           Left = 277
-          Top = 1
+          Top = 2
           Width = 49
           Height = 14
           Caption = 'Emiss'#227'o'
@@ -911,7 +911,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label35: TLabel
           Left = 792
-          Top = 1
+          Top = 2
           Width = 98
           Height = 14
           Caption = 'N'#250'mero do Lote'
@@ -919,7 +919,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label1: TLabel
           Left = 381
-          Top = 33
+          Top = 34
           Width = 70
           Height = 14
           Caption = 'Liquida'#231#227'o'
@@ -927,7 +927,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label29: TLabel
           Left = 4
-          Top = 118
+          Top = 120
           Width = 77
           Height = 14
           Caption = 'Total Bruto'
@@ -944,7 +944,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label30: TLabel
           Left = 277
-          Top = 33
+          Top = 34
           Width = 84
           Height = 14
           Caption = 'Prv Embarque'
@@ -952,7 +952,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label44: TLabel
           Left = 381
-          Top = 0
+          Top = 2
           Width = 56
           Height = 14
           Caption = 'Embarque'
@@ -960,7 +960,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label60: TLabel
           Left = 186
-          Top = 118
+          Top = 120
           Width = 91
           Height = 14
           Caption = 'Tot Bruto Esp'
@@ -977,7 +977,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label71: TLabel
           Left = 277
-          Top = 118
+          Top = 120
           Width = 77
           Height = 14
           Caption = 'Tot L'#237'q Esp'
@@ -994,7 +994,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label54: TLabel
           Left = 202
-          Top = 65
+          Top = 66
           Width = 35
           Height = 14
           Caption = 'Banco'
@@ -1002,7 +1002,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label10: TLabel
           Left = 371
-          Top = 117
+          Top = 119
           Width = 91
           Height = 14
           Caption = 'Pes bruto(Kg)'
@@ -1010,7 +1010,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label9: TLabel
           Left = 462
-          Top = 117
+          Top = 119
           Width = 77
           Height = 14
           Caption = 'Pes L'#237'q(Kg)'
@@ -1018,7 +1018,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label15: TLabel
           Left = 553
-          Top = 117
+          Top = 119
           Width = 70
           Height = 14
           Caption = 'Volume(m'#179')'
@@ -1026,7 +1026,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label22: TLabel
           Left = 624
-          Top = 117
+          Top = 119
           Width = 77
           Height = 14
           Caption = 'Caixas Tot.'
@@ -1034,7 +1034,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label94: TLabel
           Left = 709
-          Top = 118
+          Top = 120
           Width = 49
           Height = 14
           Caption = 'Cartons'
@@ -1042,7 +1042,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label97: TLabel
           Left = 809
-          Top = 118
+          Top = 120
           Width = 49
           Height = 14
           Caption = 'Pallets'
@@ -1050,21 +1050,21 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label3: TLabel
           Left = 555
-          Top = 65
+          Top = 66
           Width = 168
           Height = 14
           Caption = 'Informa'#231#245'es p/documentos'
         end
         object Label33: TLabel
           Left = 894
-          Top = 33
+          Top = 34
           Width = 70
           Height = 14
           Caption = 'Fabricante'
         end
         object Label84: TLabel
           Left = 483
-          Top = 33
+          Top = 34
           Width = 84
           Height = 14
           Caption = 'Env.Inv.Pack'
@@ -1072,7 +1072,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label85: TLabel
           Left = 1118
-          Top = 66
+          Top = 67
           Width = 70
           Height = 14
           Caption = 'Dat. Fotos'
@@ -1080,7 +1080,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object lbVerLi: TLabel
           Left = 4
-          Top = 65
+          Top = 66
           Width = 49
           Height = 14
           Caption = 'Venc LI'
@@ -1088,7 +1088,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label63: TLabel
           Left = 103
-          Top = 67
+          Top = 68
           Width = 84
           Height = 14
           Caption = 'Ver Trat Adm'
@@ -1096,7 +1096,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label51: TLabel
           Left = 483
-          Top = 0
+          Top = 2
           Width = 70
           Height = 14
           Caption = 'ETA Brasil'
@@ -1104,7 +1104,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label64: TLabel
           Left = 587
-          Top = 33
+          Top = 34
           Width = 84
           Height = 14
           Caption = 'Rec.Inv.Pack'
@@ -1112,7 +1112,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label65: TLabel
           Left = 825
-          Top = 66
+          Top = 67
           Width = 84
           Height = 14
           Caption = 'Dat. Inst BL'
@@ -1120,7 +1120,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label66: TLabel
           Left = 1021
-          Top = 66
+          Top = 67
           Width = 56
           Height = 14
           Caption = 'Mod. Doc'
@@ -1128,7 +1128,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label67: TLabel
           Left = 689
-          Top = 33
+          Top = 34
           Width = 56
           Height = 14
           Caption = 'Env. B/L'
@@ -1136,7 +1136,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label68: TLabel
           Left = 791
-          Top = 33
+          Top = 34
           Width = 56
           Height = 14
           Caption = 'Rec. B/L'
@@ -1144,7 +1144,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label69: TLabel
           Left = 923
-          Top = 66
+          Top = 67
           Width = 84
           Height = 14
           Caption = 'Dat. Apro BL'
@@ -1152,7 +1152,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label70: TLabel
           Left = 777
-          Top = 132
+          Top = 134
           Width = 10
           Height = 18
           Caption = '+'
@@ -1165,7 +1165,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object Label95: TLabel
           Left = 728
-          Top = 66
+          Top = 67
           Width = 56
           Height = 14
           Caption = 'I/PL Des'
@@ -1173,7 +1173,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object lpkFornecedor: TDBLookupComboBox
           Left = 4
-          Top = 47
+          Top = 48
           Width = 269
           Height = 22
           DataField = 'lkpFornecedor'
@@ -1182,7 +1182,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbeNumFatura: TDBEdit
           Left = 586
-          Top = 13
+          Top = 14
           Width = 193
           Height = 22
           CharCase = ecUpperCase
@@ -1192,7 +1192,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object edtvlr_liquido: TDBEdit
           Left = 95
-          Top = 131
+          Top = 133
           Width = 90
           Height = 22
           TabStop = False
@@ -1204,7 +1204,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbeNumRefVolume: TDBEdit
           Left = 792
-          Top = 13
+          Top = 14
           Width = 193
           Height = 22
           Hint = 'N'#250'mero do Lote = N'#250'mero de Refer'#234'ncia de Volume'
@@ -1217,7 +1217,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit2: TDBEdit
           Left = 4
-          Top = 131
+          Top = 133
           Width = 90
           Height = 22
           TabStop = False
@@ -1229,7 +1229,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit16: TDBEdit
           Left = 186
-          Top = 131
+          Top = 133
           Width = 90
           Height = 22
           TabStop = False
@@ -1241,7 +1241,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit17: TDBEdit
           Left = 277
-          Top = 131
+          Top = 133
           Width = 90
           Height = 22
           TabStop = False
@@ -1253,7 +1253,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object rgPallets: TDBRadioGroup
           Left = 997
-          Top = 1
+          Top = 2
           Width = 123
           Height = 32
           Caption = 'Pallets'
@@ -1270,7 +1270,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBLookupCombo3: TJvDBLookupCombo
           Left = 202
-          Top = 79
+          Top = 80
           Width = 351
           Height = 21
           DataField = 'cod_banco'
@@ -1283,7 +1283,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvStaticText3: TJvStaticText
           Left = 4
-          Top = 101
+          Top = 103
           Width = 362
           Height = 18
           Alignment = taCenter
@@ -1305,7 +1305,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvStaticText1: TJvStaticText
           Left = 369
-          Top = 101
+          Top = 103
           Width = 334
           Height = 18
           Alignment = taCenter
@@ -1327,7 +1327,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object edtpes_bruto: TDBEdit
           Left = 371
-          Top = 132
+          Top = 134
           Width = 90
           Height = 22
           TabStop = False
@@ -1339,7 +1339,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object edtpes_liquido: TDBEdit
           Left = 462
-          Top = 132
+          Top = 134
           Width = 90
           Height = 22
           TabStop = False
@@ -1351,7 +1351,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit1: TDBEdit
           Left = 553
-          Top = 132
+          Top = 134
           Width = 70
           Height = 22
           TabStop = False
@@ -1363,7 +1363,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit6: TDBEdit
           Left = 624
-          Top = 132
+          Top = 134
           Width = 78
           Height = 22
           TabStop = False
@@ -1375,7 +1375,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvStaticText2: TJvStaticText
           Left = 707
-          Top = 101
+          Top = 103
           Width = 153
           Height = 18
           Alignment = taCenter
@@ -1397,7 +1397,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit46: TDBEdit
           Left = 709
-          Top = 132
+          Top = 134
           Width = 51
           Height = 22
           TabStop = False
@@ -1409,7 +1409,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit49: TDBEdit
           Left = 809
-          Top = 132
+          Top = 134
           Width = 50
           Height = 22
           TabStop = False
@@ -1421,7 +1421,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBEdit50: TDBEdit
           Left = 4
-          Top = 13
+          Top = 14
           Width = 269
           Height = 22
           CharCase = ecUpperCase
@@ -1432,7 +1432,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object DBRadioGroup2: TDBRadioGroup
           Left = 1125
-          Top = 1
+          Top = 2
           Width = 127
           Height = 32
           Caption = 'Pre'#231'os Especiais'
@@ -1450,7 +1450,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dtpDatEntrega: TJvDBDatePickerEdit
           Left = 381
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1465,7 +1465,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit1: TJvDBDatePickerEdit
           Left = 277
-          Top = 46
+          Top = 47
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1480,7 +1480,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit5: TJvDBDatePickerEdit
           Left = 277
-          Top = 13
+          Top = 14
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1495,7 +1495,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit2: TJvDBDatePickerEdit
           Left = 381
-          Top = 13
+          Top = 14
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1510,7 +1510,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBLookupCombo4: TJvDBLookupCombo
           Left = 555
-          Top = 79
+          Top = 80
           Width = 170
           Height = 21
           Hint = 
@@ -1527,7 +1527,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbcFabricante: TDBLookupComboBox
           Left = 894
-          Top = 47
+          Top = 48
           Width = 251
           Height = 22
           DataField = 'lkpFabricante'
@@ -1537,7 +1537,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit3: TJvDBDatePickerEdit
           Left = 483
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1552,7 +1552,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit4: TJvDBDatePickerEdit
           Left = 586
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1567,7 +1567,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbies_li: TDBRadioGroup
           Left = 1149
-          Top = 37
+          Top = 38
           Width = 123
           Height = 32
           Caption = 'Lic.Importa'#231#227'o'
@@ -1585,7 +1585,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object dbVerLi: TJvDBDatePickerEdit
           Left = 4
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1600,7 +1600,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit8: TJvDBDatePickerEdit
           Left = 103
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1615,7 +1615,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit7: TJvDBDatePickerEdit
           Left = 483
-          Top = 13
+          Top = 14
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1630,7 +1630,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit9: TJvDBDatePickerEdit
           Left = 1118
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1645,7 +1645,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit10: TJvDBDatePickerEdit
           Left = 825
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1660,7 +1660,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit11: TJvDBDatePickerEdit
           Left = 1021
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1675,7 +1675,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit12: TJvDBDatePickerEdit
           Left = 689
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1690,7 +1690,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit13: TJvDBDatePickerEdit
           Left = 791
-          Top = 47
+          Top = 48
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1705,7 +1705,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit14: TJvDBDatePickerEdit
           Left = 923
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1720,7 +1720,7 @@ object fr_ManNF: Tfr_ManNF
         end
         object JvDBDatePickerEdit15: TJvDBDatePickerEdit
           Left = 728
-          Top = 79
+          Top = 80
           Width = 95
           Height = 22
           AllowNoDate = True
@@ -1736,17 +1736,17 @@ object fr_ManNF: Tfr_ManNF
       end
       object GroupBox1: TGroupBox
         Left = 0
-        Top = 431
-        Width = 1342
-        Height = 155
+        Top = 433
+        Width = 1350
+        Height = 164
         Align = alClient
         Caption = 'Coment'#225'rios Gerais(somente para consulta nesta tela)'
         TabOrder = 2
         object mmobs: TDBMemo
           Left = 2
           Top = 16
-          Width = 1338
-          Height = 137
+          Width = 1346
+          Height = 146
           Align = alClient
           BevelInner = bvNone
           BevelOuter = bvNone
@@ -1758,8 +1758,8 @@ object fr_ManNF: Tfr_ManNF
       end
       object Panel9: TPanel
         Left = 0
-        Top = 158
-        Width = 1342
+        Top = 160
+        Width = 1350
         Height = 273
         Align = alTop
         BevelOuter = bvNone
@@ -1767,7 +1767,7 @@ object fr_ManNF: Tfr_ManNF
         object pgConfDescAdic: TPageControl
           Left = 0
           Top = 0
-          Width = 1342
+          Width = 1350
           Height = 273
           ActivePage = tsBl
           Align = alClient
@@ -3288,7 +3288,7 @@ object fr_ManNF: Tfr_ManNF
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 1342
+        Width = 1350
         Height = 164
         Align = alTop
         BevelInner = bvLowered
@@ -3578,8 +3578,8 @@ object fr_ManNF: Tfr_ManNF
       end
       inline fr_FmNavigator2: Tfr_FmNavigator
         Left = 0
-        Top = 592
-        Width = 1342
+        Top = 603
+        Width = 1350
         Height = 36
         Align = alBottom
         Color = clBtnFace
@@ -3592,7 +3592,7 @@ object fr_ManNF: Tfr_ManNF
         ParentFont = False
         TabOrder = 1
         inherited ToolBar1: TToolBar
-          Width = 1342
+          Width = 1350
           Height = 36
           Align = alClient
         end
@@ -4170,8 +4170,8 @@ object fr_ManNF: Tfr_ManNF
       object PageControl1: TPageControl
         Left = 0
         Top = 164
-        Width = 1342
-        Height = 428
+        Width = 1350
+        Height = 439
         ActivePage = TabSheet1
         Align = alClient
         TabOrder = 2
@@ -4824,6 +4824,8 @@ object fr_ManNF: Tfr_ManNF
     OnNewRecord = nota_fiscal_saidaNewRecord
     OnPostError = nota_fiscal_saidaDeleteError
     OnUpdateError = nota_fiscal_saidaUpdateError
+    BufferChunks = 1000
+    CachedUpdates = False
     DeleteSQL.Strings = (
       'delete from "nota_fiscal_saida"'
       'where'
@@ -5549,6 +5551,8 @@ object fr_ManNF: Tfr_ManNF
   object qryTransportadora: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select "cod_transportadora", "nom_transportadora", "ies_situacao' +
@@ -5578,6 +5582,8 @@ object fr_ManNF: Tfr_ManNF
   object Clientes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select "nom_cliente_reduz", "ncm_fatura", "ncm_pack_list", "ncm_' +
@@ -5640,6 +5646,8 @@ object fr_ManNF: Tfr_ManNF
     OnEditError = nota_fiscal_saidaDeleteError
     OnPostError = nota_fiscal_saidaDeleteError
     OnUpdateError = nota_fiscal_saidaUpdateError
+    BufferChunks = 1000
+    CachedUpdates = False
     DeleteSQL.Strings = (
       'delete from "nota_fiscal_saida_produto"'
       'where'
@@ -6127,6 +6135,8 @@ object fr_ManNF: Tfr_ManNF
   object qryProduto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_produto", a."ncm_cod", a."ies_situacao",'
       '       c."cod_uni_medida", c."den_uni_medida", c."sigla"'
@@ -6296,6 +6306,7 @@ object fr_ManNF: Tfr_ManNF
     BeforeOpen = nf_saida_complementoBeforeOpen
     BeforePost = nf_saida_complementoBeforePost
     OnNewRecord = nf_saida_complementoNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "nf_saida_complemento"'
@@ -6641,6 +6652,8 @@ object fr_ManNF: Tfr_ManNF
   object condicao_venda: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "condicao_venda"')
     Left = 616
@@ -6666,6 +6679,8 @@ object fr_ManNF: Tfr_ManNF
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = FornecedorBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."cod_fornecedor", a."raz_social_reduz", "ies_idioma", "' +
@@ -6675,9 +6690,6 @@ object fr_ManNF: Tfr_ManNF
       '        b."cod_empresa" = :cod_empresa'
       '    and b."ies_situacao" = '#39'A'#39
       '    and b."cod_fornecedor" = a."cod_fornecedor"'
-      '    and b."cod_cliente" in (select "cod_cliente"'
-      '                              from "usuario_cliente"'
-      '                             where "login" = :login)'
       'group by 1,2,3,4'
       'order by 2')
     Left = 490
@@ -6686,11 +6698,6 @@ object fr_ManNF: Tfr_ManNF
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorcod_fornecedor: TSmallintField
@@ -6711,6 +6718,8 @@ object fr_ManNF: Tfr_ManNF
   object portos_embarque: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "portos"'
       'where "ies_tipo" = '#39'E'#39)
@@ -6738,6 +6747,8 @@ object fr_ManNF: Tfr_ManNF
   object portos_desembarque: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "portos"'
       'where "ies_tipo" = '#39'D'#39)
@@ -6765,6 +6776,8 @@ object fr_ManNF: Tfr_ManNF
   object Importador: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "nom_cliente", "endereco", "idioma_shipmarks"'
       'from "cliente"'
@@ -6800,6 +6813,8 @@ object fr_ManNF: Tfr_ManNF
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterOpen = ExportadorAfterOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social", "raz_social_reduz",'
       '       "pais_origem", "pais_aquisicao", "pais_procedencia",'
@@ -6886,6 +6901,8 @@ object fr_ManNF: Tfr_ManNF
   object produtos_xls: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select f."num_pedido_cli", a."cod_produto", a."vlr_unitario", a.' +
@@ -6989,6 +7006,8 @@ object fr_ManNF: Tfr_ManNF
   object transportadora: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_transportadora", "nom_transportadora", "endereco"'
       'from "transportadora"'
@@ -7022,6 +7041,8 @@ object fr_ManNF: Tfr_ManNF
   object NumTipoContainer: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_container", a."num_container", b."tip_container"'
       'from "nf_saida_complemento" a, "containers" b'
@@ -7066,6 +7087,8 @@ object fr_ManNF: Tfr_ManNF
   object cby_nf_saida_complemento: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_nf_saida_complemento"(:cod_empresa, :num_nota' +
@@ -7161,6 +7184,8 @@ object fr_ManNF: Tfr_ManNF
   object cby_nf_saida_embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "cby_nf_saida_embalagem"(:cod_empresa,'
       '                                       :num_nota_fiscal,'
@@ -7228,6 +7253,7 @@ object fr_ManNF: Tfr_ManNF
     AfterDelete = nf_containerAfterDelete
     AfterPost = nf_containerAfterPost
     OnNewRecord = nf_containerNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "nf_container"'
@@ -7386,6 +7412,8 @@ object fr_ManNF: Tfr_ManNF
   object Containers: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "containers"')
     Left = 60
@@ -7449,6 +7477,8 @@ object fr_ManNF: Tfr_ManNF
   object embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "embalagem"'
       'where "cod_empresa" = :cod_empresa'
@@ -7566,6 +7596,8 @@ object fr_ManNF: Tfr_ManNF
   object Del_nf_produtos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'delete from "nota_fiscal_saida_produto"'
       'where "cod_empresa" = :cod_empresa'
@@ -7597,6 +7629,7 @@ object fr_ManNF: Tfr_ManNF
     AfterPost = emb_especial_fatAfterPost
     AfterScroll = emb_especial_fatAfterScroll
     BeforeDelete = emb_especial_fatBeforeDelete
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "emb_especial_fat"'
@@ -7801,6 +7834,7 @@ object fr_ManNF: Tfr_ManNF
     AfterDelete = emb_especial_item_fatAfterDelete
     AfterPost = emb_especial_item_fatAfterPost
     OnCalcFields = emb_especial_item_fatCalcFields
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "emb_especial_item_fat"'
@@ -7947,6 +7981,8 @@ object fr_ManNF: Tfr_ManNF
   object FaturaPedidos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."num_pedido"'
       'from "nota_fiscal_saida_produto" a'
@@ -8006,6 +8042,8 @@ object fr_ManNF: Tfr_ManNF
   object qryPagamentos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "pedido_pagamento"'
@@ -8084,6 +8122,7 @@ object fr_ManNF: Tfr_ManNF
     AfterPost = nf_adic_descAfterPost
     BeforeDelete = nf_adic_descBeforeDelete
     OnNewRecord = nf_adic_descNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "nf_adic_desc"'
@@ -8236,6 +8275,8 @@ object fr_ManNF: Tfr_ManNF
   object SeqNFAdicDesc: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "nf_adic_desc" a'
@@ -8268,6 +8309,8 @@ object fr_ManNF: Tfr_ManNF
   object qryAdicDesc: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "nf_adic_desc" a'
       'where a."cod_empresa" = :cod_empresa'
@@ -8350,6 +8393,8 @@ object fr_ManNF: Tfr_ManNF
   object armadores: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "armadores"'
       'order by "den_armador"')
@@ -8370,6 +8415,8 @@ object fr_ManNF: Tfr_ManNF
   object despachante: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "despachante"'
       'order by "den_despachante"')
@@ -8390,6 +8437,8 @@ object fr_ManNF: Tfr_ManNF
   object tipo_embarque: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "tipo_embarque"'
       'order by "den_tip_embarque"')
@@ -8410,6 +8459,8 @@ object fr_ManNF: Tfr_ManNF
   object fornecedor_contato: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "fornecedor_contato" a'
@@ -8450,6 +8501,7 @@ object fr_ManNF: Tfr_ManNF
     AfterDelete = nf_confirmacoesAfterDelete
     AfterPost = nf_confirmacoesAfterPost
     AfterScroll = nf_confirmacoesAfterScroll
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "nf_confirmacoes"'
@@ -8778,6 +8830,8 @@ object fr_ManNF: Tfr_ManNF
   object spr_adic_desc_pedidos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_adic_desc_pedidos"(:cod_empresa, :num_nota_fi' +
@@ -8865,6 +8919,7 @@ object fr_ManNF: Tfr_ManNF
     Transaction = dmConnection.TransSig
     AfterDelete = pedido_adic_descAfterDelete
     AfterPost = pedido_adic_descAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_adic_desc"'
@@ -8992,6 +9047,8 @@ object fr_ManNF: Tfr_ManNF
   object Aux: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 588
     Top = 439
   end
@@ -9000,6 +9057,7 @@ object fr_ManNF: Tfr_ManNF
     Transaction = dmConnection.TransSig
     AfterDelete = bl_combinadoAfterDelete
     AfterPost = bl_combinadoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "bl_combinado"'
@@ -9383,6 +9441,8 @@ object fr_ManNF: Tfr_ManNF
   object Seq_BL: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select sig_nvl(MAX("seq_bl")) + 1 "seq_bl"'
       'from "bl_combinado"'
@@ -9396,6 +9456,8 @@ object fr_ManNF: Tfr_ManNF
   object Seq_Fat: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select sig_nvl(MAX("seq_fatura")) + 1 "seq_fatura"'
       'from "bl_combinado"'
@@ -9415,6 +9477,7 @@ object fr_ManNF: Tfr_ManNF
   object sel_faturas: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
     CachedUpdates = True
     SQL.Strings = (
       
@@ -9627,6 +9690,8 @@ object fr_ManNF: Tfr_ManNF
   object bl_fatura: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "seq_bl"'
       'from "bl_combinado"'
@@ -9661,6 +9726,8 @@ object fr_ManNF: Tfr_ManNF
   object totais_bl: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "spr_totais_bl"(:cod_empresa, :seq_bl);')
     Left = 228
@@ -9716,6 +9783,8 @@ object fr_ManNF: Tfr_ManNF
   object qryConfirmacoes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "nf_confirmacoes"'
       'where "cod_empresa" = :cod_empresa'
@@ -9892,6 +9961,8 @@ object fr_ManNF: Tfr_ManNF
   object spr_saldo_confirmacao: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_saldo_confirmacao"(:cod_empresa, :num_nota_fi' +
@@ -10087,6 +10158,7 @@ object fr_ManNF: Tfr_ManNF
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = nf_confirmacoesAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "nf_confirmacoes"'
@@ -10170,6 +10242,8 @@ object fr_ManNF: Tfr_ManNF
   object qryPagamentos_esp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "pedido_pagamento"'
@@ -10244,6 +10318,8 @@ object fr_ManNF: Tfr_ManNF
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = BancoBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_banco", "nom_banco", "txt_descricao"'
       'from "banco"'
@@ -10302,6 +10378,8 @@ object fr_ManNF: Tfr_ManNF
   object PendentesEmbarque: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_produtos_pendentes"(:cod_empresa, :cod_client' +
@@ -10464,6 +10542,8 @@ object fr_ManNF: Tfr_ManNF
   object ProxSequencia: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "nota_fiscal_saida_produto" a'
@@ -10497,6 +10577,7 @@ object fr_ManNF: Tfr_ManNF
     Transaction = dmConnection.TransSig
     AfterDelete = adicional_descontoAfterDelete
     AfterPost = adicional_descontoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "adicional_desconto"'
@@ -10622,6 +10703,8 @@ object fr_ManNF: Tfr_ManNF
   object produtos_pkl: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '/* packing list itens com pallets  */'
       'select'
@@ -10813,6 +10896,8 @@ object fr_ManNF: Tfr_ManNF
   object emb_esp_fat: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a.*'
       'from "emb_especial_fat" a'
@@ -10951,6 +11036,8 @@ object fr_ManNF: Tfr_ManNF
   object ProdutosExcelAlteracao: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a.*, b."cod_prod_fornec", c."num_pedido_cli", c."num_pedi' +
@@ -11228,6 +11315,7 @@ object fr_ManNF: Tfr_ManNF
   end
   object excluir_item_emb_esp: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'delete from "emb_especial_item_fat"'
       'where "cod_empresa" = :cod_empresa'
@@ -11253,6 +11341,7 @@ object fr_ManNF: Tfr_ManNF
     BeforeDelete = fatura_pagamentoBeforeDelete
     BeforePost = fatura_pagamentoBeforePost
     OnNewRecord = fatura_pagamentoNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "fatura_pagamento"'
@@ -11402,6 +11491,8 @@ object fr_ManNF: Tfr_ManNF
   object SeqPagFatura: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "fatura_pagamento" a'
@@ -11433,6 +11524,8 @@ object fr_ManNF: Tfr_ManNF
   object SeqPedidoPagamento: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "pedido_pagamento" a'
@@ -11462,6 +11555,7 @@ object fr_ManNF: Tfr_ManNF
     AfterPost = pedido_pagamentoAfterPost
     BeforePost = pedido_pagamentoBeforePost
     OnNewRecord = pedido_pagamentoNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_pagamento"'
@@ -11618,6 +11712,8 @@ object fr_ManNF: Tfr_ManNF
   object adic_desc_terms: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "nf_adic_desc"'
       'where "cod_empresa" = :cod_empresa'
@@ -11709,6 +11805,8 @@ object fr_ManNF: Tfr_ManNF
   object nf_confirmacoes_lkp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select first 1 cast(-1 as numeric(12,0)) "num_pedido", cast('#39'<To' +
@@ -11768,6 +11866,7 @@ object fr_ManNF: Tfr_ManNF
     Transaction = dmConnection.TransSig
     AfterPost = ProdutosFaturaImpAfterPost
     BeforePost = nota_fiscal_saida_produtoBeforePost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "nota_fiscal_saida_produto"'
@@ -12174,6 +12273,8 @@ object fr_ManNF: Tfr_ManNF
   object emb_padrao: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_calc_embalagem"(:cod_empresa, :cod_produto, :' +
@@ -12329,6 +12430,8 @@ object fr_ManNF: Tfr_ManNF
   object cliente_filial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select 0 "seq_filial", "nom_cliente" "nome", "endereco" "enderec' +
@@ -12378,6 +12481,8 @@ object fr_ManNF: Tfr_ManNF
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterOpen = FabricantesAfterOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "fabricantes"'
       'order by "nome"')
@@ -12409,6 +12514,8 @@ object fr_ManNF: Tfr_ManNF
   object emb_esp_item_fat: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."pes_liquido"'
       ' from "emb_especial_item_fat" a'

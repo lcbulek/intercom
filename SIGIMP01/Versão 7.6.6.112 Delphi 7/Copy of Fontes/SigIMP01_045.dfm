@@ -1,13 +1,15 @@
 object dmCOM: TdmCOM
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 752
-  Top = 281
+  Left = 544
+  Top = 159
   Height = 581
   Width = 822
   object Embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "embalagem"'
       'where "cod_empresa" = :cod_empresa'
@@ -120,6 +122,8 @@ object dmCOM: TdmCOM
   object cby_calc_embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_calc_embalagem"(:cod_empresa, :cod_produto, :' +
@@ -254,6 +258,8 @@ object dmCOM: TdmCOM
   object ultimo_pedido_cliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select first 1 *'
       'from "pedido" a, "pedido_complemento" b'
@@ -634,6 +640,8 @@ object dmCOM: TdmCOM
   object VerPedido: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."num_pedido", b."num_pedido_cli", b."num_pedido_for", a' +
@@ -695,6 +703,7 @@ object dmCOM: TdmCOM
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = parametro_comercialAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "parametro_comercial"'
@@ -963,18 +972,24 @@ object dmCOM: TdmCOM
   object CheckPedido: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 176
     Top = 80
   end
   object CheckNf: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 280
     Top = 80
   end
   object Ultimo_Pedido_Produto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '-- '#218'ltima Confirma'#231#227'o de Venda do Produto'
       
@@ -1049,6 +1064,8 @@ object dmCOM: TdmCOM
   object ListaGeralCliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select first 1 a."num_lista", a."den_lista", b."dat_cadastro", b' +
@@ -1110,6 +1127,8 @@ object dmCOM: TdmCOM
   object Fatura: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "num_fatura"'
       'from "nf_saida_complemento"'
@@ -1147,6 +1166,8 @@ object dmCOM: TdmCOM
   object tipo_produto_pedido: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         '  select a."cod_tip_produto", a."den_tip_produto", a."den_tip_pr' +
@@ -1198,6 +1219,8 @@ object dmCOM: TdmCOM
   object ncm_pedido: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."ncm_cod", b."cod_cliente"'
       '  from "pedido_produto" a, "produto" b, "tipo_produto" c'
@@ -1238,6 +1261,8 @@ object dmCOM: TdmCOM
   object tipo_produto_fatura: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."cod_tip_produto", a."den_tip_produto", a."den_tip_prod' +
@@ -1295,6 +1320,8 @@ object dmCOM: TdmCOM
   object ncm_fatura: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."ncm_cod", b."cod_cliente"'
       
@@ -1343,6 +1370,8 @@ object dmCOM: TdmCOM
   object Nota_Fiscal_Saida: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."num_nota_fiscal", a."serie"'
       'from "nota_fiscal_saida" a,  "nf_saida_complemento" b'
@@ -1411,6 +1440,8 @@ object dmCOM: TdmCOM
   object ProdutosHistPreco: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_produto",  a."cod_cliente", a."cod_fornecedor"'
       'from "produto" a'
@@ -1455,6 +1486,8 @@ object dmCOM: TdmCOM
   object ultimos_precos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select c."dat_cadastro" "data_preco", c."vlr_unitario" "vlr_unit' +
@@ -1628,6 +1661,8 @@ object dmCOM: TdmCOM
   object lista_preco: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "obs_preco"'
       'from "lista_preco"'
@@ -1662,6 +1697,8 @@ object dmCOM: TdmCOM
   object PedidoHistPreco: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."dat_emissao", a."terms_payment", b."num_pedido_cli"'
       'from "pedido" a, "pedido_complemento" b'
@@ -1702,6 +1739,8 @@ object dmCOM: TdmCOM
   object Fornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "raz_social_reduz"'
       'from "fornecedor"'
@@ -1724,6 +1763,8 @@ object dmCOM: TdmCOM
   object Cliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'Select "cod_cliente"'
       'from "cliente"'

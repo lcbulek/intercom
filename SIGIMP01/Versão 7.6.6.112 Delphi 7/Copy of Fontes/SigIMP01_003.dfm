@@ -1,12 +1,12 @@
 object fr_Filtro: Tfr_Filtro
-  Left = 358
-  Top = 174
+  Left = -1
+  Top = 56
   HelpType = htKeyword
   HelpKeyword = '003'
   ActiveControl = edNumPedIntercom
   AutoScroll = False
   Caption = 'Pesquisar Pedidos e Faturas'
-  ClientHeight = 766
+  ClientHeight = 614
   ClientWidth = 1350
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -237,14 +237,14 @@ object fr_Filtro: Tfr_Filtro
     Left = 0
     Top = 116
     Width = 1350
-    Height = 650
+    Height = 498
     Align = alClient
     TabOrder = 1
     object pgcFiltro: TPageControl
       Left = 1
       Top = 1
       Width = 1348
-      Height = 648
+      Height = 496
       ActivePage = tbsPedido
       Align = alClient
       TabOrder = 0
@@ -254,7 +254,7 @@ object fr_Filtro: Tfr_Filtro
         Caption = 'Pedidos(F5)'
         object Panel4: TPanel
           Left = 0
-          Top = 574
+          Top = 422
           Width = 1340
           Height = 45
           Align = alBottom
@@ -397,12 +397,12 @@ object fr_Filtro: Tfr_Filtro
           Left = 0
           Top = 0
           Width = 1340
-          Height = 257
+          Height = 105
           Align = alClient
           TabOrder = 1
           object gfPedido: TJvDBGridFooter
             Left = 2
-            Top = 236
+            Top = 84
             Width = 1336
             Height = 19
             Columns = <
@@ -444,7 +444,7 @@ object fr_Filtro: Tfr_Filtro
             Left = 2
             Top = 16
             Width = 1336
-            Height = 220
+            Height = 68
             Align = alClient
             DataSource = ds_Pedidos
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect]
@@ -640,7 +640,7 @@ object fr_Filtro: Tfr_Filtro
         end
         object GroupBox3: TGroupBox
           Left = 0
-          Top = 437
+          Top = 285
           Width = 1340
           Height = 137
           Align = alBottom
@@ -833,7 +833,7 @@ object fr_Filtro: Tfr_Filtro
         end
         object Panel6: TPanel
           Left = 0
-          Top = 257
+          Top = 105
           Width = 1340
           Height = 180
           Align = alBottom
@@ -894,7 +894,7 @@ object fr_Filtro: Tfr_Filtro
         ImageIndex = 1
         object pnlNF: TPanel
           Left = 0
-          Top = 575
+          Top = 423
           Width = 1340
           Height = 44
           Align = alBottom
@@ -1021,14 +1021,14 @@ object fr_Filtro: Tfr_Filtro
           Left = 0
           Top = 0
           Width = 1340
-          Height = 258
+          Height = 106
           Align = alClient
           TabOrder = 1
           object dbgFaturas: TJvDBUltimGrid
             Left = 2
             Top = 16
             Width = 1336
-            Height = 221
+            Height = 69
             Align = alClient
             DataSource = ds_Faturas
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect]
@@ -1215,7 +1215,7 @@ object fr_Filtro: Tfr_Filtro
           end
           object gfFaturas: TJvDBGridFooter
             Left = 2
-            Top = 237
+            Top = 85
             Width = 1336
             Height = 19
             Columns = <
@@ -1246,7 +1246,7 @@ object fr_Filtro: Tfr_Filtro
         end
         object GroupBox10: TGroupBox
           Left = 0
-          Top = 438
+          Top = 286
           Width = 1340
           Height = 137
           Align = alBottom
@@ -1354,7 +1354,7 @@ object fr_Filtro: Tfr_Filtro
         end
         object Panel5: TPanel
           Left = 0
-          Top = 258
+          Top = 106
           Width = 1340
           Height = 180
           Align = alBottom
@@ -1626,22 +1626,14 @@ object fr_Filtro: Tfr_Filtro
   object Clientes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
-      ''
       'order by "cod_cliente"')
     Left = 592
     Top = 16
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientescod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -1653,15 +1645,14 @@ object fr_Filtro: Tfr_Filtro
   object Fornecedores: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."raz_social_reduz",  a."cod_fornecedor"'
       '  from "fornecedor" a, "produto" b'
       '  where'
       '        b."cod_empresa" = :cod_empresa'
       '    and b."cod_fornecedor" = a."cod_fornecedor"'
-      '    and b."cod_cliente" in (select "cod_cliente"'
-      '                              from "usuario_cliente"'
-      '                             where "login" = :login)'
       'group by 1,2'
       'order by 1')
     Left = 592
@@ -1670,11 +1661,6 @@ object fr_Filtro: Tfr_Filtro
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorescod_fornecedor: TSmallintField
@@ -1706,6 +1692,7 @@ object fr_Filtro: Tfr_Filtro
     AfterPost = PedidosAfterPost
     AfterScroll = PedidosAfterScroll
     OnCalcFields = PedidosCalcFields
+    BufferChunks = 1000
     CachedUpdates = True
     SQL.Strings = (
       
@@ -1776,15 +1763,6 @@ object fr_Filtro: Tfr_Filtro
       
         '   and c."cod_fornecedor" = b."cod_fornecedor"                  ' +
         '                      '
-      
-        '   and a."cod_cliente" in (select "cod_cliente"                 ' +
-        '                      '
-      
-        '                             from "usuario_cliente"             ' +
-        '                      '
-      
-        '                            where "login" = :login)             ' +
-        '                      '
       ' order by a."dat_emissao" descending ')
     UpdateObject = upPedidos
     Left = 29
@@ -1803,11 +1781,6 @@ object fr_Filtro: Tfr_Filtro
       item
         DataType = ftUnknown
         Name = 'ano'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Pedidosnum_pedido_cli: TIBStringField
@@ -2082,6 +2055,7 @@ object fr_Filtro: Tfr_Filtro
     AfterPost = FaturasAfterPost
     AfterScroll = FaturasAfterScroll
     OnCalcFields = FaturasCalcFields
+    BufferChunks = 1000
     CachedUpdates = True
     SQL.Strings = (
       'select'
@@ -2533,6 +2507,8 @@ object fr_Filtro: Tfr_Filtro
   object cby_pedido_faturados: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from  "cby_pedido_faturados"(:cod_empresa, :num_pedido)' +
@@ -2608,6 +2584,8 @@ object fr_Filtro: Tfr_Filtro
   object cby_pedido_pendentes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "cby_pedido_pendentes"(:cod_empresa, :num_pedido);')
     Left = 135
@@ -2661,6 +2639,8 @@ object fr_Filtro: Tfr_Filtro
   object Grupos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."den_tip_produto"'
       'from "tipo_produto" a'
@@ -2699,6 +2679,8 @@ object fr_Filtro: Tfr_Filtro
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     OnCalcFields = PedidoProdutosCalcFields
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "spr_pedidos_faturas"(:cod_empresa, :num_pedido);')
     Left = 29
@@ -2867,6 +2849,8 @@ object fr_Filtro: Tfr_Filtro
   object TotalPedidoProdutos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_tot_pedidos_faturas"(:cod_empresa, :num_pedid' +
@@ -2941,6 +2925,8 @@ object fr_Filtro: Tfr_Filtro
   object cby_produto_pendentes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_produto_pendentes"(:cod_empresa, :num_pedido,' +
@@ -2995,6 +2981,8 @@ object fr_Filtro: Tfr_Filtro
   object pedido_pagamento_ad: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '   select a.*, b."num_fatura"'
       '     from "pedido_pagamento" a'
@@ -3081,6 +3069,8 @@ object fr_Filtro: Tfr_Filtro
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     OnCalcFields = ProdutosFaturaCalcFields
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a.*, c."num_pedido_cli", c."num_pedido_for"'
       '  from "nota_fiscal_saida_produto" a, "pedido_complemento" c'
@@ -3206,6 +3196,8 @@ object fr_Filtro: Tfr_Filtro
   object CondicaoVenda: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "den_tip_condicao"'
       '  from "condicao_venda"'
@@ -3222,6 +3214,8 @@ object fr_Filtro: Tfr_Filtro
   object Portos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "den_porto" from "portos"'
       'where "cod_porto" = :"cod_porto"')
@@ -3237,6 +3231,8 @@ object fr_Filtro: Tfr_Filtro
   object spr_faturas_pedido: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "spr_faturas_pedido"(:cod_empresa, :num_pedido);')
     Left = 95
@@ -3256,6 +3252,8 @@ object fr_Filtro: Tfr_Filtro
   object pedido_pagamento_ef: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '   select a.*, b."num_fatura"'
       '     from "pedido_pagamento" a'
@@ -3316,6 +3314,8 @@ object fr_Filtro: Tfr_Filtro
   object spr_saldo_confirmacao: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_saldo_confirmacao"(:cod_empresa, :num_nota_fi' +
@@ -3384,6 +3384,8 @@ object fr_Filtro: Tfr_Filtro
   object spr_fatura_pedido_ptgadiantado: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_fatura_pedido_ptgadiantado"(:cod_empresa, :nu' +
@@ -3431,6 +3433,8 @@ object fr_Filtro: Tfr_Filtro
   object fatura_pagamento: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "fatura_pagamento"'

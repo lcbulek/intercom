@@ -150,12 +150,6 @@ begin
      begin
         SQL.Add('   and a."cod_cliente" = :cod_cliente                     ');
         ParamByName('cod_cliente').AsString := Clientescod_cliente.AsString;
-     end else
-     begin
-        SQL.Add('  and a."cod_cliente" in (select "cod_cliente"        ');
-        SQL.Add('                            from "usuario_cliente"    ');
-        SQL.Add('                           where "login" = :login)    ');
-        ParamByName('login').Value := vgLogin;
      end;
      SQL.Add('   and substr(a."dat_emissao", 1,4) = :ano              ');
      SQL.Add('   and b."cod_empresa" = a."cod_empresa"                  ');
@@ -476,15 +470,10 @@ begin
     SQL.Add('  and b."cod_empresa" = a."cod_empresa"                                                      ');
     SQL.Add('  and b."num_pedido" = a."num_pedido"                                                        ');
     SQL.Add('  and c."cod_fornecedor" = b."cod_fornecedor"                                                ');
-    SQL.Add('  and a."cod_cliente" in (select "cod_cliente"                                               ');
-    SQL.Add('                            from "usuario_cliente"                                           ');
-    SQL.Add('                           where "login" = :login)                                           ');
     SQL.Add('order by a."dat_emissao" descending                                                          ');
 
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
     ParamByName('ano').AsString          := seAno.Text;
-    ParamByName('login').AsString        := vgLogin;
-
     Open;
 
     if (IsEmpty) then Exit; // sair se não existir pedidos
@@ -939,9 +928,6 @@ begin
     SQL.Add('  and b."cod_empresa" = a."cod_empresa"               ');
     SQL.Add('  and b."num_pedido"  = a."num_pedido"                ');
     SQL.Add('  and c."cod_cliente" = a."cod_cliente"               ');
-    SQL.Add('  and c."cod_cliente" in (select "cod_cliente"        ');
-    SQL.Add('                            from "usuario_cliente"    ');
-    SQL.Add('                           where "login" = :login)    ');
     if (dbcFornecedores.Value <> '0') then
     begin
       SQL.Add('  and b."cod_fornecedor" = :cod_fornecedor          ');
@@ -952,7 +938,6 @@ begin
     SQL.Add('order by 1                                            ');
 
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;
     ParamByName('ano').Value := seAno.Text;
     Open;
   end;
@@ -971,9 +956,6 @@ begin
     SQL.Add('  and b."cod_empresa" = a."cod_empresa"               ');
     SQL.Add('  and b."num_pedido"  = a."num_pedido"                ');
     SQL.Add('  and c."cod_cliente" = a."cod_cliente"               ');
-    SQL.Add('  and c."cod_cliente" in (select "cod_cliente"        ');
-    SQL.Add('                            from "usuario_cliente"    ');
-    SQL.Add('                           where "login" = :login)    ');
     if (dbcFornecedores.Value <> '0') then
     begin
       SQL.Add('  and b."cod_fornecedor" = :cod_fornecedor          ');
@@ -984,7 +966,6 @@ begin
     SQL.Add('order by 1                                            ');
 
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;
     ParamByName('ano').Value := seAno.Text;
     Open;
   end;
@@ -1000,12 +981,6 @@ begin
     begin
        SQL.Add('   and a."cod_cliente" = :cod_cliente                     ');
        ParamByName('cod_cliente').AsString := Clientescod_cliente.AsString;
-    end else
-    begin
-       SQL.Add('  and a."cod_cliente" in (select "cod_cliente"        ');
-       SQL.Add('                            from "usuario_cliente"    ');
-       SQL.Add('                           where "login" = :login)    ');
-       ParamByName('login').Value := vgLogin;
     end;
     SQL.Add('   and substr(a."dat_emissao", 1,4) = :ano              ');
     SQL.Add('   and b."cod_empresa" = a."cod_empresa"                  ');

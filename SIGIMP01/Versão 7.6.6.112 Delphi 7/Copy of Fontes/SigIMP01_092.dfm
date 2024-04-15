@@ -1,6 +1,6 @@
 object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
   Left = 770
-  Top = 363
+  Top = 364
   HelpType = htKeyword
   HelpKeyword = '071'
   BorderIcons = [biSystemMenu]
@@ -254,6 +254,8 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = ClientesBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select c."cod_cliente"'
       'from "pedido" a, "pedido_complemento" b, "cliente" c'
@@ -262,9 +264,6 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
       '  and b."cod_empresa" = a."cod_empresa"'
       '  and b."num_pedido"  = a."num_pedido"'
       '  and c."cod_cliente" = a."cod_cliente"'
-      '  and c."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
       'group by 1'
       'order by 1')
     Left = 40
@@ -273,11 +272,6 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Clientescod_cliente: TIBStringField
@@ -297,6 +291,8 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = FornecedoresBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."cod_fornecedor", c."raz_social_reduz"'
       'from "pedido" a, "pedido_complemento" b, "fornecedor" c'
@@ -333,6 +329,8 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     OnCalcFields = PedidosCalcFields
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select                                                          ' +
@@ -401,9 +399,6 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
       '  and b."cod_empresa" = a."cod_empresa"'
       '  and b."num_pedido" = a."num_pedido"'
       '  and c."cod_fornecedor" = b."cod_fornecedor"'
-      '  and a."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
       'order by a."dat_emissao" descending')
     Left = 120
     Top = 8
@@ -426,11 +421,6 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
       item
         DataType = ftUnknown
         Name = 'ano'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Pedidoscod_empresa: TSmallintField
@@ -637,6 +627,8 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_comercial"'
       'where "cod_empresa" = :cod_empresa')
@@ -691,6 +683,8 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
   object Grupos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."den_tip_produto"'
       'from "tipo_produto" a'
@@ -728,6 +722,8 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
   object cby_pedido_pendentes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "cby_pedido_pendentes"(:cod_empresa, :num_pedido);')
     Left = 155
@@ -747,6 +743,8 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
   object CondicaoVenda: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "den_tip_condicao"'
       '  from "condicao_venda"'
@@ -763,6 +761,8 @@ object fr_PedidosRegistradosResumo: Tfr_PedidosRegistradosResumo
   object Portos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "den_porto" from "portos"'
       'where "cod_porto" = :"cod_porto"')

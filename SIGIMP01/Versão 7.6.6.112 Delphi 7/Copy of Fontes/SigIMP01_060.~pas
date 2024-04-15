@@ -556,7 +556,6 @@ procedure TfrmProdList.FormCreate(Sender: TObject);
 begin
   with Clientes do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
   Fornecedores.Open;
@@ -807,7 +806,7 @@ begin
       Transaction.CommitRetaining;
       Refresh;
    end;
-   (*
+
    { Processar a alteração de cadastro do produto }
    with spr_prodlist_cadastro do
    begin
@@ -835,10 +834,10 @@ begin
      Transaction.RollbackRetaining;
     end;
    end;
-   *)
+
    SalvarMarcador;
 
-   //RomanearProdlist(NumProdList, DataSet.FieldByName('num_sequencia').AsInteger);
+   RomanearProdlist(NumProdList, DataSet.FieldByName('num_sequencia').AsInteger);
 
    RefreshTabelas;
 

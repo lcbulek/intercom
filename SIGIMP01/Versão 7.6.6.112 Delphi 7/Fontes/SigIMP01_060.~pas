@@ -2170,7 +2170,8 @@ begin
 
    btnAddPcklst.Enabled := pgItensProdList.ActivePage = tsItensPrl;
    btnRemPcklst.Enabled := pgItensProdList.ActivePage = tsPackList;
-   btnFaturar.Enabled := pgItensProdList.ActivePage = tsPackList;
+   if Length(trim(edNumFatura.text)) > 0 then
+      btnFaturar.Enabled := pgItensProdList.ActivePage = tsPackList;
 end;
 
 procedure TfrmProdList.palletsqtd_palletValidate(Sender: TField);

@@ -1,6 +1,6 @@
 inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
-  Left = 466
-  Top = 195
+  Left = 350
+  Top = 113
   Width = 1256
   Height = 705
   HelpType = htKeyword
@@ -12,12 +12,12 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   PixelsPerInch = 96
   TextHeight = 14
   inherited Panel1: TPanel
-    Width = 1240
+    Width = 1248
     Height = 199
     object Panel2: TPanel [0]
       Left = 2
       Top = 2
-      Width = 1236
+      Width = 1244
       Height = 195
       Align = alClient
       BevelInner = bvLowered
@@ -314,7 +314,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
       object Panel12: TPanel
         Left = 2
         Top = 140
-        Width = 1232
+        Width = 1240
         Height = 53
         Align = alBottom
         TabOrder = 16
@@ -793,10 +793,10 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     end
   end
   inherited fr_FmNavigator1: Tfr_FmNavigator
-    Top = 630
-    Width = 1240
+    Top = 641
+    Width = 1248
     inherited ToolBar1: TToolBar
-      Width = 1240
+      Width = 1248
     end
     inherited ActionList1: TActionList
       Left = 446
@@ -841,13 +841,13 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   end
   inherited PageControl1: TPageControl
     Top = 199
-    Width = 1240
-    Height = 431
+    Width = 1248
+    Height = 442
     inherited TabSheet1: TTabSheet
       Caption = 'Produtos'
       inherited DBGrade: TJvDBUltimGrid
-        Width = 1232
-        Height = 313
+        Width = 1240
+        Height = 324
         Options = [dgEditing, dgAlwaysShowEditor, dgTitles, dgIndicator, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgMultiSelect]
         OnDrawColumnCell = DBGradeDrawColumnCell
         MultiSelect = True
@@ -920,7 +920,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
           item
             Expanded = False
             FieldName = 'pes_liquido'
-            Width = 80
+            Width = 83
             Visible = True
           end
           item
@@ -955,8 +955,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
       end
       object Panel4: TPanel
         Left = 0
-        Top = 361
-        Width = 1232
+        Top = 372
+        Width = 1240
         Height = 41
         Align = alBottom
         BevelInner = bvRaised
@@ -1001,8 +1001,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
       end
       object Panel6: TPanel
         Left = 0
-        Top = 313
-        Width = 1232
+        Top = 324
+        Width = 1240
         Height = 48
         Align = alBottom
         BevelInner = bvLowered
@@ -2321,21 +2321,14 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterOpen = ClientesAfterOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente_reduz"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 688
     Top = 408
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientescod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -2358,6 +2351,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object cby_imp_ped_cli: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_imp_ped_cli"(:cod_empresa, :cod_cliente, :num' +
@@ -2468,6 +2463,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object parametro_cliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_cliente" p'
       'where p."cod_cliente" = :cod_cliente')
@@ -2502,6 +2499,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     Transaction = dmConnection.TransSig
     AfterOpen = FornecedoresAfterOpen
     Active = True
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."raz_social_reduz",  "cod_fornecedor", "ies_idioma", "c' +
@@ -2556,6 +2555,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object parametro_comercial: TIBDataSet
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "parametro_comercial"'
@@ -2748,6 +2748,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     AfterDelete = imp_ped_cliAfterDelete
     AfterPost = imp_ped_cliAfterPost
     AfterScroll = imp_ped_cliAfterScroll
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "imp_ped_cli"'
@@ -3005,6 +3006,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     AfterPost = imp_ped_cli_prodAfterPost
     BeforePost = IBDataSetGradeBeforePost
     OnNewRecord = imp_ped_cli_prodNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "imp_ped_cli_prod"'
@@ -3362,6 +3364,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     AfterDelete = PedidoAfterDelete
     AfterPost = PedidoAfterPost
     OnNewRecord = PedidoNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido"'
@@ -3623,6 +3626,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     Transaction = dmConnection.TransSig
     AfterDelete = pedido_produtoAfterDelete
     AfterPost = pedido_produtoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_produto"'
@@ -4039,6 +4043,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     AfterPost = pedido_complementoAfterPost
     BeforeOpen = pedido_complementoBeforeOpen
     OnNewRecord = pedido_complementoNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_complemento"'
@@ -4290,6 +4295,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object Sequencia: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."seq")+1 "seq"'
       'from "imp_ped_cli_prod" a'
@@ -4320,6 +4327,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   end
   object delete_pedido: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'delete from "pedido" a'
       'where a."cod_empresa" = :cod_empresa'
@@ -4333,6 +4341,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   end
   object delete_itens: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'delete from "pedido_produto"'
       'where "cod_empresa" = :cod_empresa'
@@ -4343,6 +4352,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   end
   object delete_complemento: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'delete from "pedido_complemento"'
       'where "cod_empresa" = :cod_empresa'
@@ -4353,6 +4363,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   end
   object sql_situacao_importado: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'update "imp_ped_cli" a'
       '  set a."ies_situacao" = '#39'I'#39
@@ -4372,6 +4383,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   end
   object sql_situacao_erro: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'update "imp_ped_cli" a'
       '  set a."ies_situacao" = '#39'E'#39
@@ -4390,6 +4402,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   end
   object up_imp_ped_cli_prod: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'update "imp_ped_cli_prod" x'
       '  set x."ies_status" = '#39'G'#39
@@ -4404,6 +4417,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object Banco: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_banco"'
       'from "banco"'
@@ -4432,6 +4447,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     AfterPost = emb_especial_impAfterPost
     AfterScroll = emb_especial_impAfterScroll
     BeforeDelete = emb_especial_impBeforeDelete
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "emb_especial_imp"'
@@ -4619,6 +4635,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     AfterDelete = emb_especial_item_impAfterDelete
     AfterPost = emb_especial_item_impAfterPost
     OnCalcFields = emb_especial_item_impCalcFields
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "emb_especial_item_imp"'
@@ -4757,6 +4774,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = emb_especial_pedAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "emb_especial_ped"'
@@ -4927,6 +4945,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = emb_especial_item_pedAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "emb_especial_item_ped"'
@@ -5049,6 +5068,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     OnNewRecord = IBDataSetGradeNewRecord
     OnPostError = IBDataSetGradePostError
     OnUpdateError = IBDataSetGradeUpdateError
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "imp_ped_cli_prod"'
@@ -5388,6 +5408,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object QrAux2: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "imp_ped_cli_prod"'
       'where "cod_empresa" = :cod_empresa'
@@ -5428,6 +5450,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object Produtos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select "cod_produto", "den_produto_detpor", "den_produto", "pes_' +
@@ -5482,6 +5506,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object TotalPesoPallets: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select SUM("pes_liquido") * 1.10 "pes_liquido_pallet"'
       'from "imp_ped_cli_prod"'
@@ -5520,6 +5546,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   end
   object AtualizarPallets: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'update "imp_ped_cli_prod"'
       '  set "pes_liquido_pallet" = :"pes_liquido_pallet",'
@@ -5535,6 +5562,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object emb_esp_imp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "emb_especial_imp"'
       'where "cod_empresa" = :cod_empresa'
@@ -5660,6 +5689,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object emb_esp_item_imp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "emb_especial_item_imp"'
@@ -5701,6 +5732,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   object emb_padrao: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_calc_embalagem"(:cod_empresa, :cod_produto, :' +
@@ -5837,6 +5870,8 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     Transaction = dmConnection.TransSig
     AfterOpen = FabricantesAfterOpen
     Active = True
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "fabricantes"'
       'order by "nome"')

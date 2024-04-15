@@ -572,17 +572,11 @@ begin
     SQL.Add('   and b."cod_empresa" = a."cod_empresa"                                              ');
     SQL.Add('   and b."num_pedido" = a."num_pedido"                                                ');
     SQL.Add('   and c."cod_fornecedor" = b."cod_fornecedor"                                        ');
-    SQL.Add('   and a."cod_cliente" in (select "cod_cliente"                                       ');
-    SQL.Add('                             from "usuario_cliente"                                   ');
-    SQL.Add('                            where "login" = :login)                                   ');
-
-
     SQL.Add(' order by a."dat_emissao" descending ');
 
-    //SQL.SaveToFile('C:\SIG\sql.txt');
+    SQL.SaveToFile('C:\SIG\pedidos.sql');
 
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
 end;
@@ -665,15 +659,11 @@ begin
         SQL.Add('  and substr(a."dat_emissao", 1,4) = :ano');
         ParamByName('ano').AsString := seAno.Text;
     end;
-
-    SQL.Add('   and a."cod_cliente" in (select "cod_cliente"                                       ');  {26.08.14: Filtrar por Clientes do Usuário  }
-    SQL.Add('                             from "usuario_cliente"                                   ');
-    SQL.Add('                            where "login" = :login)                                   ');
-
     SQL.Add('order by a."dat_emissao" descending ');
-    //SQL.SaveToFile('C:\SIG\faturas.sql');
+
+    SQL.SaveToFile('C:\SIG\faturas.sql');
+
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;
 
     Open;
   end;
@@ -753,14 +743,12 @@ begin
   with Clientes do
   begin
     Close;
-    ParamByName('login').Value := vgLogin;  { 26.08.14: Filtrar os Clientes por Usuário }
     Open;
   end;
   with Fornecedores do
   begin
     Close;
     ParamByName('cod_empresa').Value := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;  { 26.08.14: Filtrar Fornecedores dos Clientes do Usuário }
     Open;
   end;
 end;
@@ -1324,9 +1312,6 @@ begin
     SQL.Add('  where                                                         ');
     SQL.Add('        b."cod_empresa" = :cod_empresa                          ');
     SQL.Add('    and b."cod_fornecedor" = a."cod_fornecedor"                 ');
-    SQL.Add('    and b."cod_cliente" in (select "cod_cliente"                ');  {26.08.14: Filtrar por Clientes do Usuário  }
-    SQL.Add('                              from "usuario_cliente"            ');
-    SQL.Add('                             where "login" = :login)            ');
 
     if (dbcClientes.Value <> '0') then
     begin
@@ -1338,7 +1323,6 @@ begin
     SQL.Add('order by 1');
 
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;
 
     Open;
   end;

@@ -1,6 +1,6 @@
 object frm_PesquisaAdcDesc: Tfrm_PesquisaAdcDesc
-  Left = 577
-  Top = 360
+  Left = 515
+  Top = 192
   HelpType = htKeyword
   HelpKeyword = '018'
   BorderIcons = [biSystemMenu]
@@ -258,21 +258,14 @@ object frm_PesquisaAdcDesc: Tfrm_PesquisaAdcDesc
   object Cliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 408
     Top = 18
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientecod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -289,6 +282,8 @@ object frm_PesquisaAdcDesc: Tfrm_PesquisaAdcDesc
   object Fornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."raz_social_reduz",  a."cod_fornecedor"'
       '  from "fornecedor" a, "produto" b'
@@ -296,9 +291,6 @@ object frm_PesquisaAdcDesc: Tfrm_PesquisaAdcDesc
       '        b."cod_empresa" = :cod_empresa'
       '    and b."cod_fornecedor" = a."cod_fornecedor"'
       '    and b."cod_cliente" = :cod_cliente'
-      '    and b."cod_cliente" in (select "cod_cliente"'
-      '                              from "usuario_cliente"'
-      '                             where "login" = :login)'
       'group by 1,2'
       'order by 1')
     Left = 408
@@ -312,11 +304,6 @@ object frm_PesquisaAdcDesc: Tfrm_PesquisaAdcDesc
       item
         DataType = ftUnknown
         Name = 'cod_cliente'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorcod_fornecedor: TSmallintField
@@ -336,6 +323,8 @@ object frm_PesquisaAdcDesc: Tfrm_PesquisaAdcDesc
   object adicional_desconto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "adicional_desconto"'
@@ -858,6 +847,8 @@ object frm_PesquisaAdcDesc: Tfrm_PesquisaAdcDesc
   object Fornecedor_lkp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social_reduz"'
       'from "fornecedor"')

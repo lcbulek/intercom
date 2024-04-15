@@ -1,6 +1,6 @@
 object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
   Left = 705
-  Top = 332
+  Top = 205
   HelpType = htKeyword
   HelpKeyword = '071'
   BorderIcons = [biSystemMenu]
@@ -366,6 +366,8 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = ClientesBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select c."cod_cliente"'
       'from "pedido" a, "pedido_complemento" b, "cliente" c'
@@ -374,9 +376,6 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
       '  and b."cod_empresa" = a."cod_empresa"'
       '  and b."num_pedido"  = a."num_pedido"'
       '  and c."cod_cliente" = a."cod_cliente"'
-      '  and c."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
       'group by 1'
       'order by 1')
     Left = 84
@@ -385,11 +384,6 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Clientescod_cliente: TIBStringField
@@ -409,6 +403,8 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = FornecedoresBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."cod_fornecedor", c."raz_social_reduz"'
       'from "pedido" a, "pedido_complemento" b, "fornecedor" c'
@@ -444,6 +440,8 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
   object PedidoProdutos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_produtos_embarcados"(:cod_empresa, :cod_produ' +
@@ -625,6 +623,8 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterScroll = ProdutosAfterScroll
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '/* selecionar produtos Embarcados do cliente e fornecedor */'
       'select a."cod_produto"'
@@ -679,6 +679,8 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_comercial"'
       'where "cod_empresa" = :cod_empresa')
@@ -733,6 +735,8 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
   object embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "embalagem"'
       'where "cod_empresa" = :cod_empresa'
@@ -843,6 +847,8 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
   object pedido_adic_desc: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "pedido_adic_desc"'
       'where "cod_empresa" = :cod_empresa'
@@ -867,6 +873,7 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
     Transaction = dmConnection.TransSig
     AfterDelete = t_histcomprasAfterDelete
     AfterPost = t_histcomprasAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "t_histcompras"'
@@ -950,6 +957,8 @@ object fr_HistoricoComprasEmbarque: Tfr_HistoricoComprasEmbarque
   object qryProdutos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."cod_produto", a."cod_cliente", a."cod_fornecedor", b."' +

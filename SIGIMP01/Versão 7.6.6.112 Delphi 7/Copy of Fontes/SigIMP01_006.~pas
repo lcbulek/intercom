@@ -911,7 +911,6 @@ type
       var Handled: Boolean);
     procedure fr_FmNavigator2ActionList1Execute(Action: TBasicAction;
       var Handled: Boolean);
-    procedure qryPedidocod_moedaValidate(Sender: TField);
     procedure edtvlr_freteExit(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure actExcelOrderExecute(Sender: TObject);
@@ -986,6 +985,7 @@ type
     procedure actHistPrecosExecute(Sender: TObject);
     procedure pedido_adic_descvlr_adic_descValidate(Sender: TField);
     procedure pedido_adic_descvlr_adic_desc_espValidate(Sender: TField);
+    procedure PackagesInformation(Col1, Col2: String; Linha: integer);
     procedure GerarPedido(Tipo: String);
     procedure GerarShipMarks;
     procedure actExcelGerarExecute(Sender: TObject);
@@ -1061,7 +1061,7 @@ var
 
 implementation
 
-uses unConnection, SigIMP01_003, UnMenuCompl, SigIMP01_034, SigIMP01_045, UnMenu, SigIMP01_008,
+uses unConnection, SigIMP01_003, UnMenuCompl, SigIMP01_034, SigIMP01_045, UnMenu, 
   SigIMP01_023, SigIMP01_074;
 
 {$R *.dfm}
@@ -2043,38 +2043,13 @@ end;
 procedure Tfr_ManPedido.fr_FmNavigator1ActionList1Execute(
   Action: TBasicAction; var Handled: Boolean);
 begin
-	if Action = fr_FmNavigator1.acInsert then Handled	:= not Permitir_Acesso(CtInsert, Buscar_Unit(ClassName));
-  if Action = fr_FmNavigator1.acEdit then   Handled	:= not Permitir_Acesso(CtEdit, Buscar_Unit(ClassName));
-  if Action = fr_FmNavigator1.acDelete then Handled	:= not Permitir_Acesso(CtDelete, Buscar_Unit(ClassName));
-
   fr_FmNavigator1.ActionList1Execute(Action, Handled);
 end;
 
 procedure Tfr_ManPedido.fr_FmNavigator2ActionList1Execute(
   Action: TBasicAction; var Handled: Boolean);
 begin
-	if Action = fr_FmNavigator2.acInsert then Handled	:= not Permitir_Acesso(CtInsert, Buscar_Unit(ClassName));
-  if Action = fr_FmNavigator2.acEdit then   Handled	:= not Permitir_Acesso(CtEdit, Buscar_Unit(ClassName));
-  if Action = fr_FmNavigator2.acDelete then Handled	:= not Permitir_Acesso(CtDelete, Buscar_Unit(ClassName));
-
   fr_FmNavigator2.ActionList1Execute(Action, Handled);
-end;
-
-procedure Tfr_ManPedido.qryPedidocod_moedaValidate(Sender: TField);
-begin
-(*	try
-    qryMoeda.DisableControls;
-    qryMoeda.First;
-    if not qryMoeda.Locate(qryMoedacod_moeda.DisplayName, Sender.AsInteger, []) then
-    try
-    	Abort;
-    finally
-    	MessageDlg('Moeda inexistente', mtError, [mbCancel], 0);
-    end else
-	finally
-  	qryMoeda.EnableControls;
-  end;
-*)
 end;
 
 procedure Tfr_ManPedido.edtvlr_freteExit(Sender: TObject);
@@ -2253,23 +2228,666 @@ begin
    AbrirExcel(FileName, True);
 end;
 
+procedure Tfr_ManPedido.PackagesInformation(Col1, Col2: String; Var Linha: integer);
+Var
+  LinhaAux : Integer;
+  s : string;
+begin
+   { PACKAGES INFORMATION }
+   LinhaAux := Linha;
+
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+      MergeCells := True;
+      if (IdiomaExporter= 'I') then
+      begin
+        Value := 'PACKAGES INFORMATION:'
+      end else if (IdiomaExporter= 'P') then
+      begin
+        Value := 'INFORMAÇÕES SOBRE EMBALAGENS:';
+      end else if (IdiomaExporter= 'E') then
+      begin
+        Value := 'INFORMACIONES SOBRE EMBALAJES:';
+      end;
+      Font.Bold := True;
+      Font.Name := 'Arial';
+      Font.Size := 10;
+      Interior.ColorIndex := 0;
+      Borders.LineStyle := xlContinuous;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+   end;
+
+   { TOTAL VOLUME }
+   Inc(Linha);
+   s := '';
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        s := 'TOTAL VOLUME:'
+     else if (IdiomaExporter= 'P') then
+        s := 'VOLUME TOTAL:'
+     else if (IdiomaExporter= 'E') then
+        s := 'VOLUMEM TOTAL:';
+
+     s := s +  FormatFloat(VolumeNumberFormatTotal, Arredonda(pedido_complementovol_geral.AsFloat, -2, rmUp));
+     Value2 := s ;
+     Font.Name := 'Arial';
+     Font.Size := 10;
+     Font.Bold := True;
+     HorizontalAlignment := xlLeft;
+   end;
+
+   { TOTAL GROSS WEIGHT }
+   Inc(Linha);
+   s := '';
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        s := 'TOTAL GROSS WEIGHT:'
+     else if (IdiomaExporter= 'P') then
+        s := 'PESO BRUTO TOTAL:'
+     else if (IdiomaExporter= 'E') then
+        s := 'PESO BRUTO TOTAL:';
+
+     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_bru_geral.AsFloat);
+     Value2 := s ;
+     Font.Name := 'Arial';
+     Font.Bold := True;
+     Font.Size := 10;
+     HorizontalAlignment := xlLeft;
+   end;
+
+   { TOTAL NET WEIGHT }
+   Inc(Linha);
+   s := '';
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        s := 'TOTAL NET WEIGHT:'
+     else if (IdiomaExporter= 'P') then
+        s := 'PESO LÍQUIDO TOTAL:'
+     else if (IdiomaExporter= 'E') then
+        s := 'PESO NETO TOTAL:';
+
+     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_liq_geral.AsFloat);
+     Value2 := s ;
+     Font.Name := 'Arial';
+     Font.Bold := True;
+     Font.Size := 10;
+     HorizontalAlignment := xlLeft;
+   end;
+
+   { QUANTITY OF CARTONS }
+   Inc(Linha);
+   s := '';
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+      MergeCells := True;
+      if (IdiomaExporter= 'I') then
+      begin
+         s := 'QUANTITY OF CARTONS:'
+      end else if (IdiomaExporter= 'P') then
+      begin
+         s := 'QUANTIDADE DE EMBALAGENS:'
+      end else if (IdiomaExporter= 'E') then
+      begin
+         s := 'CANTIDAD DE EMBALAJES:'
+      end;
+
+      if (qryPedidoies_pallets.Value = 'S') then
+      begin
+         if (pedido_complementocxs_outpallet.Value > 0) then
+            s := s + ' ' + FormatFloat(' #,##0', pedido_complementocxs_outpallet.Value) + ' CARTONS AND ';
+         s := s + FormatFloat('  #,##0', pedido_complementoqtd_pallets.Value) + ' PALLETS';
+      end else
+         s := s + FormatFloat('  #,##0', pedido_complementoqtd_caixas.value) + ' CARTONS';
+
+      Value2 := s;
+      Font.Bold := True;
+      Font.Name := 'Arial';
+      Font.Size := 10;
+      Interior.ColorIndex := 0;
+      Borders.LineStyle := xlNone;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlTop;
+      WrapText := True;
+      ShrinkToFit := False;
+   end;
+
+   with ExcelWorkSheet.Range[Col1 + IntToStr(LinhaAux), Col2 + IntToStr(Linha)] do
+   begin
+    Borders[xlDiagonalDown].LineStyle := xlNone;
+    Borders[xlDiagonalUp].LineStyle := xlNone;
+    with Borders[xlEdgeLeft] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeTop] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeBottom] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeRight] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    Borders[xlInsideVertical].LineStyle := xlNone;
+    Borders[xlInsideHorizontal].LineStyle := xlNone;
+    VerticalAlignment := xlTop;
+   end;
+end;
+
 procedure Tfr_ManPedido.GerarPedido(Tipo: String);
 Var
   DIR_PLANILHAS, PATH : String;
   Linha1, Linha2, LinhaAux, cont, Cont_Caract : Integer;
   Tot : String;
 
-procedure ConditionPage(Pagina, Tipo: String);  {Tipo = C -> Condition Page completa P -> Parte da condition + Remarks para assinaturas }
+procedure EspecificationPage(Tipo: String);
+begin
+   { PÁGINA DE SPECIFICATION }
+   ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
+   ExcelWorksheet.Activate(lcid);
+   ExcelWorkSheet.Name := 'Specification';
+
+   {Gerar cabeçalho no excel}
+   Linha := 1; // variável p/ referencia de linha
+   { Packing Page }
+   PedidoHeader(Tipo, 'P');
+   PedidoItensPackingList(Tipo);
+
+   { Totais }
+   LinhaAux := Linha;
+   { TOTAL FOB }
+   Linha := Linha + 1;
+
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Value := 'TOTAL ' + trim(pedido_complementolkcCondicaoVenda.AsString) + ' US$';
+     Font.Name := 'Arial';
+     Font.Size := 10;
+     Font.Bold := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   ExcelWorkSheet.Cells.Item[Linha, 10].NumberFormat := '#.##0,00';
+   ExcelWorkSheet.Cells.Item[Linha, 10].Formula := '=ROUND(SUM(J8:J'+IntTostr(LinhaAux-1)+'),2)';
+   Tot := '';
+
+   { ADICIONAIS }
+   with qryAdicDesc do
+   begin
+     Close;
+     SQL.Clear;
+     SQL.Add('select * from "pedido_adic_desc" a                                        ');
+     SQL.Add(' where a."cod_empresa" = :cod_empresa                                     ');
+     SQL.Add('   and a."num_pedido" = :"num_pedido"                                     ');
+     SQL.Add('   and a."ies_tipo" = :ies_tipo                                           ');
+     if (Tipo = 'A') or (Tipo = '') then
+        SQL.Add('   and a."vlr_adic_desc" > 0                                              ')
+     else
+        SQL.Add('   and a."vlr_adic_desc_esp" > 0                                          ');
+     SQL.Add('union all                                                                 ');
+     SQL.Add('select * from "pedido_adic_desc" a                                        ');
+     SQL.Add(' where a."cod_empresa" = :cod_empresa                                     ');
+     SQL.Add('   and a."num_pedido" = :"num_pedido"                                     ');
+     SQL.Add('   and a."ies_tipo" = :ies_tipo                                           ');
+     SQL.Add('   and ((a."vlr_adic_desc" = 0 or a."vlr_adic_desc" is null)              ');
+     SQL.Add('   and (a."vlr_adic_desc_esp" = 0 or a."vlr_adic_desc_esp" is null))      ');
+     SQL.Add('order by 3                                                                ');
+
+     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+     ParamByName('num_pedido').Value := qryPedidonum_pedido.AsLargeInt;
+     ParamByName('ies_tipo').AsString := 'A';
+     Open;
+     if Not(IsEmpty) then
+     begin
+       Tot := '=J'+IntToStr(Linha);
+       while Not(EOF) do
+       begin
+         Linha := Linha + 1;
+         ExcelWorkSheet.Cells.Item[Linha, 10].NumberFormat := '#.##0,00';
+
+         if (Tipo = 'A') or (Tipo = '') then
+         begin
+            if (qryAdicDescvlr_adic_desc.AsFloat > 0) then
+               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := qryAdicDescvlr_adic_desc.AsFloat
+            else
+               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := '';
+         end
+         else
+         begin
+            if (qryAdicDescvlr_adic_desc_esp.AsFloat > 0) then
+               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := qryAdicDescvlr_adic_desc_esp.AsFloat
+            else
+               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := '';
+         end;
+
+         ExcelWorkSheet.Cells.Item[Linha, 10].VerticalAlignment := xlCenter;
+         s := StringReplace(trim(qryAdicDesctxt_descricao.AsString), #13#10, ' ', [rfReplaceAll]);
+         i := (length(s) / 95);
+         i := i + 1;
+         with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+         begin
+           MergeCells := True;
+           Value2 := s;
+           Font.Name := 'Arial';
+           Font.Size := 10;
+           Font.Bold := True;
+           Interior.ColorIndex := 0;
+           Borders.LineStyle := xlContinuous;
+           HorizontalAlignment := xlLeft;
+           VerticalAlignment := xlTop;
+           WrapText := True;
+           ShrinkToFit := False;
+           Rows.RowHeight := 12 * i;
+         end;
+         Tot := Tot + '+J'+IntToStr(Linha);
+         Next;
+       end;
+     end;
+   end;
+   { DESCONTOS }
+   with qryAdicDesc do
+   begin
+     Close;
+     SQL.Clear;
+     SQL.Add('select * from "pedido_adic_desc" a                                        ');
+     SQL.Add(' where a."cod_empresa" = :cod_empresa                                     ');
+     SQL.Add('   and a."num_pedido" = :"num_pedido"                                     ');
+     SQL.Add('   and a."ies_tipo" = :ies_tipo                                           ');
+     if (Tipo = 'A') or (Tipo = '') then
+        SQL.Add('   and a."vlr_adic_desc" > 0                                              ')
+     else
+        SQL.Add('   and a."vlr_adic_desc_esp" > 0                                          ');
+     SQL.Add('union all                                                                 ');
+     SQL.Add('select * from "pedido_adic_desc" a                                        ');
+     SQL.Add(' where a."cod_empresa" = :cod_empresa                                     ');
+     SQL.Add('   and a."num_pedido" = :"num_pedido"                                     ');
+     SQL.Add('   and a."ies_tipo" = :ies_tipo                                           ');
+     SQL.Add('   and ((a."vlr_adic_desc" = 0 or a."vlr_adic_desc" is null)              ');
+     SQL.Add('   and (a."vlr_adic_desc_esp" = 0 or a."vlr_adic_desc_esp" is null))      ');
+     SQL.Add('order by 3                                                                ');
+
+     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+     ParamByName('num_pedido').Value := qryPedidonum_pedido.AsLargeInt;
+     ParamByName('ies_tipo').AsString := 'D';
+     Open;
+     if Not(IsEmpty) then
+     begin
+       if (Tot = '') then Tot := '=J'+IntToStr(Linha);
+       while Not(EOF) do
+       begin
+         Linha := Linha + 1;
+         ExcelWorkSheet.Cells.Item[Linha, 10].NumberFormat := '#.##0,00';
+
+         if (Tipo = 'A') or (Tipo = '') then
+         begin
+            if (qryAdicDescvlr_adic_desc.AsFloat > 0) then
+               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := qryAdicDescvlr_adic_desc.AsFloat
+            else
+               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := '';
+         end
+         else
+         begin
+            if (qryAdicDescvlr_adic_desc_esp.AsFloat > 0) then
+               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := qryAdicDescvlr_adic_desc_esp.AsFloat
+            else
+               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := '';
+         end;
+
+         ExcelWorkSheet.Cells.Item[Linha, 10].VerticalAlignment := xlCenter;
+         s := StringReplace(trim(qryAdicDesctxt_descricao.AsString), #13#10, ' ', [rfReplaceAll]);
+         i := (length(s) / 95);
+         i := i + 1;
+         with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+         begin
+           MergeCells := True;
+           Value2 := s;
+           Font.Name := 'Arial';
+           Font.Size := 10;
+           Font.Bold := True;
+           Interior.ColorIndex := 0;
+           Borders.LineStyle := xlContinuous;
+           HorizontalAlignment := xlLeft;
+           VerticalAlignment := xlTop;
+           WrapText := True;
+           ShrinkToFit := False;
+           Rows.RowHeight := 12 * i;
+         end;
+         Tot := Tot + '-I'+IntToStr(Linha);
+         Next;
+       end;
+     end;
+   end;
+   { FINAL VALUE OF PROFORMA INVOICE }
+   if (Tot <> '') then
+   begin
+     Linha := Linha + 1;
+     with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+     begin
+       MergeCells := True;
+       if (IdiomaExporter= 'I') then
+          Value := 'FINAL VALUE OF THIS CONFIRMATION'
+       else if (IdiomaExporter= 'P') then
+          Value := 'VALOR FINAL DA CONFIRMAÇÃO'
+       else if (IdiomaExporter= 'E') then
+          Value := 'VALOR FINAL DE LA CONFIRMACIÓN';
+
+       Font.Name := 'Arial';
+       Font.Size := 10;
+       Font.Bold := True;
+       Interior.ColorIndex := 0;
+       Borders.LineStyle := xlContinuous;
+       HorizontalAlignment := xlLeft;
+       VerticalAlignment := xlTop;
+       WrapText := True;
+       ShrinkToFit := False;
+     end;
+     ExcelWorkSheet.Cells.Item[Linha, 10].NumberFormat := '#.##0,00';
+     ExcelWorkSheet.Cells.Item[Linha, 10].Formula := Tot;
+     ExcelWorkSheet.Cells.Item[Linha, 10].Font.Name := 'Arial';
+     ExcelWorkSheet.Cells.Item[Linha, 10].Font.Size := 10;
+   end;
+
+   { TOTAL VOLUME }
+   Linha := Linha + 1;
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        Value := 'TOTAL VOLUME'
+     else if (IdiomaExporter= 'P') then
+        Value := 'VOLUME TOTAL'
+     else if (IdiomaExporter= 'E') then
+        Value := 'VOLUMEM TOTAL';
+
+     Font.Name := 'Arial';
+     Font.Size := 10;
+     Font.Bold := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   ExcelWorkSheet.Cells.Item[Linha, 11].NumberFormat := VolumeNumberFormat;
+   ExcelWorkSheet.Cells.Item[Linha, 11].Formula := '=ROUND(SUM(K8:K'+IntTostr(LinhaAux-1)+'),' + VolumeDecimaisTotal + ')';
+   ExcelWorkSheet.Cells.Item[Linha, 11].Font.Name := 'Arial';
+   ExcelWorkSheet.Cells.Item[Linha, 11].Font.Size := 10;
+
+   if (qryPedidoies_pallets.AsString = 'S') then
+   begin
+     ExcelWorkSheet.Cells.Item[Linha, 23].NumberFormat := VolumeNumberFormat;
+     ExcelWorkSheet.Cells.Item[Linha, 23].Formula := '=ROUND(SUM(W8:W'+IntTostr(LinhaAux-1)+'),2)';
+     ExcelWorkSheet.Cells.Item[Linha, 23].Font.Name := 'Arial';
+     ExcelWorkSheet.Cells.Item[Linha, 23].Font.Size := 10;
+   end;
+   { TOTAL GROSS WEIGHT  }
+   Linha := Linha + 1;
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        Value := 'TOTAL GROSS WEIGHT'
+     else if (IdiomaExporter= 'P') then
+        Value := 'PESO BRUTO TOTAL'
+     else if (IdiomaExporter= 'E') then
+        Value := 'PESO BRUTO TOTAL';
+
+     Font.Name := 'Arial';
+     Font.Size := 10;
+     Font.Bold := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   ExcelWorkSheet.Cells.Item[Linha, 12].NumberFormat := '#.##0,00';
+   ExcelWorkSheet.Cells.Item[Linha, 12].FormulaR1C1 := '=ROUND(SUM(R[-'+IntToStr(Linha-8)+']C:R[-4]C), 2)';
+   ExcelWorkSheet.Cells.Item[Linha, 12].Font.Name := 'Arial';
+   ExcelWorkSheet.Cells.Item[Linha, 12].Font.Size := 10;
+
+   if (qryPedidoies_pallets.AsString = 'S') then
+   begin
+     ExcelWorkSheet.Cells.Item[Linha, 21].NumberFormat := '#.##0,00';
+     ExcelWorkSheet.Cells.Item[Linha, 21].FormulaR1C1 := '=SUM(R[-'+IntToStr(Linha-8)+']C:R[-4]C)';
+     ExcelWorkSheet.Cells.Item[Linha, 21].Font.Name := 'Arial';
+     ExcelWorkSheet.Cells.Item[Linha, 21].Font.Size := 10;
+   end;
+   { TOTAL NET WEIGHT  }
+   Linha := Linha + 1;
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        Value := 'TOTAL NET WEIGHT'
+     else if (IdiomaExporter= 'P') then
+        Value := 'PESO LÍQUIDO TOTAL'
+     else if (IdiomaExporter= 'E') then
+        Value := 'PESO NETO TOTAL';
+
+     Font.Name := 'Arial';
+     Font.Bold := True;
+     Font.Size := 10;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   ExcelWorkSheet.Cells.Item[Linha, 13].NumberFormat := '#.##0,00';
+   ExcelWorkSheet.Cells.Item[Linha, 13].Formula := '=ROUND(SUM(M8:M'+IntTostr(LinhaAux-1)+'), 2)';
+   ExcelWorkSheet.Cells.Item[Linha, 13].Font.Name := 'Arial';
+   ExcelWorkSheet.Cells.Item[Linha, 13].Font.Size := 10;
+   if (qryPedidoies_pallets.AsString = 'S') then
+   begin
+     ExcelWorkSheet.Cells.Item[Linha, 22].NumberFormat := '#.##0,00';
+     ExcelWorkSheet.Cells.Item[Linha, 22].FormulaR1C1 := '=SUM(R[-'+IntToStr(Linha-8)+']C:R[-5]C)';
+     ExcelWorkSheet.Cells.Item[Linha, 22].Font.Name := 'Arial';
+     ExcelWorkSheet.Cells.Item[Linha, 22].Font.Size := 10;
+   end;
+   { TOTAL OF CARTONS }
+   Linha := Linha + 1;
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        Value := 'TOTAL OF CARTONS'
+     else if (IdiomaExporter= 'P') then
+        Value := 'TOTAL DE VOLUMES'
+     else if (IdiomaExporter= 'E') then
+        Value := 'TOTAL DE VOLÚMENES';
+
+     Font.Name := 'Arial';
+     Font.Size := 10;
+     Font.Bold := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   ExcelWorkSheet.Cells.Item[Linha, 14].NumberFormat := '##.##0';
+   ExcelWorkSheet.Cells.Item[Linha, 14].Formula := '=SUM(N8:N'+IntTostr(LinhaAux-1)+')';
+   ExcelWorkSheet.Cells.Item[Linha, 14].Font.Name := 'Arial';
+   ExcelWorkSheet.Cells.Item[Linha, 14].Font.Size := 10;
+
+   if (qryPedidoies_pallets.AsString = 'S') then
+   begin
+     ExcelWorkSheet.Cells.Item[Linha, 20].NumberFormat := '##.##0';
+     ExcelWorkSheet.Cells.Item[Linha, 20].Formula := '=SUM(T8:T'+IntTostr(LinhaAux-1)+')';
+     ExcelWorkSheet.Cells.Item[Linha, 20].Font.Name := 'Arial';
+     ExcelWorkSheet.Cells.Item[Linha, 20].Font.Size := 10;
+   end;
+   { Esconder as colunas }
+   if (cbPrecos.Checked) then ExcelWorkSheet.Range['H1','H1'].EntireColumn.Hidden := False
+                         else ExcelWorkSheet.Range['H1','H1'].EntireColumn.Hidden := True;
+   if (cbImages.Checked) then ExcelWorkSheet.Range['D1','D1'].EntireColumn.Hidden := False
+                         else ExcelWorkSheet.Range['D1','D1'].EntireColumn.Hidden := True;
+
+
+   LinhaAux := LinhaAux + 1;
+
+   if (qryPedidoies_pallets.AsString = 'N') then s := 'S' else s := 'W';
+
+   with ExcelWorkSheet.Range['C' + IntToStr(LinhaAux),s + IntToStr(Linha)] do
+   begin
+      with Borders[xlInsideHorizontal] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlInsideVertical] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeLeft] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeTop] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeRight] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+      with Borders[xlEdgeBottom] do
+      begin
+         LineStyle := xlContinuous;
+         Weight := xlThin;
+         ColorIndex := xlAutomatic;
+      end;
+   end;
+   ExcelWorkSheet.Range['J' + IntToStr(LinhaAux),s + IntToStr(Linha)].HorizontalAlignment := xlCenter;
+
+  { Totais Gerais }
+  Linha := Linha + 2;
+  LinhaAux := Linha;
+
+  { PACKAGES INFORMATION }
+  PackagesInformation('A', 'C', Linha);
+
+   { Definir área de impressão }
+   if (qryPedidoies_pallets.AsString = 'N') then
+   begin
+      { ajustar propriedades para impressão da página de Packing }
+      ExcelWorksheet.PageSetup.PrintArea := '$A$1:$T$'+IntToStr(Linha);
+      with ExcelWorksheet.PageSetup do
+      begin
+        PrintTitleRows := '$1:$7';
+        PrintTitleColumns := '';
+        LeftHeader := '';
+        CenterHeader := '';
+        RightHeader := 'Page &P of &N';
+        LeftFooter := '';
+        CenterFooter := '';
+        RightFooter := '';
+        LeftMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
+        RightMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
+        TopMargin := ExcelWorksheet.Application.InchesToPoints(0.393700787401575, GetUserDefaultLCID);
+        BottomMargin := 0;
+        HeaderMargin := 0;
+        FooterMargin := 0;
+        PrintHeadings := False;
+        PrintGridlines := False;
+        PrintComments := xlPrintNoComments;
+        CenterHorizontally := False;
+        CenterVertically := False;
+        Orientation := xlLandscape;
+        Draft := False;
+        PaperSize := xlPaperA4;
+        FirstPageNumber := xlAutomatic;
+        Order := xlDownThenOver;
+        BlackAndWhite := False;
+        Zoom := 65;
+       end;
+   end else
+   begin
+      { ajustar propriedades para impressão da página de Packing }
+      ExcelWorksheet.PageSetup.PrintArea := '$A$1:$X$'+IntToStr(Linha);
+      with ExcelWorksheet.PageSetup do
+      begin
+        PrintTitleRows := '$1:$7';
+        PrintTitleColumns := '';
+        LeftHeader := '';
+        CenterHeader := '';
+        RightHeader := 'Page &P of &N';
+        LeftFooter := '';
+        CenterFooter := '';
+        RightFooter := '';
+        LeftMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
+        RightMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
+        TopMargin := ExcelWorksheet.Application.InchesToPoints(0.393700787401575, GetUserDefaultLCID);
+        BottomMargin := 0;
+        HeaderMargin := 0;
+        FooterMargin := 0;
+        PrintHeadings := False;
+        PrintGridlines := False;
+        PrintComments := xlPrintNoComments;
+        CenterHorizontally := False;
+        CenterVertically := False;
+        Orientation := xlLandscape;
+        Draft := False;
+        PaperSize := xlPaperA4;
+        FirstPageNumber := xlAutomatic;
+        Order := xlDownThenOver;
+        BlackAndWhite := False;
+        Zoom := 58;
+       end;
+   end;
+   { FIM DA PÁGINA DE SPECIFICATION }
+end;
+
+procedure ConditionPage(Tipo: String);
 var
-  l : Integer;
   s : String;
-  r : Double;
   ind : integer;
 
 begin
+   { Criar a página de CONDITIONS antes da página de SPECIFICATION }
+   WkBk.Worksheets.Add(WkBk.Worksheets['Specification'], EmptyParam, 1, EmptyParam, lcid);
+   ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
+   ExcelWorksheet.Activate(lcid);
+   ExcelWorksheet.Name := 'Conditions';
+
    { PÁGINA DAS CONDIÇÕES - CONDITIONS PAGE }
-   if (Pagina = 'C') or (Pagina = 'P') then  // Gerar na página de Conditions e Confirmation
-   begin
    Linha := 1;
 
    { Título da página, ORDER NUMBER quando for orçamento, ou PROFORMA INVOICE quando for pedido }
@@ -2600,7 +3218,7 @@ begin
       { Nome do Fabricante }
       with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
       begin
-        MergeCells := True;      
+        MergeCells := True;
         Value := Fabricantesnome.AsString;
         Font.Name := 'Arial';
         Font.Bold := True;
@@ -2898,10 +3516,7 @@ begin
     Borders[xlInsideVertical].LineStyle := xlNone;
     Borders[xlInsideHorizontal].LineStyle := xlNone;
    end;
-   end; { Pagina = C or P }
 
-   if (Pagina = 'C') then // Gerar apenas para página de Condition
-   begin
    Inc(Linha);
    Inc(Linha);
    LinhaAux := Linha;
@@ -3115,164 +3730,8 @@ begin
    LinhaAux := Linha;
 
    { PACKAGES INFORMATION }
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-      MergeCells := True;   
-      if (IdiomaExporter= 'I') then
-      begin
-        Value := 'PACKAGES INFORMATION:'
-      end else if (IdiomaExporter= 'P') then
-      begin
-        Value := 'INFORMAÇÕES SOBRE EMBALAGENS:';
-      end else if (IdiomaExporter= 'E') then
-      begin
-        Value := 'INFORMACIONES SOBRE EMBALAJES:';
-      end;
-      Font.Bold := True;
-      Font.Name := 'Arial';
-      Font.Size := 10;
-      Interior.ColorIndex := 0;
-      Borders.LineStyle := xlContinuous;
-      HorizontalAlignment := xlCenter;
-      VerticalAlignment := xlCenter;
-   end;
+   PackagesInformation('A', 'J', Linha);
 
-   { TOTAL VOLUME }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;   
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL VOLUME:'
-     else if (IdiomaExporter= 'P') then
-        s := 'VOLUME TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'VOLUMEN TOTAL:';
-
-     s := s +  FormatFloat(VolumeNumberFormatTotal, Arredonda(pedido_complementovol_geral.AsFloat, -3, rmUp));
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Size := 10;
-     Font.Bold := True;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { TOTAL GROSS WEIGHT }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL GROSS WEIGHT:'
-     else if (IdiomaExporter= 'P') then
-        s := 'PESO BRUTO TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'PESO BRUTO TOTAL:';
-
-     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_bru_geral.AsFloat);
-     MergeCells := True;     
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { TOTAL NET WEIGHT }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL NET WEIGHT:'
-     else if (IdiomaExporter= 'P') then
-        s := 'PESO LÍQUIDO TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'PESO NETO TOTAL:';
-
-     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_liq_geral.AsFloat);
-     MergeCells := True;
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { QUANTITY OF CARTONS }
-   Inc(Linha);
-   s := '';
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-      if (IdiomaExporter= 'I') then
-      begin
-         s := 'QUANTITY OF CARTONS:'
-      end else if (IdiomaExporter= 'P') then
-      begin
-         s := 'QUANTIDADE DE EMBALAGENS:'
-      end else if (IdiomaExporter= 'E') then
-      begin
-         s := 'CANTIDAD DE EMBALAJES:'
-      end;
-
-      if (qryPedidoies_pallets.Value = 'S') then
-      begin
-         if (pedido_complementocxs_outpallet.Value > 0) then
-            s := s + ' ' + FormatFloat(' #,##0', pedido_complementocxs_outpallet.Value) + ' CARTONS AND ';
-         s := s + FormatFloat('  #,##0', pedido_complementoqtd_pallets.Value) + ' PALLETS';
-      end else
-         s := s + FormatFloat('  #,##0', pedido_complementoqtd_caixas.value) + ' CARTONS';
-
-      MergeCells := True;         
-      Value2 := s;
-      Font.Bold := True;
-      Font.Name := 'Arial';
-      Font.Size := 10;
-      Interior.ColorIndex := 0;
-      Borders.LineStyle := xlNone;
-      HorizontalAlignment := xlLeft;
-      VerticalAlignment := xlTop;
-      WrapText := True;
-      ShrinkToFit := False;
-   end;
-
-  with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
-   end; { Pagina = 'C' }
-
-   if (Pagina = 'C') or (Pagina = 'P') then
-   begin
    { início - CONTAINERS }
    Inc(Linha);
    LinhaAux := Linha;
@@ -3298,30 +3757,30 @@ begin
      end;
    end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    if (IdiomaExporter= 'I') then
-       FormulaR1C1 := 'QUANTITY AND TYPE OF CONTAINER(S): ' + s
-    else if (IdiomaExporter= 'P') then
-       FormulaR1C1 := 'QUANTIDADE E TIPO DE CONTAINER(S): ' + s
-    else if (IdiomaExporter= 'E') then
-       FormulaR1C1 := 'CANTIDAD Y TIPO DE CONTAINER(S): ' + s;
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        FormulaR1C1 := 'QUANTITY AND TYPE OF CONTAINER(S): ' + s
+     else if (IdiomaExporter= 'P') then
+        FormulaR1C1 := 'QUANTIDADE E TIPO DE CONTAINER(S): ' + s
+     else if (IdiomaExporter= 'E') then
+        FormulaR1C1 := 'CANTIDAD Y TIPO DE CONTAINER(S): ' + s;
 
-    Characters[1,35].Font.Bold := True;
-    Characters[36,20].Font.Bold := False;
-    Font.Name := 'Arial';
-    Font.Size := 10;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
+     Characters[1,35].Font.Bold := True;
+     Characters[36,20].Font.Bold := False;
+     Font.Name := 'Arial';
+     Font.Size := 10;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   {fim }
 
-  Inc(Linha);
+   Inc(Linha);
 
    { início }
    with ExcelWorksheet.Range['A'+IntToStr(Linha),'A'+IntToStr(Linha)] do
@@ -3340,18 +3799,17 @@ begin
      Font.Size := 9;
    end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
-
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    { início }
    with ExcelWorksheet.Range['D'+IntToStr(Linha),'D'+IntToStr(Linha)] do
@@ -3370,17 +3828,17 @@ begin
      Font.Name := 'Arial';
    end;
 
-  with ExcelWorkSheet.Range['D'+IntToStr(Linha),'G'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
+   with ExcelWorkSheet.Range['D'+IntToStr(Linha),'G'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    { início }
    with ExcelWorksheet.Range['H'+IntToStr(Linha),'H'+IntToStr(Linha)] do
@@ -3399,17 +3857,17 @@ begin
      Font.Name := 'Arial';
    end;
 
-  with ExcelWorkSheet.Range['H'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
+   with ExcelWorkSheet.Range['H'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    Linha := Linha + 1;
 
@@ -3430,17 +3888,17 @@ begin
      Font.Name := 'Arial';
    end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'E'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'E'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    { início }
    with ExcelWorksheet.Range['F'+IntToStr(Linha),'F'+IntToStr(Linha)] do
@@ -3459,17 +3917,17 @@ begin
      Font.Name := 'Arial';
    end;
 
-  with ExcelWorkSheet.Range['F'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;                                              
-  end;
-  { fim }
+   with ExcelWorkSheet.Range['F'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    Linha := Linha + 1;
 
@@ -3498,7 +3956,6 @@ begin
 
    Linha := Linha + 1;
 
-
    { início }
    if (IdiomaExporter= 'I') then
    begin
@@ -3519,7 +3976,6 @@ begin
      else
         s := 'FECHA ESTIMADA PARA LA ENTREGA: ' + FormatDateTime('DD/MM/YYYY', qryPedidodat_entrega.AsDateTime)
    end;
-
 
    ExcelWorkSheet.Range['A'+IntToStr(Linha),'A'+IntToStr(Linha)].FormulaR1C1 := s;
    with ExcelWorksheet.Range['A'+IntToStr(Linha),'A'+IntToStr(Linha)].Characters[1,29].Font do
@@ -3547,20 +4003,19 @@ begin
      Shadow := False;
      Underline := xlUnderlineStyleNone;
      ColorIndex := xlAutomatic;
-   end;      
+   end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-  { fim }
-
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     Interior.ColorIndex := 0;
+     Borders.LineStyle := xlContinuous;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+   end;
+   { fim }
 
    Linha := Linha + 1;
 
@@ -3618,11 +4073,7 @@ begin
     Borders[xlInsideHorizontal].LineStyle := xlContinuous;
     VerticalAlignment := xlTop;
    end;
-   end; { Pagina = 'C' or Pagina = 'P' }
 
-
-   if (Pagina = 'C') then
-   begin
    { início }
    Linha := Linha + 1;
    Linha1 := Linha;
@@ -4175,193 +4626,10 @@ begin
      BlackAndWhite := False;
      Zoom := 95;
     end;
-   end; { Pagina = 'C' }
-
-   if (Pagina = 'P') then // Gerar apenas para Página de Confirmation
-   begin
-      Linha := Linha + 2;
-      LinhaAux := Linha;
-
-      { Remarks }
-      with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := 'REMARKS:';
-        Font.Name := 'Arial';
-        Font.Bold := True;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlContinuous;
-        HorizontalAlignment := xlLeft;                 
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 15;
-      end;
-
-      Linha := Linha + 1;
-
-      { Linhas de Memo1 para Proforma Invoice }
-      for mi := 0 to ChinesTxt.Memo1.Lines.Count - 1 do
-      begin
-         with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-         begin
-          MergeCells := True;
-          Value2 := ChinesTxt.Memo1.Lines[mi];
-          Font.Bold := False;
-          Font.Name := 'Arial';
-          Font.Size := 8;
-          Interior.ColorIndex := 0;
-          HorizontalAlignment := xlLeft;
-          VerticalAlignment := xlTop;
-          WrapText := True;
-          ShrinkToFit := False;                                      
-          Borders.LineStyle := xlContinuous;
-          Rows.RowHeight := 12;
-         end;
-         Inc(Linha);                                                  
-      end;
-
-
-      Linha := Linha + 3;
-      with ExcelWorkSheet.Range['A'+IntToStr(Linha),'E'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := 'Confirmed by Buyer (Signature and stamp)';
-        Font.Name := 'Arial';
-        Font.Bold := False;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlNone;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 12;
-      end;
-      with ExcelWorkSheet.Range['F'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := 'Confirmed by Seller (Signature and stamp)';
-        Font.Name := 'Arial';
-        Font.Bold := False;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlNone;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 12;
-      end;
-
-      Inc(Linha);
-
-      with ExcelWorkSheet.Range['A'+IntToStr(Linha),'E'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := ' Confirmado por el Comprador(Firma y sello)';
-        Font.Name := 'Arial';
-        Font.Bold := False;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlNone;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 12;
-      end;
-      with ExcelWorkSheet.Range['F'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        Value2 := ' Confirmado por el vendedor (Firma y sello))';
-        Font.Name := 'Arial';
-        Font.Bold := False;
-        Font.Size := 10;
-        Interior.ColorIndex := 0;
-        Borders.LineStyle := xlNone;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlTop;
-        WrapText := True;
-        ShrinkToFit := False;
-        Rows.RowHeight := 12;
-      end;
-
-      Linha := Linha + 1;
-
-      with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-      begin
-       Borders[xlDiagonalDown].LineStyle := xlNone;
-       Borders[xlDiagonalUp].LineStyle := xlNone;
-       with Borders[xlEdgeLeft] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeTop] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeBottom] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeRight] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       Borders[xlInsideVertical].LineStyle := xlNone;
-       Borders[xlInsideHorizontal].LineStyle := xlNone;
-       VerticalAlignment := xlTop;
-      end;
-
-      Linha := Linha + 1;
-      { ajustar propriedades para impressão da página de condições }
-      ExcelWorksheet.PageSetup.PrintArea := '$A$1:$J$'+IntToStr(Linha);
-      with ExcelWorksheet.PageSetup do
-      begin
-        PrintTitleRows := '$1:$2';
-        PrintTitleColumns := '';
-        LeftHeader := '';
-        CenterHeader := '';
-        RightHeader := '';
-        LeftFooter := '';
-        LeftMargin := ExcelWorksheet.Application.InchesToPoints(0.78740157480315, GetUserDefaultLCID);
-        RightMargin := 0;
-        TopMargin := ExcelWorksheet.Application.InchesToPoints(0.590551181102362, GetUserDefaultLCID);
-        BottomMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
-        HeaderMargin := 0;
-        FooterMargin := 0;
-        PrintHeadings := False;
-        PrintGridlines := False;
-        PrintComments := xlPrintNoComments;
-        CenterHorizontally := False;
-        CenterVertically := False;
-        Orientation := xlPortrait;
-        Draft := False;
-        PaperSize := xlPaperA4;
-        FirstPageNumber := xlAutomatic;
-        Order := xlDownThenOver;
-        BlackAndWhite := False;
-        Zoom := 95;
-       end;
-
-   end;
-
   { FIM DA PÁGINA DAS CONDIÇÕES - CONDITIONS PAGE }
 end;
 
 begin
-  Application.CreateForm(TChinesTxt, ChinesTxt);
-
   { Obrigatório o número do pedido para geração dos documentos }
   if (qryPedidoies_tip_pedido.AsString = 'O') and
      (trim(pedido_complementonum_pedido_cli.AsString) = '') then
@@ -4461,680 +4729,33 @@ begin
 
    { Atenção:                                                                      }
    { Processar primeiro a página de específicações e depois a página de condições  }
-   { a fim de obter passar os totais das específicações para a página de condições }
+   { a fim de obter e passar os totais das específicações para a página de condições }
 
    { Verificar se Pedido tem produtos duplicados }
    with ProdutosDuplicados do
    begin
     Close;
     ParamByName('cod_empresa').AsInteger	:= qryPedidocod_empresa.AsInteger;
-    ParamByName('num_pedido').Value  	   := qryPedidonum_pedido.AsLargeInt;
+    ParamByName('num_pedido').Value  	    := qryPedidonum_pedido.AsLargeInt;
     Open;
    end;
 
-   { PÁGINA DE SPECIFICATION }
-   ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
-   ExcelWorksheet.Activate(lcid);
-   ExcelWorkSheet.Name := 'Specification';
+   EspecificationPage(Tipo);
+   ConditionPage(Tipo);
 
-   {Gerar cabeçalho no excel}
-   Linha := 1; // variável p/ referencia de linha
-   { Packing Page }
-   PedidoHeader(Tipo, 'P');
-   PedidoItensPackingList(Tipo);
+   { Salvar a planilha }
+   //ExcelApplication.ActiveWorkbook.SaveAs(FileName,xlNormal,'','',false,false,xlNochange,false, xlUserResolution,False,EmptyParam,0);
+   ExcelApplication.ActiveWorkbook.Save(lcid);
 
-   { Totais }
-   LinhaAux := Linha;
-   { TOTAL FOB }
-   Linha := Linha + 1;
+   Exportador.Close;
+   Importador.Close;
 
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;   
-     Value := 'TOTAL ' + trim(pedido_complementolkcCondicaoVenda.AsString) + ' US$';
-     Font.Name := 'Arial';
-     Font.Size := 10;
-     Font.Bold := True;
-     Interior.ColorIndex := 0;
-     Borders.LineStyle := xlContinuous;
-     HorizontalAlignment := xlLeft;
-     VerticalAlignment := xlTop;
-     WrapText := True;
-     ShrinkToFit := False;
-   end;
-   ExcelWorkSheet.Cells.Item[Linha, 10].NumberFormat := '#.##0,00';
-   ExcelWorkSheet.Cells.Item[Linha, 10].Formula := '=ROUND(SUM(J8:J'+IntTostr(LinhaAux-1)+'),2)';
-   Tot := '';
+   { finalizar progress bar }
+   btnOrderProforma.Enabled := True;
+   Ani.Terminate;
 
-
-   { ADICIONAIS }
-   with qryAdicDesc do
-   begin
-     Close;
-     SQL.Clear;
-     SQL.Add('select * from "pedido_adic_desc" a                                        ');
-     SQL.Add(' where a."cod_empresa" = :cod_empresa                                     ');
-     SQL.Add('   and a."num_pedido" = :"num_pedido"                                     ');
-     SQL.Add('   and a."ies_tipo" = :ies_tipo                                           ');
-     if (Tipo = 'A') or (Tipo = '') then
-        SQL.Add('   and a."vlr_adic_desc" > 0                                              ')
-     else
-        SQL.Add('   and a."vlr_adic_desc_esp" > 0                                          ');
-     SQL.Add('union all                                                                 ');
-     SQL.Add('select * from "pedido_adic_desc" a                                        ');
-     SQL.Add(' where a."cod_empresa" = :cod_empresa                                     ');
-     SQL.Add('   and a."num_pedido" = :"num_pedido"                                     ');
-     SQL.Add('   and a."ies_tipo" = :ies_tipo                                           ');
-     SQL.Add('   and ((a."vlr_adic_desc" = 0 or a."vlr_adic_desc" is null)              ');
-     SQL.Add('   and (a."vlr_adic_desc_esp" = 0 or a."vlr_adic_desc_esp" is null))      ');
-     SQL.Add('order by 3                                                                ');
-
-     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-     ParamByName('num_pedido').Value := qryPedidonum_pedido.AsLargeInt;
-     ParamByName('ies_tipo').AsString := 'A';
-     Open;
-     if Not(IsEmpty) then
-     begin
-       Tot := '=J'+IntToStr(Linha);
-       while Not(EOF) do
-       begin
-         Linha := Linha + 1;
-         ExcelWorkSheet.Cells.Item[Linha, 10].NumberFormat := '#.##0,00';
-
-         if (Tipo = 'A') or (Tipo = '') then
-         begin
-            if (qryAdicDescvlr_adic_desc.AsFloat > 0) then
-               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := qryAdicDescvlr_adic_desc.AsFloat
-            else
-               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := '';
-         end
-         else
-         begin
-            if (qryAdicDescvlr_adic_desc_esp.AsFloat > 0) then
-               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := qryAdicDescvlr_adic_desc_esp.AsFloat
-            else
-               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := '';
-         end;
-
-         ExcelWorkSheet.Cells.Item[Linha, 10].VerticalAlignment := xlCenter;
-         s := StringReplace(trim(qryAdicDesctxt_descricao.AsString), #13#10, ' ', [rfReplaceAll]);
-         i := (length(s) / 95);
-         i := i + 1;
-         with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-         begin
-           MergeCells := True;
-           Value2 := s;
-           Font.Name := 'Arial';
-           Font.Size := 10;
-           Font.Bold := True;
-           Interior.ColorIndex := 0;
-           Borders.LineStyle := xlContinuous;
-           HorizontalAlignment := xlLeft;
-           VerticalAlignment := xlTop;
-           WrapText := True;
-           ShrinkToFit := False;
-           Rows.RowHeight := 12 * i;
-         end;
-         Tot := Tot + '+J'+IntToStr(Linha);
-         Next;
-       end;
-     end;
-   end;
-   { DESCONTOS }
-   with qryAdicDesc do
-   begin
-     Close;
-     SQL.Clear;
-     SQL.Add('select * from "pedido_adic_desc" a                                        ');
-     SQL.Add(' where a."cod_empresa" = :cod_empresa                                     ');
-     SQL.Add('   and a."num_pedido" = :"num_pedido"                                     ');
-     SQL.Add('   and a."ies_tipo" = :ies_tipo                                           ');
-     if (Tipo = 'A') or (Tipo = '') then
-        SQL.Add('   and a."vlr_adic_desc" > 0                                              ')
-     else
-        SQL.Add('   and a."vlr_adic_desc_esp" > 0                                          ');
-     SQL.Add('union all                                                                 ');
-     SQL.Add('select * from "pedido_adic_desc" a                                        ');
-     SQL.Add(' where a."cod_empresa" = :cod_empresa                                     ');
-     SQL.Add('   and a."num_pedido" = :"num_pedido"                                     ');
-     SQL.Add('   and a."ies_tipo" = :ies_tipo                                           ');
-     SQL.Add('   and ((a."vlr_adic_desc" = 0 or a."vlr_adic_desc" is null)              ');
-     SQL.Add('   and (a."vlr_adic_desc_esp" = 0 or a."vlr_adic_desc_esp" is null))      ');
-     SQL.Add('order by 3                                                                ');
-
-     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-     ParamByName('num_pedido').Value := qryPedidonum_pedido.AsLargeInt;
-     ParamByName('ies_tipo').AsString := 'D';
-     Open;
-     if Not(IsEmpty) then
-     begin
-       if (Tot = '') then Tot := '=J'+IntToStr(Linha);
-       while Not(EOF) do
-       begin
-         Linha := Linha + 1;
-         ExcelWorkSheet.Cells.Item[Linha, 10].NumberFormat := '#.##0,00';
-
-         if (Tipo = 'A') or (Tipo = '') then
-         begin
-            if (qryAdicDescvlr_adic_desc.AsFloat > 0) then
-               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := qryAdicDescvlr_adic_desc.AsFloat
-            else
-               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := '';
-         end
-         else
-         begin
-            if (qryAdicDescvlr_adic_desc_esp.AsFloat > 0) then
-               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := qryAdicDescvlr_adic_desc_esp.AsFloat
-            else
-               ExcelWorkSheet.Cells.Item[Linha, 10].FormulaR1C1  := '';
-         end;
-
-         ExcelWorkSheet.Cells.Item[Linha, 10].VerticalAlignment := xlCenter;
-         s := StringReplace(trim(qryAdicDesctxt_descricao.AsString), #13#10, ' ', [rfReplaceAll]);
-         i := (length(s) / 95);
-         i := i + 1;
-         with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-         begin
-           MergeCells := True;
-           Value2 := s;
-           Font.Name := 'Arial';
-           Font.Size := 10;
-           Font.Bold := True;
-           Interior.ColorIndex := 0;
-           Borders.LineStyle := xlContinuous;
-           HorizontalAlignment := xlLeft;
-           VerticalAlignment := xlTop;
-           WrapText := True;
-           ShrinkToFit := False;
-           Rows.RowHeight := 12 * i;
-         end;
-         Tot := Tot + '-I'+IntToStr(Linha);
-         Next;
-       end;
-     end;
-   end;
-   { FINAL VALUE OF PROFORMA INVOICE }
-   if (Tot <> '') then
-   begin
-     Linha := Linha + 1;
-     with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-     begin
-       MergeCells := True;
-       if (IdiomaExporter= 'I') then
-          Value := 'FINAL VALUE OF THIS CONFIRMATION'
-       else if (IdiomaExporter= 'P') then
-          Value := 'VALOR FINAL DA CONFIRMAÇÃO'
-       else if (IdiomaExporter= 'E') then
-          Value := 'VALOR FINAL DE LA CONFIRMACIÓN';
-
-       Font.Name := 'Arial';
-       Font.Size := 10;
-       Font.Bold := True;
-       Interior.ColorIndex := 0;
-       Borders.LineStyle := xlContinuous;
-       HorizontalAlignment := xlLeft;
-       VerticalAlignment := xlTop;
-       WrapText := True;
-       ShrinkToFit := False;
-     end;
-     ExcelWorkSheet.Cells.Item[Linha, 10].NumberFormat := '#.##0,00';
-     ExcelWorkSheet.Cells.Item[Linha, 10].Formula := Tot;
-     ExcelWorkSheet.Cells.Item[Linha, 10].Font.Name := 'Arial';
-     ExcelWorkSheet.Cells.Item[Linha, 10].Font.Size := 10;
-   end;
-
-   { TOTAL VOLUME }
-   Linha := Linha + 1;
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        Value := 'TOTAL VOLUME'
-     else if (IdiomaExporter= 'P') then
-        Value := 'VOLUME TOTAL'
-     else if (IdiomaExporter= 'E') then
-        Value := 'VOLUMEM TOTAL';
-
-     Font.Name := 'Arial';
-     Font.Size := 10;
-     Font.Bold := True;
-     Interior.ColorIndex := 0;
-     Borders.LineStyle := xlContinuous;
-     HorizontalAlignment := xlLeft;
-     VerticalAlignment := xlTop;
-     WrapText := True;
-     ShrinkToFit := False;
-   end;
-   ExcelWorkSheet.Cells.Item[Linha, 11].NumberFormat := VolumeNumberFormat;
-   ExcelWorkSheet.Cells.Item[Linha, 11].Formula := '=ROUND(SUM(K8:K'+IntTostr(LinhaAux-1)+'),' + VolumeDecimaisTotal + ')';
-   ExcelWorkSheet.Cells.Item[Linha, 11].Font.Name := 'Arial';
-   ExcelWorkSheet.Cells.Item[Linha, 11].Font.Size := 10;
-
-   if (qryPedidoies_pallets.AsString = 'S') then
-   begin
-     ExcelWorkSheet.Cells.Item[Linha, 23].NumberFormat := VolumeNumberFormat;
-     ExcelWorkSheet.Cells.Item[Linha, 23].Formula := '=ROUND(SUM(W8:W'+IntTostr(LinhaAux-1)+'),2)';
-     ExcelWorkSheet.Cells.Item[Linha, 23].Font.Name := 'Arial';
-     ExcelWorkSheet.Cells.Item[Linha, 23].Font.Size := 10;
-   end;
-   { TOTAL GROSS WEIGHT  }
-   Linha := Linha + 1;
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        Value := 'TOTAL GROSS WEIGHT'
-     else if (IdiomaExporter= 'P') then
-        Value := 'PESO BRUTO TOTAL'
-     else if (IdiomaExporter= 'E') then
-        Value := 'PESO BRUTO TOTAL';
-
-     Font.Name := 'Arial';
-     Font.Size := 10;
-     Font.Bold := True;
-     Interior.ColorIndex := 0;
-     Borders.LineStyle := xlContinuous;
-     HorizontalAlignment := xlLeft;
-     VerticalAlignment := xlTop;
-     WrapText := True;
-     ShrinkToFit := False;
-   end;
-   ExcelWorkSheet.Cells.Item[Linha, 12].NumberFormat := '#.##0,00';
-   ExcelWorkSheet.Cells.Item[Linha, 12].FormulaR1C1 := '=ROUND(SUM(R[-'+IntToStr(Linha-8)+']C:R[-4]C), 2)';
-   ExcelWorkSheet.Cells.Item[Linha, 12].Font.Name := 'Arial';
-   ExcelWorkSheet.Cells.Item[Linha, 12].Font.Size := 10;
-
-   if (qryPedidoies_pallets.AsString = 'S') then
-   begin
-     ExcelWorkSheet.Cells.Item[Linha, 21].NumberFormat := '#.##0,00';
-     ExcelWorkSheet.Cells.Item[Linha, 21].FormulaR1C1 := '=SUM(R[-'+IntToStr(Linha-8)+']C:R[-4]C)';
-     ExcelWorkSheet.Cells.Item[Linha, 21].Font.Name := 'Arial';
-     ExcelWorkSheet.Cells.Item[Linha, 21].Font.Size := 10;
-   end;
-   { TOTAL NET WEIGHT  }
-   Linha := Linha + 1;
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        Value := 'TOTAL NET WEIGHT'
-     else if (IdiomaExporter= 'P') then
-        Value := 'PESO LÍQUIDO TOTAL'
-     else if (IdiomaExporter= 'E') then
-        Value := 'PESO NETO TOTAL';
-
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     Interior.ColorIndex := 0;
-     Borders.LineStyle := xlContinuous;
-     HorizontalAlignment := xlLeft;
-     VerticalAlignment := xlTop;
-     WrapText := True;
-     ShrinkToFit := False;
-   end;
-   ExcelWorkSheet.Cells.Item[Linha, 13].NumberFormat := '#.##0,00';
-   ExcelWorkSheet.Cells.Item[Linha, 13].Formula := '=ROUND(SUM(M8:M'+IntTostr(LinhaAux-1)+'), 2)';
-   ExcelWorkSheet.Cells.Item[Linha, 13].Font.Name := 'Arial';
-   ExcelWorkSheet.Cells.Item[Linha, 13].Font.Size := 10;
-   if (qryPedidoies_pallets.AsString = 'S') then
-   begin
-     ExcelWorkSheet.Cells.Item[Linha, 22].NumberFormat := '#.##0,00';
-     ExcelWorkSheet.Cells.Item[Linha, 22].FormulaR1C1 := '=SUM(R[-'+IntToStr(Linha-8)+']C:R[-5]C)';
-     ExcelWorkSheet.Cells.Item[Linha, 22].Font.Name := 'Arial';
-     ExcelWorkSheet.Cells.Item[Linha, 22].Font.Size := 10;
-   end;
-   { TOTAL OF CARTONS }
-   Linha := Linha + 1;
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        Value := 'TOTAL OF CARTONS'
-     else if (IdiomaExporter= 'P') then
-        Value := 'TOTAL DE VOLUMES'
-     else if (IdiomaExporter= 'E') then
-        Value := 'TOTAL DE VOLÚMENES';
-
-     Font.Name := 'Arial';
-     Font.Size := 10;
-     Font.Bold := True;
-     Interior.ColorIndex := 0;
-     Borders.LineStyle := xlContinuous;
-     HorizontalAlignment := xlLeft;
-     VerticalAlignment := xlTop;
-     WrapText := True;
-     ShrinkToFit := False;
-   end;
-   ExcelWorkSheet.Cells.Item[Linha, 14].NumberFormat := '##.##0';
-   ExcelWorkSheet.Cells.Item[Linha, 14].Formula := '=SUM(N8:N'+IntTostr(LinhaAux-1)+')';
-   ExcelWorkSheet.Cells.Item[Linha, 14].Font.Name := 'Arial';
-   ExcelWorkSheet.Cells.Item[Linha, 14].Font.Size := 10;
-
-   if (qryPedidoies_pallets.AsString = 'S') then
-   begin
-     ExcelWorkSheet.Cells.Item[Linha, 20].NumberFormat := '##.##0';
-     ExcelWorkSheet.Cells.Item[Linha, 20].Formula := '=SUM(T8:T'+IntTostr(LinhaAux-1)+')';
-     ExcelWorkSheet.Cells.Item[Linha, 20].Font.Name := 'Arial';
-     ExcelWorkSheet.Cells.Item[Linha, 20].Font.Size := 10;
-   end;
-   { Esconder as colunas }
-   if (cbPrecos.Checked) then ExcelWorkSheet.Range['H1','H1'].EntireColumn.Hidden := False
-                         else ExcelWorkSheet.Range['H1','H1'].EntireColumn.Hidden := True;
-   if (cbImages.Checked) then ExcelWorkSheet.Range['D1','D1'].EntireColumn.Hidden := False
-                         else ExcelWorkSheet.Range['D1','D1'].EntireColumn.Hidden := True;
-
-
-   LinhaAux := LinhaAux + 1;
-
-   if (qryPedidoies_pallets.AsString = 'N') then s := 'S' else s := 'W';
-
-   with ExcelWorkSheet.Range['C' + IntToStr(LinhaAux),s + IntToStr(Linha)] do
-   begin
-      with Borders[xlInsideHorizontal] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlInsideVertical] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeLeft] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeTop] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeRight] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeBottom] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-   end;
-   ExcelWorkSheet.Range['J' + IntToStr(LinhaAux),s + IntToStr(Linha)].HorizontalAlignment := xlCenter;
-
-  { Totais Gerais }
-  Linha := Linha + 2;
-  LinhaAux := Linha;
-
-   { PACKAGES INFORMATION }
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-      MergeCells := True;
-      if (IdiomaExporter= 'I') then
-      begin
-        Value := 'PACKAGES INFORMATION:'
-      end else if (IdiomaExporter= 'P') then
-      begin
-        Value := 'INFORMAÇÕES SOBRE EMBALAGENS:';
-      end else if (IdiomaExporter= 'E') then
-      begin
-        Value := 'INFORMACIONES SOBRE EMBALAJES:';
-      end;
-      Font.Bold := True;
-      Font.Name := 'Arial';
-      Font.Size := 10;
-      Interior.ColorIndex := 0;
-      Borders.LineStyle := xlContinuous;
-      HorizontalAlignment := xlCenter;
-      VerticalAlignment := xlCenter;
-   end;
-
-   { TOTAL VOLUME }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL VOLUME:'
-     else if (IdiomaExporter= 'P') then
-        s := 'VOLUME TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'VOLUMEM TOTAL:';
-
-     s := s +  FormatFloat(VolumeNumberFormatTotal, Arredonda(pedido_complementovol_geral.AsFloat, -3, rmUp));
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Size := 10;
-     Font.Bold := True;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { TOTAL GROSS WEIGHT }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL GROSS WEIGHT:'
-     else if (IdiomaExporter= 'P') then
-        s := 'PESO BRUTO TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'PESO BRUTO TOTAL:';
-
-     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_bru_geral.AsFloat);
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { TOTAL NET WEIGHT }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL NET WEIGHT:'
-     else if (IdiomaExporter= 'P') then
-        s := 'PESO LÍQUIDO TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'PESO NETO TOTAL:';
-
-     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_liq_geral.AsFloat);
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { QUANTITY OF CARTONS }
-   Inc(Linha);
-   s := '';
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-      MergeCells := True;
-      if (IdiomaExporter= 'I') then
-      begin
-         s := 'QUANTITY OF CARTONS:'
-      end else if (IdiomaExporter= 'P') then
-      begin
-         s := 'QUANTIDADE DE EMBALAGENS:'
-      end else if (IdiomaExporter= 'E') then
-      begin
-         s := 'CANTIDAD DE EMBALAJES:'
-      end;
-
-      if (qryPedidoies_pallets.Value = 'S') then
-      begin
-         if (pedido_complementocxs_outpallet.Value > 0) then
-            s := s + ' ' + FormatFloat(' #,##0', pedido_complementocxs_outpallet.Value) + ' CARTONS AND ';
-         s := s + FormatFloat('  #,##0', pedido_complementoqtd_pallets.Value) + ' PALLETS';
-      end else
-         s := s + FormatFloat('  #,##0', pedido_complementoqtd_caixas.value) + ' CARTONS';
-
-      Value2 := s;
-      Font.Bold := True;
-      Font.Name := 'Arial';
-      Font.Size := 10;
-      Interior.ColorIndex := 0;
-      Borders.LineStyle := xlNone;
-      HorizontalAlignment := xlLeft;
-      VerticalAlignment := xlTop;
-      WrapText := True;
-      ShrinkToFit := False;
-   end;
-
-  with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'C'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
-
-   { Definir área de impressão }
-   if (qryPedidoies_pallets.AsString = 'N') then
-   begin
-      { ajustar propriedades para impressão da página de Packing }
-      ExcelWorksheet.PageSetup.PrintArea := '$A$1:$T$'+IntToStr(Linha);
-      with ExcelWorksheet.PageSetup do
-      begin
-        PrintTitleRows := '$1:$7';
-        PrintTitleColumns := '';
-        LeftHeader := '';
-        CenterHeader := '';
-        RightHeader := 'Page &P of &N';
-        LeftFooter := '';
-        CenterFooter := '';
-        RightFooter := '';
-        LeftMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
-        RightMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
-        TopMargin := ExcelWorksheet.Application.InchesToPoints(0.393700787401575, GetUserDefaultLCID);
-        BottomMargin := 0;
-        HeaderMargin := 0;
-        FooterMargin := 0;
-        PrintHeadings := False;
-        PrintGridlines := False;
-        PrintComments := xlPrintNoComments;
-        CenterHorizontally := False;
-        CenterVertically := False;
-        Orientation := xlLandscape;
-        Draft := False;
-        PaperSize := xlPaperA4;
-        FirstPageNumber := xlAutomatic;
-        Order := xlDownThenOver;
-        BlackAndWhite := False;
-        Zoom := 65;
-       end;
-   end else
-   begin
-      { ajustar propriedades para impressão da página de Packing }
-      ExcelWorksheet.PageSetup.PrintArea := '$A$1:$X$'+IntToStr(Linha);
-      with ExcelWorksheet.PageSetup do
-      begin
-        PrintTitleRows := '$1:$7';
-        PrintTitleColumns := '';
-        LeftHeader := '';
-        CenterHeader := '';
-        RightHeader := 'Page &P of &N';
-        LeftFooter := '';
-        CenterFooter := '';
-        RightFooter := '';
-        LeftMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
-        RightMargin := ExcelWorksheet.Application.InchesToPoints(0.196850393700787, GetUserDefaultLCID);
-        TopMargin := ExcelWorksheet.Application.InchesToPoints(0.393700787401575, GetUserDefaultLCID);
-        BottomMargin := 0;
-        HeaderMargin := 0;
-        FooterMargin := 0;
-        PrintHeadings := False;
-        PrintGridlines := False;
-        PrintComments := xlPrintNoComments;
-        CenterHorizontally := False;
-        CenterVertically := False;
-        Orientation := xlLandscape;
-        Draft := False;
-        PaperSize := xlPaperA4;
-        FirstPageNumber := xlAutomatic;
-        Order := xlDownThenOver;
-        BlackAndWhite := False;
-        Zoom := 58;
-       end;
-   end;
-   { FIM DA PÁGINA DE SPECIFICATION }
-
-   { Criar a página de CONDITIONS antes da página de SPECIFICATION }
-   WkBk.Worksheets.Add(WkBk.Worksheets['Specification'], EmptyParam, 1, EmptyParam, lcid);
-   ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
-   ExcelWorksheet.Activate(lcid);
-   ExcelWorksheet.Name := 'Conditions';
-
-   { Página das Condições para Pedidos e Confirmações }
-   ConditionPage('C', Tipo);
-
-   (* Removido em 01.11.2021 - não gerar mais Confirmation page
-   { Página CONFIRMATION quando o pedido for confirmado }
-   if (qryPedidoies_tip_pedido.AsString = 'P') then
-   begin
-     { Criar a página de CONFIRMATION antes da página de CONDITIONS }
-     WkBk.Worksheets.Add(WkBk.Worksheets['Conditions'], EmptyParam, 1, EmptyParam, lcid);
-     ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
-     ExcelWorksheet.Activate(lcid);
-     ExcelWorksheet.Name := 'Confirmation';
-     ConditionPage('P', Tipo);
-   end;
-   *)
-
-  { Salvar a planilha }
-  //ExcelApplication.ActiveWorkbook.SaveAs(FileName,xlNormal,'','',false,false,xlNochange,false, xlUserResolution,False,EmptyParam,0);
-  ExcelApplication.ActiveWorkbook.Save(lcid);
-
-  Exportador.Close;
-  Importador.Close;
-
-  { finalizar progress bar }
-  btnOrderProforma.Enabled := True;
-  Ani.Terminate;
-
-  { Fechar planilha e encerrar excel }
-  FecharExcel2;
+   { Fechar planilha e encerrar excel }
+   FecharExcel2;
 end;
 
 Procedure Tfr_ManPedido.FecharExcel2;
@@ -11002,7 +10623,6 @@ end;
 procedure Tfr_ManPedido.FornecedorBeforeOpen(DataSet: TDataSet);
 begin
   Fornecedor.ParamByName('cod_empresa').Value := vgCod_Empresa;
-  Fornecedor.ParamByName('login').Value := vgLogin;
 end;
 
 procedure Tfr_ManPedido.FabricantesAfterOpen(DataSet: TDataSet);

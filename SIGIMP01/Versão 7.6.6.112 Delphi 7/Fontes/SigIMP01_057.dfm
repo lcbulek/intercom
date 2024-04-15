@@ -1,8 +1,8 @@
 inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
-  Left = 350
-  Top = 113
+  Left = 29
+  Top = 19
   Width = 1256
-  Height = 705
+  Height = 703
   HelpType = htKeyword
   HelpKeyword = '057'
   BorderStyle = bsSizeable
@@ -793,7 +793,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
     end
   end
   inherited fr_FmNavigator1: Tfr_FmNavigator
-    Top = 641
+    Top = 639
     Width = 1248
     inherited ToolBar1: TToolBar
       Width = 1248
@@ -842,12 +842,12 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
   inherited PageControl1: TPageControl
     Top = 199
     Width = 1248
-    Height = 442
+    Height = 440
     inherited TabSheet1: TTabSheet
       Caption = 'Produtos'
       inherited DBGrade: TJvDBUltimGrid
         Width = 1240
-        Height = 324
+        Height = 322
         Options = [dgEditing, dgAlwaysShowEditor, dgTitles, dgIndicator, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgMultiSelect]
         OnDrawColumnCell = DBGradeDrawColumnCell
         MultiSelect = True
@@ -955,7 +955,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
       end
       object Panel4: TPanel
         Left = 0
-        Top = 372
+        Top = 370
         Width = 1240
         Height = 41
         Align = alBottom
@@ -1001,7 +1001,7 @@ inherited frmImportarPedidoCliente: TfrmImportarPedidoCliente
       end
       object Panel6: TPanel
         Left = 0
-        Top = 324
+        Top = 322
         Width = 1240
         Height = 48
         Align = alBottom

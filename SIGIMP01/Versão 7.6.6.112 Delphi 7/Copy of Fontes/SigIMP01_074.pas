@@ -142,7 +142,6 @@ procedure Tfrm_PesquisaAdcDesc.FormCreate(Sender: TObject);
 begin
   with Cliente do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
   Fornecedor.Open;
@@ -155,7 +154,6 @@ begin
     Close;
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
     ParamByName('cod_cliente').AsString := Clientecod_cliente.AsString;
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
 end;

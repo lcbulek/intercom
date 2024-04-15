@@ -2,12 +2,11 @@ object dmConnection: TdmConnection
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Left = 755
-  Top = 262
+  Left = 760
+  Top = 178
   Height = 463
   Width = 556
   object dbSig: TIBDatabase
-    Connected = True
     DatabaseName = 'C:\SIG\Base de Dados\DBSIG.FDB'
     Params.Strings = (
       'password=57071273'
@@ -15,6 +14,9 @@ object dmConnection: TdmConnection
       'user_name=sysdba')
     LoginPrompt = False
     DefaultTransaction = TransSig
+    IdleTimer = 0
+    SQLDialect = 3
+    TraceFlags = []
     AllowStreamedConnected = False
     AfterConnect = dbSigAfterConnect
     BeforeDisconnect = dbSigBeforeDisconnect
@@ -22,6 +24,7 @@ object dmConnection: TdmConnection
     Top = 14
   end
   object TransSig: TIBTransaction
+    Active = False
     DefaultDatabase = dbSig
     Params.Strings = (
       'read_committed'
@@ -35,6 +38,8 @@ object dmConnection: TdmConnection
     Database = dbSig
     Transaction = TransSig
     AfterScroll = empresaAfterScroll
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_empresa",'
       '"nom_empresa",'
@@ -186,6 +191,8 @@ object dmConnection: TdmConnection
   object usuario: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "usuario"'
       'where'
@@ -256,6 +263,8 @@ object dmConnection: TdmConnection
   object qryConnect: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 140
     Top = 16
   end
@@ -8212,13 +8221,6 @@ object dmConnection: TdmConnection
     Left = 414
     Top = 19
     StyleName = 'XP Style'
-    object acHelp: TAction
-      Caption = 'Ajuda'
-      Hint = 'Ajuda'
-      ImageIndex = 26
-      ShortCut = 112
-      OnExecute = acHelpExecute
-    end
     object acSobre: TAction
       Caption = 'Sobre'
       Hint = 'Sobre o sistema'
@@ -8231,16 +8233,12 @@ object dmConnection: TdmConnection
       ImageIndex = 212
       OnExecute = acCloseExecute
     end
-    object acAlterarSenha: TAction
-      Caption = 'Alterar Senha'
-      ImageIndex = 43
-      ShortCut = 113
-      OnExecute = acAlterarSenhaExecute
-    end
   end
   object qryPesquisa: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     OnFilterRecord = qryPesquisaFilterRecord
     Left = 37
     Top = 166
@@ -8248,6 +8246,8 @@ object dmConnection: TdmConnection
   object qryBuscaLogo: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "local_logotipo"'
       'from "empresa"'
@@ -8270,6 +8270,8 @@ object dmConnection: TdmConnection
   object cidade: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_cidade", a."nom_cidade",'
       '       b."cod_unidade_federativa", b."nom_unidade_federativa"'
@@ -8315,6 +8317,8 @@ object dmConnection: TdmConnection
   object qryDateTime: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select first 1 CURRENT_TIMESTAMP'
       'from RDB$DATABASE'
@@ -8330,6 +8334,8 @@ object dmConnection: TdmConnection
   object cliente: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select "cod_cliente", "mas_cod_produto", "ncm_formato", "ncm_for' +
@@ -8386,6 +8392,8 @@ object dmConnection: TdmConnection
   object fornecedor: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "mas_cod_produto" from  "fornecedor"'
       'where "cod_fornecedor" = :cod_fornecedor')
@@ -8410,6 +8418,8 @@ object dmConnection: TdmConnection
   object procura_produto: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."cod_produto", a."cod_cliente", a."cod_fornecedor", a."' +
@@ -8422,6 +8432,8 @@ object dmConnection: TdmConnection
   object Produto_Det: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."cod_produto", a."den_produto_det", a."den_produto_detp' +
@@ -8626,6 +8638,8 @@ object dmConnection: TdmConnection
   object qryAux: TIBQuery
     Database = dbSig
     Transaction = TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 408
     Top = 136
   end

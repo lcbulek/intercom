@@ -57,7 +57,6 @@ object fr_Menu: Tfr_Menu
       Caption = 'Atualizar'
       ImageIndex = 74
       ShortCut = 116
-      OnExecute = acAtualizaExecute
     end
     object act_Ativar: TAction
       Caption = 'Ativar'

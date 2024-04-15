@@ -1,6 +1,6 @@
 inherited fr_MenuPrincipalCOM: Tfr_MenuPrincipalCOM
-  Left = 847
-  Top = 280
+  Left = 329
+  Top = 127
   HelpType = htKeyword
   HelpKeyword = '001'
   Caption = 'fr_MenuPrincipalCOM'
@@ -20,6 +20,9 @@ inherited fr_MenuPrincipalCOM: Tfr_MenuPrincipalCOM
       object Empresa1: TMenuItem
         Caption = 'Empresas Usuarias do Sistema'
         OnClick = actCadastroEmpresaExecute
+      end
+      object actUsuarios1: TMenuItem
+        Action = actCadUsuarios
       end
       object Idiomas1: TMenuItem
         Caption = 'Idiomas do Sistema'
@@ -389,6 +392,11 @@ inherited fr_MenuPrincipalCOM: Tfr_MenuPrincipalCOM
       Category = 'Pedidos e Faturas'
       Caption = 'Faturas Registradas no Sistema - Resumo'
       OnExecute = actFaturasResumoExecute
+    end
+    object actCadUsuarios: TAction
+      Category = 'Cadastros'
+      Caption = 'Usu'#225'rios'
+      OnExecute = actCadUsuariosExecute
     end
   end
 end

@@ -1,6 +1,6 @@
 object fr_PedidosRegistrados: Tfr_PedidosRegistrados
   Left = 638
-  Top = 407
+  Top = 409
   HelpType = htKeyword
   HelpKeyword = '071'
   BorderIcons = [biSystemMenu]
@@ -267,6 +267,8 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = ClientesBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select c."cod_cliente"'
       'from "pedido" a, "pedido_complemento" b, "cliente" c'
@@ -275,9 +277,6 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
       '  and b."cod_empresa" = a."cod_empresa"'
       '  and b."num_pedido"  = a."num_pedido"'
       '  and c."cod_cliente" = a."cod_cliente"'
-      '  and c."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
       'group by 1'
       'order by 1')
     Left = 40
@@ -286,11 +285,6 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Clientescod_cliente: TIBStringField
@@ -310,6 +304,8 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = FornecedoresBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."cod_fornecedor", c."raz_social_reduz"'
       'from "pedido" a, "pedido_complemento" b, "fornecedor" c'
@@ -346,6 +342,8 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterScroll = PedidosAfterScroll
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_empresa",  a."dat_emissao",'
       
@@ -441,6 +439,8 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterScroll = ProdutosAfterScroll
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "spr_pedidos_faturas"(:cod_empresa, :num_pedido);')
     Left = 120
@@ -583,6 +583,8 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_comercial"'
       'where "cod_empresa" = :cod_empresa')
@@ -637,6 +639,8 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
   object embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "embalagem"'
       'where "cod_empresa" = :cod_empresa'
@@ -747,6 +751,8 @@ object fr_PedidosRegistrados: Tfr_PedidosRegistrados
   object pedido_adic_desc: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "pedido_adic_desc"'
       'where "cod_empresa" = :cod_empresa'

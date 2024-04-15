@@ -7,6 +7,8 @@ object dmProdList: TdmProdList
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_comercial"'
       'where "cod_empresa" = :cod_empresa')
@@ -59,6 +61,8 @@ object dmProdList: TdmProdList
   object prod_list: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "prod_list"'
       'where "cod_empresa" = :cod_empresa'
@@ -138,6 +142,8 @@ object dmProdList: TdmProdList
   object cliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente_reduz"'
       'from "cliente"'
@@ -161,6 +167,8 @@ object dmProdList: TdmProdList
   object fornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social_reduz"'
       'from "fornecedor"'
@@ -188,6 +196,8 @@ object dmProdList: TdmProdList
   object faturas_prodlist: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       ' select "num_fatura"'
       'from "prod_list_itens"'
@@ -218,12 +228,16 @@ object dmProdList: TdmProdList
   object itens_prodlist: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 128
     Top = 136
   end
   object Saldos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_saldos_produtos"(:cod_empresa, :num_pedido, :' +
@@ -257,6 +271,12 @@ object dmProdList: TdmProdList
       Precision = 18
       Size = 3
     end
+    object Saldosqtd_faturada: TIBBCDField
+      FieldName = 'qtd_faturada'
+      Origin = 'spr_saldos_produtos.qtd_faturada'
+      Precision = 18
+      Size = 3
+    end
     object Saldosqtd_embarcada: TIBBCDField
       FieldName = 'qtd_embarcada'
       Origin = '"spr_saldos_produtos"."qtd_embarcada"'
@@ -285,6 +305,8 @@ object dmProdList: TdmProdList
   object pedido_produto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_empresa", a."num_pedido", a."num_sequencia",'
       
@@ -472,6 +494,8 @@ object dmProdList: TdmProdList
   object ProdListGrupos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "prod_list_itens"'
@@ -501,6 +525,8 @@ object dmProdList: TdmProdList
   object ProdListEmbEsp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "prod_list_itens"                           '
       ' where "cod_empresa" = :cod_empresa                       '
@@ -529,6 +555,8 @@ object dmProdList: TdmProdList
   object ProdListPallets: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "prod_list_itens"                           '
       ' where "cod_empresa" = :cod_empresa                       '

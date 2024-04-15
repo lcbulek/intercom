@@ -1156,6 +1156,10 @@ type
     Label95: TLabel;
     JvDBDatePickerEdit15: TJvDBDatePickerEdit;
     nota_fiscal_saidadat_pl_des: TDateField;
+    OrdersList: TIBQuery;
+    OrdersListnum_pedido_for: TIBStringField;
+    OrdersListnum_pedido_cli: TIBStringField;
+    OrdersListdat_liberacao: TDateField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure nota_fiscal_saidaAfterCancel(DataSet: TDataSet);
     procedure nota_fiscal_saidaAfterClose(DataSet: TDataSet);
@@ -1189,6 +1193,9 @@ type
     procedure dts_nf_saida_complementoStateChange(Sender: TObject);
     procedure nf_saida_complementoNewRecord(DataSet: TDataSet);
     procedure nf_saida_complementoAfterOpen(DataSet: TDataSet);
+    function OrderList(Num_NF: integer; Tipo: boolean): String;
+
+
     // fatura
     procedure actFaturaExecute(Sender: TObject);
     procedure GerarFatura(Tipo: String);
@@ -2169,6 +2176,39 @@ begin
      nota_fiscal_saida.Edit;
 
 end;
+
+function Tfr_ManNf.OrderList(Num_NF: integer; Tipo: boolean): String;
+Var
+  s : String;
+begin
+  { Lista de Proformas da Fatura }
+  s := '';
+
+  with OrdersList do
+  begin
+    Close;
+    ParamByName('cod_empresa').Value := vgCod_Empresa;
+    ParamByName('num_nota_fiscal').Value := Num_NF;
+    Open;
+    First;
+    while Not(EOF) do
+    begin
+      if (Tipo) then
+      begin // Proforma
+        s := s + Trim(FieldByName('num_pedido_for').AsString) + ' DD '
+               + FormatDateTime('ddmmmyyyy', FieldByName('dat_liberacao').Value);
+      end else
+      begin // Order
+        s := s + Trim(FieldByName('num_pedido_cli').AsString);
+      end;
+      Next;
+      if Not(EOF) then s := s + ', ';
+    end;
+    s := s + '.';
+  end;
+  Result := s;
+end;
+
 
 procedure Tfr_ManNF.nf_saida_complementoNewRecord(DataSet: TDataSet);
 begin
@@ -3278,7 +3318,7 @@ begin
      VerticalAlignment := xlTop;
      WrapText := True;
      ShrinkToFit := False;
-     Rows.RowHeight := 24.75;
+     Rows.RowHeight := 12.00;
    end;
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha1),'J'+IntToStr(Linha1)] do
@@ -3314,29 +3354,13 @@ begin
     VerticalAlignment := xlTop;
    end;
 
-   { Lista de SALES COMFIRMATION  }
-   s3 := '';
-
-   with nf_Confirmacoes do { obtém as Proforma Invoices dos Pedidos }
-   begin
-     First;
-     while Not(EOF) do
-     begin
-       s3 := s3 + Trim(FieldByName('num_pedido_for').AsString) + ' DD '
-             + FormatDateTime('ddmmmyyyy',FieldByName('dat_liberacao').Value);
-       Next;
-       if Not(EOF) then s3 := s3 + ', ';
-     end;
-     s3 := s3 + '.';
-   end;
-
-   { texto para Proforma Invoice }
+   { Lista de SALES CONFIRMATION  }
    Linha1 := Linha1 + 1;
-   i := (length(s3) / 110);
-   i := i + 1;
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha1),'J'+IntToStr(Linha1)] do
    begin
+     s3 := '';
+     s3 := OrderList(nota_fiscal_saidanum_nota_fiscal.AsInteger, true);
      MergeCells := True;
      Value2 := s3;
      Font.Name := 'Arial';
@@ -3347,6 +3371,8 @@ begin
      VerticalAlignment := xlTop;
      WrapText := True;
      ShrinkToFit := False;
+     i := (length(s3) / 110);
+     i := i + 1;
      Rows.RowHeight := 12.75 * Int(i);
    end;
 
@@ -3359,7 +3385,6 @@ begin
     Borders[xlEdgeBottom].LineStyle := xlNone;
     Borders[xlEdgeRight].LineStyle := xlNone;
     Borders[xlInsideVertical].LineStyle := xlNone;
-    //Borders[xlInsideHorizontal].LineStyle := xlNone;
    end;
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha1),'J'+IntToStr(Linha1)] do
@@ -3528,6 +3553,31 @@ begin
     ShrinkToFit := False;
   end;
   { fim }
+
+  Inc(Linha);
+
+  { início }
+  with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+  begin
+    MergeCells := True;
+    if (IdiomaExporter= 'I') then
+    begin
+       FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
+       Characters[1,15].Font.Bold := True;
+       Characters[16,10].Font.Bold := False;
+    end else if (IdiomaExporter= 'P') then
+    begin
+       FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
+       Characters[1,21].Font.Bold := True;
+       Characters[22,10].Font.Bold := False;
+    end else if (IdiomaExporter= 'E') then begin
+       FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
+       Characters[1,22].Font.Bold := True;
+       Characters[23,10].Font.Bold := False;
+    end;
+    Font.Name := 'Arial';
+    Font.Size := 9;
+  end;
 
   inc(Linha);
 
@@ -4239,14 +4289,14 @@ begin
       ShrinkToFit := False;
    end;
 
-   { TOTAL NET WEIGHT }
+   { NET WEIGHT }
    if Not(bBl) then
    begin
       Inc(Linha);
       s := '';
       with ExcelWorksheet.Range[C1+IntToStr(Linha),C2+IntToStr(Linha)] do
       begin
-        s := 'TOTAL NET WEIGHT:';
+        s := 'NET WEIGHT:';
         s := s + FormatFloat('  #,##0.00 Kg', DataSet.FieldByName('pes_liq_geral').AsFloat);
         if (bPallets = true) then
            s := s + ' (OF THE' + FormatFloat('  #,##0', DataSet.FieldByName('qtd_caixas').value) + ' CARTONS)';
@@ -4260,13 +4310,13 @@ begin
       end;
    end;
 
-   { TOTAL GROSS WEIGHT }
+   { GROSS WEIGHT }
    Inc(Linha);
    s := '';
    with ExcelWorksheet.Range[C1+IntToStr(Linha),C2+IntToStr(Linha)] do
    begin
      MergeCells := True;
-     s := 'TOTAL GROSS WEIGHT:';
+     s := 'GROSS WEIGHT:';
      s := s + FormatFloat('  #,##0.00 Kg', DataSet.FieldByName('pes_bru_geral').AsFloat);
      if ((bPallets = true) and (bCaixas = false)) then s := s + ' (OF THE PALLETS)';
      if ((bPallets = true) and (bCaixas = true))  then s := s + ' (CARTONS + PALLETS)';
@@ -4278,13 +4328,13 @@ begin
      Borders[xlEdgeLeft].LineStyle := xlNone;
    end;
 
-   { TOTAL VOLUME }
+   { VOLUME }
    Inc(Linha);
    s := '';
    with ExcelWorksheet.Range[C1+IntToStr(Linha),C2+IntToStr(Linha)] do
    begin
      MergeCells := True;
-     s := 'TOTAL VOLUME:';
+     s := 'VOLUME:';
      s := s +  FormatFloat(VolumeNumberFormatTotal, Arredonda(DataSet.FieldByName('vol_geral').AsFloat, -2, rmUp));
      if ((bPallets = true) and (bCaixas = false)) then s := s + ' (OF THE PALLETS)';
      if ((bPallets = true) and (bCaixas = true))  then s := s + ' (CARTONS + PALLETS)';
@@ -5367,7 +5417,7 @@ begin
      VerticalAlignment := xlTop;
      WrapText := True;
      ShrinkToFit := False;
-     Rows.RowHeight := 24.75;
+     Rows.RowHeight := 12.00;
    end;
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha1),'J'+IntToStr(Linha1)] do
@@ -5403,29 +5453,13 @@ begin
     VerticalAlignment := xlTop;
    end;
 
-   { Lista de SALES COMFIRMATION  }
-   s3 := '';
-
-   with nf_Confirmacoes do { obtém as Proforma Invoices dos Pedidos }
-   begin
-     First;
-     while Not(EOF) do
-     begin
-       s3 := s3 + Trim(FieldByName('num_pedido_for').AsString) + ' DD '
-             + FormatDateTime('ddmmmyyyy',FieldByName('dat_liberacao').Value);
-       Next;
-       if Not(EOF) then s3 := s3 + ', ';
-     end;
-     s3 := s3 + '.';
-   end;
-
-   { texto para Proforma Invoice }
+   { Lista de SALES CONFIRMATION  }
    Linha1 := Linha1 + 1;
-   i := (length(s3) / 110);
-   i := i + 1;
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha1),'J'+IntToStr(Linha1)] do
    begin
+     s3 := '';
+     s3 := OrderList(nota_fiscal_saidanum_nota_fiscal.AsInteger, true);
      MergeCells := True;
      Value2 := s3;
      Font.Name := 'Arial';
@@ -5436,6 +5470,8 @@ begin
      VerticalAlignment := xlTop;
      WrapText := True;
      ShrinkToFit := False;
+     i := (length(s3) / 110);
+     i := i + 1;
      Rows.RowHeight := 12.75 * Int(i);
    end;
 
@@ -5587,6 +5623,31 @@ begin
     ShrinkToFit := False;
   end;
   { fim }
+
+  Inc(Linha);
+
+  { início }
+  with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+  begin
+    MergeCells := True;
+    if (IdiomaExporter= 'I') then
+    begin
+       FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
+       Characters[1,15].Font.Bold := True;
+       Characters[16,10].Font.Bold := False;
+    end else if (IdiomaExporter= 'P') then
+    begin
+       FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
+       Characters[1,21].Font.Bold := True;
+       Characters[22,10].Font.Bold := False;
+    end else if (IdiomaExporter= 'E') then begin
+       FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
+       Characters[1,22].Font.Bold := True;
+       Characters[23,10].Font.Bold := False;
+    end;
+    Font.Name := 'Arial';
+    Font.Size := 9;
+  end;
 
   inc(Linha);
 
@@ -7187,6 +7248,30 @@ begin
 
    Inc(linha);
 
+  with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+  begin
+    MergeCells := True;
+    if (IdiomaExporter= 'I') then
+    begin
+       FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
+       Characters[1,15].Font.Bold := True;
+       Characters[16,10].Font.Bold := False;
+    end else if (IdiomaExporter= 'P') then
+    begin
+       FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
+       Characters[1,21].Font.Bold := True;
+       Characters[22,10].Font.Bold := False;
+    end else if (IdiomaExporter= 'E') then begin
+       FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
+       Characters[1,22].Font.Bold := True;
+       Characters[23,10].Font.Bold := False;
+    end;
+    Font.Name := 'Arial';
+    Font.Size := 9;
+  end;
+
+  inc(Linha);
+
    with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
    begin
      if (IdiomaExporter = 'I') then Value2 := 'THE NUMBER OF THE CONTAINER MUST BE INDICATED IN THE B/L'
@@ -7307,35 +7392,6 @@ begin
     ShrinkToFit := False;
   end;
   { fim }
-
-   { Insurance - alterado em 22.09.14 }
-   Inc(Linha);
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     if (IdiomaExporter = 'I') then
-        FormulaR1C1 := 'INSURANCE TO BE EFFECTED BY: ' + dbcInsurance.Text
-     else if (IdiomaExporter = 'P') then
-        FormulaR1C1 := 'SEGURO EFETUADO POR        : ' + dbcInsurance.Text
-     else if (IdiomaExporter = 'E') then
-        FormulaR1C1 := 'SEGURO EFECTUADO POR       : ' + dbcInsurance.Text;
-
-     Name := 'Arial';
-     Characters[1,29].Font.Bold := True;
-     Font.Size := 9;
-     Font.Name := 'Arial';
-   end;
-
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
-
 
   Inc(Linha);
 
@@ -7608,6 +7664,27 @@ begin
 
    Inc(Linha);
 
+   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     if (IdiomaExporter = 'I') then s := '3) ORDER(S) NUMBER(S): ' + OrderList(nota_fiscal_saidanum_nota_fiscal.AsInteger, false)
+     else if (IdiomaExporter = 'P') then s := '3) ORDER(S) NUMBER(S): ' + OrderList(nota_fiscal_saidanum_nota_fiscal.AsInteger, false)
+     else if (IdiomaExporter = 'E') then s := '3) ORDER(S) NUMBER(S): ' + OrderList(nota_fiscal_saidanum_nota_fiscal.AsInteger, false);
+     Value2 := s;
+     MergeCells := True;
+     Font.Name := 'Arial';
+     Font.Size := 8;
+     Interior.ColorIndex := 0;
+     HorizontalAlignment := xlLeft;
+     VerticalAlignment := xlTop;
+     WrapText := True;
+     ShrinkToFit := False;
+     i := (length(s) / 110);
+     i := i + 1;
+     Rows.RowHeight := 12.75 * Int(i);
+   end;
+
+   Inc(Linha);
+
    { TIPOS DE PRODUTOS + NCM }
    tncm := TStringList.Create;
    dmCOM.TipoNcmFatura(nota_fiscal_saidacod_empresa.AsInteger, nota_fiscal_saidanum_nota_fiscal.AsInteger, nota_fiscal_saidaserie.AsString, tncm, (clientesncm_bl.Value = 'S'), 'B');
@@ -7616,14 +7693,14 @@ begin
    begin
      if (clientesncm_bl.Value = 'S') then
      begin
-       if (IdiomaExporter = 'I') then s := '3) PRODUCTS AND NCM NUMBERS'
-       else if (IdiomaExporter = 'P') then s := '3) PRODUTOS E NÚMEROS DE NCM'
-       else if (IdiomaExporter = 'E') then s := '3) PRODUCTOS Y NÚMEROS DE NCM';
+       if (IdiomaExporter = 'I') then s := '4) PRODUCTS AND NCM NUMBERS'
+       else if (IdiomaExporter = 'P') then s := '4) PRODUTOS E NÚMEROS DE NCM'
+       else if (IdiomaExporter = 'E') then s := '4) PRODUCTOS Y NÚMEROS DE NCM';
      end else
      begin
        if (IdiomaExporter = 'I') then s := '3) PRODUCTS'
-       else if (IdiomaExporter = 'P') then s := '3) PRODUTOS'
-       else if (IdiomaExporter = 'E') then s := '3) PRODUCTOS';
+       else if (IdiomaExporter = 'P') then s := '4) PRODUTOS'
+       else if (IdiomaExporter = 'E') then s := '4) PRODUCTOS';
      end;
      Value2 := s  + #10;
      MergeCells := True;
@@ -7667,9 +7744,9 @@ begin
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
    begin
-     if (IdiomaExporter = 'I') then s := '4) CLEAN ON BOARD'
-     else if (IdiomaExporter = 'P') then s := '4) LIMPO À BORDO'
-     else if (IdiomaExporter = 'E') then s := '4) LIMPIO A BORDO';
+     if (IdiomaExporter = 'I') then s := '5) CLEAN ON BOARD'
+     else if (IdiomaExporter = 'P') then s := '5) LIMPO À BORDO'
+     else if (IdiomaExporter = 'E') then s := '5) LIMPIO A BORDO';
      Value2 := s;
      MergeCells := True;
      Font.Name := 'Arial';
@@ -7687,7 +7764,7 @@ begin
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
    begin
-     Value2 := '5) INCOTERMS: ' + trim(nf_saida_complementolkcCondicaoVenda.AsString);
+     Value2 := '6) INCOTERMS: ' + trim(nf_saida_complementolkcCondicaoVenda.AsString);
      MergeCells := True;
      Font.Name := 'Arial';
      Font.Size := 8;
@@ -12354,7 +12431,7 @@ begin
      RowHeight := 12.75 * Int(i);
    end;
 
-   Inc(linha);
+  inc(Linha);
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
    begin
@@ -12436,34 +12513,6 @@ begin
      WrapText := True;
      ShrinkToFit := False;
    end;
-
-   { Insurance - alterado em 22.09.14 }
-   Inc(Linha);
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     if (IdiomaExporter = 'I') then
-        FormulaR1C1 := 'INSURANCE TO BE EFFECTED BY: ' + dbcInsurance.Text
-     else if (IdiomaExporter = 'P') then
-        FormulaR1C1 := 'SEGURO EFETUADO POR        : ' + dbcInsurance.Text
-     else if (IdiomaExporter = 'E') then
-        FormulaR1C1 := 'SEGURO EFECTUADA POR       : ' + dbcInsurance.Text;
-
-     Name := 'Arial';
-     Characters[1,29].Font.Bold := True;
-     Font.Size := 9;
-     Font.Name := 'Arial';
-   end;
-
-  with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-  begin
-    MergeCells := True;
-    Interior.ColorIndex := 0;
-    Borders.LineStyle := xlContinuous;
-    HorizontalAlignment := xlLeft;
-    VerticalAlignment := xlTop;                                
-    WrapText := True;
-    ShrinkToFit := False;
-  end;
 
    Inc(Linha);
    if (IdiomaExporter = 'I') then s := 'FREIGHT IN NUMBERS: USD '
@@ -12706,6 +12755,27 @@ begin
        end;
 
        Inc(Linha);
+
+       with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+       begin
+         if (IdiomaExporter = 'I') then s := '3) ORDER(S) NUMBER(S): ' + OrderList(bl_combinadonum_nota_fiscal.AsInteger, false)
+         else if (IdiomaExporter = 'P') then s := '3) ORDER(S) NUMBER(S): ' + OrderList(bl_combinadonum_nota_fiscal.AsInteger, false)
+         else if (IdiomaExporter = 'E') then s := '3) ORDER(S) NUMBER(S): ' + OrderList(bl_combinadonum_nota_fiscal.AsInteger, false);
+         Value2 := s;
+         MergeCells := True;
+         Font.Name := 'Arial';
+         Font.Size := 8;
+         Interior.ColorIndex := 0;
+         HorizontalAlignment := xlLeft;
+         VerticalAlignment := xlTop;
+         WrapText := True;
+         ShrinkToFit := False;
+         i := (length(s) / 110);
+         i := i + 1;
+         Rows.RowHeight := 12.75 * Int(i);
+       end;
+
+       Inc(Linha);
        { TIPOS DE PRODUTOS + NCM }
        tncm := TStringList.Create;
        dmCOM.TipoNcmFatura(bl_combinadocod_empresa.AsInteger, bl_combinadonum_nota_fiscal.AsInteger, bl_combinadoserie.AsString, tncm, (Clientesncm_bl.Value = 'S'), 'B');
@@ -12714,14 +12784,14 @@ begin
        begin
          if (clientesncm_bl.Value = 'S') then
          begin
-           if (IdiomaExporter = 'I') then s := '3) PRODUCTS AND NCM NUMBERS'
-           else if (IdiomaExporter = 'P') then s := 'PRODUTOS E NÚMEROS DE NCM'
-           else if (IdiomaExporter = 'E') then s := 'PRODUCTOS Y NÚMEROS DE NCM';
+           if (IdiomaExporter = 'I') then s := '4) PRODUCTS AND NCM NUMBERS'
+           else if (IdiomaExporter = 'P') then s := '4) PRODUTOS E NÚMEROS DE NCM'
+           else if (IdiomaExporter = 'E') then s := '4) PRODUCTOS Y NÚMEROS DE NCM';
          end else
          begin
-           if (IdiomaExporter = 'I') then s := '3) PRODUCTS'
-           else if (IdiomaExporter = 'P') then s := 'PRODUTOS'
-           else if (IdiomaExporter = 'E') then s := 'PRODUCTOS';
+           if (IdiomaExporter = 'I') then s := '4) PRODUCTS'
+           else if (IdiomaExporter = 'P') then s := '4) PRODUTOS'
+           else if (IdiomaExporter = 'E') then s := '4) PRODUCTOS';
          end;
          Value2 := s + #10;
          MergeCells := True;
@@ -12765,9 +12835,9 @@ begin
 
       with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
       begin
-        if (IdiomaExporter = 'I') then s := '4) CLEAN ON BOARD'
-        else if (IdiomaExporter = 'P') then s := '4) LIMPO À BORDO'
-        else if (IdiomaExporter = 'E') then s := '4) LIMPIO A BORDO';
+        if (IdiomaExporter = 'I') then s := '5) CLEAN ON BOARD'
+        else if (IdiomaExporter = 'P') then s := '5) LIMPO À BORDO'
+        else if (IdiomaExporter = 'E') then s := '5) LIMPIO A BORDO';
         Value2 := s;
         MergeCells := True;
         Font.Name := 'Arial';
@@ -12779,13 +12849,13 @@ begin
         ShrinkToFit := False;
         if (IdiomaExporter = 'I') then Rows.RowHeight := 12.75
         else Rows.RowHeight := 25.50;
-      end;
+      end;                                               
 
       Inc(Linha);
 
       with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
       begin
-        Value2 := '5) INCOTERMS: ' + trim(nf_saida_complementolkcCondicaoVenda.AsString);
+        Value2 := '6) INCOTERMS: ' + trim(nf_saida_complementolkcCondicaoVenda.AsString);
         MergeCells := True;
         Font.Name := 'Arial';
         Font.Size := 8;
@@ -12899,7 +12969,32 @@ begin
          ShrinkToFit := False;
          RowHeight := 12.75;
       end;
+      Inc(linha);
+
+      with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+      begin
+        MergeCells := True;
+        if (IdiomaExporter= 'I') then
+        begin
+           FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
+           //Characters[1,15].Font.Bold := True;
+           //Characters[16,10].Font.Bold := False;
+        end else if (IdiomaExporter= 'P') then
+        begin
+           FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
+           //Characters[1,21].Font.Bold := True;
+           //Characters[22,10].Font.Bold := False;
+        end else if (IdiomaExporter= 'E') then begin
+           FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
+           //Characters[1,22].Font.Bold := True;
+           //Characters[23,10].Font.Bold := False;
+        end;
+        Font.Name := 'Arial';
+        Font.Size := 8;
+      end;
+
       Next;
+
       with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
       begin
        Borders[xlDiagonalDown].LineStyle := xlNone;
@@ -16366,7 +16461,7 @@ end;
 
 procedure Tfr_ManNF.lcbConfirmacoesClick(Sender: TObject);
 begin
-  lcbConfirmacoes.Enabled := False;
+  //lcbConfirmacoes.Enabled := False;
   if (fatura_pagamentonum_pedido.AsLargeInt = -1) then fatura_pagamento.Post;
 end;
 
@@ -16464,7 +16559,8 @@ end;
 
 procedure Tfr_ManNF.nota_fiscal_saidaAfterScroll(DataSet: TDataSet);
 begin
-  lcbConfirmacoes.Enabled := (fatura_pagamento.IsEmpty) and (nota_fiscal_saidadat_liquidacao.IsNull);
+  //lcbConfirmacoes.Enabled := (fatura_pagamento.IsEmpty) and (nota_fiscal_saidadat_liquidacao.IsNull);
+  lcbConfirmacoes.Enabled := (nota_fiscal_saidavlr_saldo.Value <> 0) and (nota_fiscal_saidavlr_saldo_esp.Value <> 0);
 end;
 
 end.

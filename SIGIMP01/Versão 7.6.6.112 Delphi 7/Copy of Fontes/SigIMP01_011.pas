@@ -151,7 +151,6 @@ begin
   begin
     with Clientes do
     begin
-      ParamByName('login').Value := vgLogin;
       Open;
     end;
     Clientes.Open;

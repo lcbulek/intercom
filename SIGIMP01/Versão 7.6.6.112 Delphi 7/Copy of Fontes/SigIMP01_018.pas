@@ -118,8 +118,7 @@ procedure Tfrm_PesquisaListaPreco.FormCreate(Sender: TObject);
 begin
   with Cliente do
   begin
-    ParamByName('login').Value := vgLogin;                          
-    Open;
+      Open;
   end;
   Fornecedor.Open;
 end;

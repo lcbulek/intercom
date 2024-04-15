@@ -6,7 +6,7 @@ uses
   ShareMem, Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, Db, DBTables, Menus, ImgList, IBDatabase, IBCustomDataSet, IBQuery,
   IniFiles, ExtCtrls, IBSQL, ScktComp, ActnList, ActnMan,  DBActns, AppEvnts,
-  Variants, DateUtils, IBServices, UnType, XPStyleActnCtrls, unAbout, UnAlteraSenha,
+  Variants, DateUtils, IBServices, UnType, XPStyleActnCtrls, unAbout,
   IBStoredProc, Math, JvComponentBase, JvBalloonHint, AniThread;
 
 const
@@ -16,8 +16,7 @@ const
   ctSelect=3;                                                           
   ctQuebra_Linha=#13;                                                       
   ctMsgValor_Invalido: String = 'Valor inválido.';
-  ctFireBird_Server1 = 'FireBird Server 1';                                
-  ctFireBird_Server2 = 'FireBird Server 2';
+  ctFireBird_Server1 = 'FireBird Server 1';
                                                                           
 type
   TAcoesMenu = (acmNew, acmEdit, acmSearch);
@@ -71,7 +70,6 @@ type
     usuarioies_root: TIBStringField;
     ImageList: TImageList;
     ActionManager: TActionManager;
-    acHelp: TAction;
     acSobre: TAction;
     acClose: TAction;
     qryPesquisa: TIBQuery;
@@ -106,7 +104,6 @@ type
     cidadenom_unidade_federativa: TIBStringField;
     qryDateTime: TIBQuery;
     qryDateTimeCURRENT_TIMESTAMP: TDateTimeField;
-    acAlterarSenha: TAction;
     cliente: TIBQuery;
     fornecedor: TIBQuery;
     procura_produto: TIBQuery;                                       
@@ -175,8 +172,7 @@ type
     { Public declarations }
   end;
 
-procedure Buscar_Host;                                     
-procedure Buscar_Help;                                          
+procedure Buscar_Host;
 procedure Buscar_Programa;
 procedure Exception_Cadastro(DataSet: TDataSet;
   E: EDatabaseError; var Action: TDataAction);
@@ -199,7 +195,6 @@ function Buscar_Logo: String;
 function Crypitc(Password : String) : String; stdcall;
 function Conectar_FireBird(Server: String = ctFireBird_Server1; Mensagem: Boolean = False): Boolean;
 function Desconectar_FireBird: Boolean;
-function Permitir_Acesso(Permissao: tpPermissao; Nome_Tela: tpNom_Tela): Boolean;
 function Gravar_Log(Value: Integer) : Boolean;
 function Check_Conexao(Value: Boolean; Mensagem: Boolean = True): Boolean;
 function Pesquisar(Tabela: String; Compl: String = ''): Boolean;
@@ -230,7 +225,6 @@ function LetraNcm(Ncm: String): String;
 
 function InserirCod(Nom_Tabela, Nom_Campo: String; Empresa: Boolean): Largeint;
 procedure SearchArquive(BasePath: String; List: TStringList; ExtFile: String = '.*');
-function RunPrograma(Programa: String): Boolean;
 function UsuarioLoginDate(): String;
 procedure RecalcularPedidos(CodProduto: String);
 procedure RecalcularFaturas(CodProduto: String);
@@ -267,7 +261,7 @@ var
   vgHost: TpHost='00';
   vgServer:string='';
   vFilPesquisa: array [0..3] of String;
-  vg_base_atual: Smallint;// 0 = Base atual e 1 = Base historico
+  vg_base_atual: Smallint;// 0 = Base atual 
   vgSerie : String ; { Número de Série Default para Notas Fiscais de Saída }
   { variaveis para o progress bar }
   Ani : TAnimationThread;
@@ -349,14 +343,9 @@ begin
 end;
 
 
-procedure Buscar_Help;
-begin
-	Application.HelpFile := ChangeFileExt(ExtractFileName(Application.ExeName),'.hlp');
-end;
-
 procedure Buscar_Programa;
 begin
-   vgCod_Programa   := Application.Name;                       
+   vgCod_Programa   := Application.Name;
 end;
 
 procedure Exception_Cadastro(DataSet: TDataSet;          
@@ -522,10 +511,7 @@ var
   DBIni: String;
   DBFileName: String;
 begin
-  { 15.03.13 - Retirada a criptografia do arquivo sig.ini }
-
-	Buscar_Host;
-  Buscar_Help;
+  Buscar_Host;
   Buscar_Programa;
 
   if Length(vgLogin) = 0 then
@@ -593,15 +579,21 @@ begin
          begin
             Close;
             SQL.Clear;
-            SQL.Add(' select * ');
-            SQL.Add(' from "usuario" ');
-            SQL.Add(' where ');
-            SQL.Add('     "login" = :login ');
-            SQL.Add(' and "senha" = :senha ');
+            SQL.Add(' select *              ');
+            SQL.Add(' from "usuario"        ');
+            SQL.Add(' where                 ');
+            SQL.Add('     "login" = :login  ');
+            SQL.Add(' and "senha" = :senha  ');
             ParamByName('login').AsString := vgLogin;
             ParamByName('senha').AsString := Crypitc(vgSenha);
             Open;
-            vgTipo := FieldByName('ies_tipo').Value;
+
+            if IsEmpty then
+               MessageDlg('Usuário ou Senha não encontrados.', mtWarning, [mbOk], 0);
+
+            if not(IsEmpty) then
+                vgTipo := FieldByName('ies_tipo').Value;
+
             Result := not IsEmpty;
          end;      
 
@@ -610,25 +602,14 @@ begin
          begin
             Close;
             SQL.Clear;
-            SQL.Add(' select a.* ');
-            SQL.Add(' from "empresa" a, "usuario_emp" b ');
-            SQL.Add(' where ');
-            SQL.Add('     b."cod_empresa" = a."cod_empresa" ');
-            SQL.Add(' and b."login"       = :login          ');
-            if not (vgCod_Empresa = 0) then
-            begin
-               SQL.Add('and  a."cod_empresa" = :cod_empresa    ');
-               ParamByName('cod_empresa').AsSmallInt := vgCod_Empresa;
-            end;
-            SQL.Add(' order by a."cod_empresa" ' );
-            ParamByName('login').AsString := vgLogin;
+            SQL.Add(' select *           ');
+            SQL.Add(' from "empresa"     ');
             Open;
             Result := not IsEmpty;
          end;
 
-	   if Result then
-   	   if not (vgCod_Empresa = 0) then
-      		Result := Check_Conexao(True, Mensagem);
+        if vgCod_Empresa > 0 then
+     		   Result := Check_Conexao(True, Mensagem);
    end;
 end;
 
@@ -666,72 +647,6 @@ begin
 	Result := False;
    with dmConnection, dbSig do
    	Connected	:= Result = not Check_Conexao(False);
-end;
-
-function Permitir_Acesso(Permissao: tpPermissao; Nome_Tela: tpNom_Tela): Boolean;
-	function BuscaOp: String;
-   begin
-      case Permissao of
-      ctInsert:	Result := 'Inserir';
-      ctEdit:		Result := 'Alterar';
-      ctDelete:	Result := 'Excluir';
-      ctSelect:	Result := 'Consultar';                      
-      end;
-   end;
-begin
-	Result := False;
-  if Length(Nome_Tela) = 0 then
-  	Exit;
-
-	with dmConnection, qryConnect, SQL do
-  try
-   	Close;
-    Clear;
-		Add(' select a.* ');
-		Add(' from "usuario" a ');
-		Add(' where ');
-		Add('     "login"         = :login ');
-		Add(' and "ies_situacao" != '+QuotedStr('I'));
-    ParamByName('login').AsString	:= vgLogin;
-    Open;
-    Result := not IsEmpty;
-    if not Result then
-    	Exit
-    else
-    if FieldByName('ies_root').AsString = 'S' then
-    	Exit;
-
-    Close;
-    Clear;
-		Add(' select f."ies_insert", f."ies_edit", f."ies_delete", f."ies_select" ');
-		Add(' from "vwsub_modulo" c');
-		Add('      join "vwusuario_sub_modulo" d on d."cod_sub_modulo" = c."cod_sub_modulo" ');
-		Add('      join "vwusuario" e on e."login" = d."login" ');
-    Add('                        and e."login" = :login ');
-    ParamByName('login').AsString	   := vgLogin;
-		Add('      join ("usuario_tela" f ');
-		Add('      join "vwtela" g on g."cod_sub_modulo" = f."cod_sub_modulo" ');
-		Add('                     and g."nom_tela"       = f."nom_tela" ');
-    Add('                     and g."nom_tela"       = :nom_tela ) ');
-		Add('        on f."cod_sub_modulo" = d."cod_sub_modulo" ');
-		Add('       and f."login"          = d."login" ');
-    ParamByName('nom_tela').AsString	:= UpperCase(Nome_Tela);
-    Open;
-    Result := not IsEmpty;
-    if Result then
-    	case Permissao of
-      ctInsert: Result := (FieldByName('ies_insert').asString	= 'S');
-      ctEdit:	 	Result := (FieldByName('ies_edit').asString	= 'S');
-      ctDelete: Result := (FieldByName('ies_delete').asString	= 'S');
-      ctSelect:	Result := (FieldByName('ies_select').asString	= 'S');
-    	end;
-
-     //if not Result then Result := True; // Comentar esta linha, para ativar a restição de usuário as telas
-
-	finally
-      if not Result then
-      	MessageDlg('Login : ' + vgLogin + ' sem permissão para (' + BuscaOp + ') na tela - ' + UpperCase(Nome_Tela), mtError, [mbCancel], 0);
-   end;
 end;
 
 function Gravar_Log(Value: Integer) : Boolean;
@@ -822,45 +737,12 @@ begin
                      ' from "sistema" '+
                      ' order by 2 '
    else
-   if Tabela = 'modulo' then
-      SQLTabela :=   ' select "cod_modulo" campo1 , "nom_modulo" campo2 '+
-                     ' from "modulo" '+
-                     ' order by 2 '
-   else
-   if Tabela = 'sub_modulo' then
-      SQLTabela :=   ' select "cod_sub_modulo" campo1 , "nom_sub_modulo" campo2 '+
-                     ' from "sub_modulo" '+
-                     ' where '+
-                     '     "ies_situacao" = '+QuotedStr('A')+
-                     ' order by 2 '
-   else
-   if Tabela = 'tela' then
-      SQLTabela :=   ' select "nom_tela" campo1 , "den_tela" campo2 '+
-                     ' from "tela" '+
-                     ' where '+
-                     '     "ies_situacao" = '+QuotedStr('A')+
-                     ' order by 2 '
-   else
    if Tabela = 'usuario' then
       SQLTabela :=   ' select "login" campo1 , "nome" campo2 '+
                      ' from "usuario" '+
                      ' where '+
                      '     "ies_situacao" = '+QuotedStr('A')+
                      ' order by 1 '
-   else
-   if Tabela = 'usuario_sub_modulo' then
-      SQLTabela :=   ' select a."login" campo1 , b."nom_sub_modulo" campo2 '+
-                     ' from "usuario_sub_modulo" a '+
-                     '      join "sub_modulo" b on b."cod_sub_modulo" = a."cod_sub_modulo" '+
-                     ' where '+
-                     '     a."ies_situacao" = '+QuotedStr('A')+
-                     ' order by 2 '
-   else
-   if Tabela = 'usuario_tela' then
-      SQLTabela :=   ' select a."login" campo1 , b."den_tela" campo2 '+
-                     ' from "usuario_tela" a '+
-                     '      join "tela" b on b."nom_tela" = a."nom_tela" '+
-                     ' order by 2 '
    else
    if Tabela = 'banco' then
       SQLTabela :=   ' select "cod_banco" campo1 , "nom_banco" campo2 '+
@@ -882,10 +764,7 @@ begin
    if Tabela = 'cliente' then
       SQLTabela :=   ' select "cod_cliente" campo1 , "nom_cliente" campo2 '+
                      ' from "cliente" '+
-                     ' where "cod_cliente"  in (select "cod_cliente"      '+
-                     '                            from "usuario_cliente"  '+
-                     '                           where "login" = ' + QuotedStr(vgLogin) + ')'+
-                     ' and '+
+                     ' where '+
                      '     "ies_situacao" = '+QuotedStr('A')+
                      ' order by 2 '
    else
@@ -936,10 +815,7 @@ begin
                     { Fornecedores dos Clientes que o Usuário tem acesso }
       SQLTabela :=  'select a."cod_fornecedor" campo1 , a."raz_social" campo2 ' +
                     '  from "fornecedor" a '+
-                    ' where a."cod_fornecedor"  in (select "cod_fornecedor" '+
-                    '                                 from "usuario_fornecedor" '+
-                    '                                where "login" = '+ QuotedStr(vgLogin) + ')'+
-                    '   and a."ies_situacao" = ' + QuotedStr('A')+
+                    ' where a."ies_situacao" = ' + QuotedStr('A')+
                     ' order by 2 '
 
    else
@@ -1782,11 +1658,6 @@ end;
 
 procedure TdmConnection.acAlterarSenhaExecute(Sender: TObject);
 begin
-	try
-   	Application.CreateForm(Tfr_AlterarSenha, fr_AlterarSenha);
-   finally                                                              
-   	fr_AlterarSenha.ShowModal;
-   end;
 
 end;
 
@@ -1931,47 +1802,6 @@ begin
   LongTimeFormat		:= 'hh:mm:ss';	{ Estilo de hora }
   ListSeparator		:= ';';        { Separador de listas }
 end;
-
-function RunPrograma(Programa: String): Boolean;
-begin
-  { Verificar se determinado programa está logado há menos de um dia }
-  with dmConnection, qryPesquisa do
-  begin
-    Close;
-    SQL.Text := 'select * from "usuario_log"               '+
-                ' where "cod_empresa" = :cod_empresa       '+
-                '   and "nom_programa" = :nom_programa     '+
-                '   and "dat_conexao" >= current_date - 1  ';
-    ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-    ParamByName('nom_programa').AsString := Programa;
-    Open;
-    Result := Not(IsEmpty);
-    Close;
-  end;
-end;
-
-function UsuarioLoginDate() : String;
-begin
-  { Verificar se determinado programa está logado há menos de um dia }
-  with dmConnection, qryPesquisa do
-  begin
-    Close;
-    SQL.Text := 'select "dat_conexao" from "usuario_log"   ' +
-                ' where "cod_empresa" = :cod_empresa       ' +
-                '   and "nom_programa" = :nom_programa     ' +
-                '   and "login" = :login                   ';
-
-    ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-    ParamByName('login').AsString        := vgLogin;
-    ParamByName('nom_programa').AsString := vgCod_Programa;
-
-    Open;
-    Result := FormatDateTime('dd.mm.yy - hh:mm', FieldByName('dat_conexao').AsDateTime);
-    Close;
-  end;
-end;
-
-
 
 function InsertCodes: Integer;
 const
@@ -2311,6 +2141,27 @@ begin
   else if (trim(r) = '1') then Result := 'F/P'
   else if (trim(r) = '2') then Result := 'P'
   else Result := '';
+end;
+
+function UsuarioLoginDate() : String;
+begin
+  { Verificar se determinado programa está logado há menos de um dia }
+  with dmConnection, qryPesquisa do
+  begin
+    Close;
+    SQL.Text := 'select "dat_conexao" from "usuario_log"   ' +
+                ' where "cod_empresa" = :cod_empresa       ' +
+                '   and "nom_programa" = :nom_programa     ' +
+                '   and "login" = :login                   ';
+
+    ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+    ParamByName('login').AsString        := vgLogin;
+    ParamByName('nom_programa').AsString := vgCod_Programa;
+
+    Open;
+    Result := FormatDateTime('dd.mm.yy - hh:mm', FieldByName('dat_conexao').AsDateTime);
+    Close;
+  end;
 end;
 
 end.

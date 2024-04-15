@@ -89,7 +89,6 @@ end;
 
 procedure Tfrm_PesquisaPedImportados.FormCreate(Sender: TObject);
 begin
-  Clientes.ParamByName('login').Value := vgLogin;
   Clientes.Open;
   Fornecedores.Open;
 end;
@@ -160,14 +159,9 @@ begin
 
     SQL.Add('  and substr("dat_cadastro", 1,4) >= :ano');
 
-    SQL.Add('   and "cod_cliente" in (select "cod_cliente"         ');  { Filtar Clientes do Usuário }
-    SQL.Add('                           from "usuario_cliente"     ');
-    SQL.Add('                          where "login" = :login)     ');
-
     SQL.Add('order by "dat_cadastro" desc                          ');
 
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;
     ParamByName('ano').Value := YearOf(Buscar_DateTime) - 1 ;
     Open;
   end;

@@ -34,7 +34,6 @@ type
     IBDataSeties_idioma: TIBStringField;
     Label6: TLabel;
     DBRadioGroup1: TDBRadioGroup;
-    spr_add_usuario_fornecedor: TIBStoredProc;
     Label7: TLabel;
     dbeMascara: TDBEdit;
     IBDataSetmas_cod_produto: TIBStringField;
@@ -63,7 +62,6 @@ type
     IBDataSetendereco: TMemoField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure IBDataSetBeforeOpen(DataSet: TDataSet);
     procedure IBDataSetBeforePost(DataSet: TDataSet);
     procedure IBDataSetNewRecord(DataSet: TDataSet);
     procedure fr_FmNavigator1acF3Execute(Sender: TObject);
@@ -85,7 +83,6 @@ type
 
 var
   fr_CadFornecedor: Tfr_CadFornecedor;
-  FornecedorNovo : boolean;
 
 implementation
 
@@ -110,12 +107,6 @@ begin
   Set_Value;
 end;
 
-procedure Tfr_CadFornecedor.IBDataSetBeforeOpen(DataSet: TDataSet);
-begin
-  inherited;
-  IBDataSet.ParamByName('login').Value := vgLogin;
-end;
-
 procedure Tfr_CadFornecedor.IBDataSetBeforePost(DataSet: TDataSet);
 begin
   inherited;
@@ -127,7 +118,6 @@ end;
 procedure Tfr_CadFornecedor.IBDataSetNewRecord(DataSet: TDataSet);
 begin
   inherited;
-  FornecedorNovo := True;
   IBDataSeties_situacao.AsString   := 'A';
   IBDataSetdat_cadastro.AsDateTime := Buscar_DateTime;
   IBDataSeties_idioma.AsString := 'I';
@@ -170,7 +160,6 @@ begin
   inherited;
   Moedas.Open;
   OpenTable(IBDataSet);
-  FornecedorNovo := False;
 end;
 
 procedure Tfr_CadFornecedor.IBDataSetBeforeDelete(DataSet: TDataSet);
@@ -210,23 +199,6 @@ begin
    	Transaction.RollbackRetaining;
    end;
 
-   if FornecedorNovo then
-   begin                                                    
-    with spr_add_usuario_fornecedor do
-    begin
-     ParamByName('cod_fornecedor').Value := IBDataSetcod_fornecedor.AsInteger;
-     ParamByName('login').Value := vgLogin;
-     ParamByName('ies_tipo').Value := vgTipo;
-     ExecProc;
-     try
-       Transaction.CommitRetaining;
-     except                                            
-       Transaction.RollbackRetaining;
-     end;
-     FornecedorNovo := False;
-   end;
-
-   end;
 
 end;
 

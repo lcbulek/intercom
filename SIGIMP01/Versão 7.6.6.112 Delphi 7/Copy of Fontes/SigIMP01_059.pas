@@ -505,7 +505,7 @@ begin
     { ignorar linha em branco }
     if (trim(ExcelWorksheet.Range['D'+ inttostr(linha),'D'+inttostr(linha)].Text) = '') then Continue;
 
-    { A - Sequencia do item no pedido }
+    { Sequencia do item no pedido }
     try
       SeqPed := ExcelWorksheet.Range['A'+ inttostr(linha),'A'+inttostr(linha)].Value;
     except
@@ -517,7 +517,7 @@ begin
       Erro := True;
       Erros := SetBit(Erros, 0);
     end;
-    { B - Order }
+    { Order }
     Pedido := '';
     Pedido := trim(ExcelWorksheet.Range['B'+ inttostr(linha),'B'+inttostr(linha)].Text);
 
@@ -540,7 +540,7 @@ begin
       Erro := True;
       Erros := SetBit(Erros, 1);
     end;
-    { C - S/C NUMBER }
+    { S/C NUMBER }
     Confirmacao := '';
     Confirmacao := trim(ExcelWorksheet.Range['C'+ inttostr(linha),'C'+inttostr(linha)].Text);
 
@@ -555,7 +555,7 @@ begin
       Erro := True;
       Erros := SetBit(Erros, 2);
     end;
-    { D - CLIENT'S CODE - CÓDIGO DO PRODUTO }
+    { CLIENT'S CODE - CÓDIGO DO PRODUTO }
     CodProduto := trim(ExcelWorksheet.Range['D'+ inttostr(linha),'D'+inttostr(linha)].Text);
     CodProduto := SemFmtProduto(clientescod_cliente.AsString, CodProduto);
 
@@ -575,67 +575,64 @@ begin
       Erros := SetBit(Erros, 3);
     end;
 
-    { I  - Data de Inicio da Produção }
+    { Data de Inicio da Produção }
     try
-      Data := (ExcelWorksheet.Range['I'+ inttostr(linha),'I'+inttostr(linha)].Text);
+      Data := (ExcelWorksheet.Range['J'+ inttostr(linha),'J'+inttostr(linha)].Text);
       Data := StringReplace(Data, '.', '/', [rfReplaceAll]);
       dtIniProducao := StrToDate(Data);
     except
       dtIniProducao := 0;
     end;
 
-    { J  - ETD FACTORY }
+    { ETD FACTORY }
     try
-      Data := (ExcelWorksheet.Range['J'+ inttostr(linha),'J'+inttostr(linha)].Text);
+      Data := (ExcelWorksheet.Range['K'+ inttostr(linha),'K'+inttostr(linha)].Text);
       Data := StringReplace(Data, '.', '/', [rfReplaceAll]);
       dtEtdFactory := StrToDate(Data);
     except
       dtEtdFactory := 0;
     end;
 
-    { K  - UPDATED ETD FACTORY }
+    { UPDATED ETD FACTORY }
     try
-      Data := (ExcelWorksheet.Range['K'+ inttostr(linha),'K'+inttostr(linha)].Text);
+      Data := (ExcelWorksheet.Range['L'+ inttostr(linha),'L'+inttostr(linha)].Text);
       Data := StringReplace(Data, '.', '/', [rfReplaceAll]);
       DtUpdEtd := StrToDate(Data);
     except
       DtUpdEtd := 0;
     end;
 
-    { L - STATUS OF PRODUCTION }
-    StatusProducao := ExcelWorksheet.Range['L'+ inttostr(linha),'L'+inttostr(linha)].Value2;
+    { STATUS OF PRODUCTION }
+    StatusProducao := ExcelWorksheet.Range['M'+ inttostr(linha),'M'+inttostr(linha)].Value2;
 
-    { M  - DATE OF INSPECTION }
+    { DATE OF INSPECTION }
     try
-      Data := (ExcelWorksheet.Range['M'+ inttostr(linha),'M'+inttostr(linha)].Text);
+      Data := (ExcelWorksheet.Range['N'+ inttostr(linha),'N'+inttostr(linha)].Text);
       Data := StringReplace(Data, '.', '/', [rfReplaceAll]);
       dtInspecao := StrToDate(Data);
     except
       dtInspecao := 0;
     end;
 
-    { N  - RESULT OF INSPECTION }
-    ResultInspecao := GetResultInspecao((ExcelWorksheet.Range['N'+ inttostr(linha),'N'+inttostr(linha)].Text));
+    { RESULT OF INSPECTION }
+    ResultInspecao := GetResultInspecao((ExcelWorksheet.Range['O'+ inttostr(linha),'O'+inttostr(linha)].Text));
 
-    { O - QUANTITY }
+    { QUANTITY }
     try
-      Q := (ExcelWorksheet.Range['O'+ inttostr(linha),'O'+inttostr(linha)].Value);
+      Q := (ExcelWorksheet.Range['P'+ inttostr(linha),'P'+inttostr(linha)].Value);
       Q := StringReplace(Q, '.', '', [rfReplaceAll]);
       qtRomanear := StrToFloat(Q);
     except
       qtRomanear := 0.00;
     end;
-    { Ignorar item com Qtd.Romanear = 0 }
-    //if (qtRomanear = 0) then Continue;
-
-    { P - INVOICE NUMBER }
-    Invoice := UpperCase(ExcelWorksheet.Range['P'+IntToStr(linha), 'P'+IntToStr(linha)].Value);
+    { INVOICE NUMBER }
+    Invoice := UpperCase(ExcelWorksheet.Range['Q'+IntToStr(linha), 'Q'+IntToStr(linha)].Value);
     { iSitFatura[Null:não informada, N:não encontrou, F:Faturada, E:Embarcada] }
     iSitFatura := GetSitFatura(Invoice);
 
-    { Q - SEQ. INVOICE ITEM }
+    { SEQ. INVOICE ITEM }
     try
-      NumSeqNf := ExcelWorksheet.Range['Q'+IntToStr(linha), 'Q'+IntToStr(linha)].Value;
+      NumSeqNf := ExcelWorksheet.Range['R'+IntToStr(linha), 'R'+IntToStr(linha)].Value;
     except
       NumSeqNf := 0;
     end;
@@ -659,55 +656,55 @@ begin
     if (Invoice <> '') and (NumSeqNf > 0) and ((iSitFatura = 'F') or (iSitFatura = 'E')) then
        if (ExisteItemNf(Invoice, NumSeqNf) = False) then Continue;
 
-    { R - UNIT }
-    UnMedida := ExcelWorksheet.Range['R'+IntToStr(linha), 'R'+IntToStr(linha)].Value;
+    { UNIT }
+    UnMedida := ExcelWorksheet.Range['S'+IntToStr(linha), 'S'+IntToStr(linha)].Value;
 
-    { S - Preço Real }
+    { Preço Real }
     try
-      Preco := ExcelWorksheet.Range['S'+ inttostr(linha),'S'+inttostr(linha)].Value;
+      Preco := ExcelWorksheet.Range['T'+ inttostr(linha),'T'+inttostr(linha)].Value;
     except
       Preco := 0.0;
     end;
 
-    { T - Total Preço Real }
+    { Total Preço Real }
     try
-      TotPreco := ExcelWorksheet.Range['T'+ inttostr(linha),'T'+inttostr(linha)].Value;
+      TotPreco := ExcelWorksheet.Range['U'+ inttostr(linha),'U'+inttostr(linha)].Value;
     except
       TotPreco := 0.0;
     end;
 
-    { U - Preço Especial }
+    { Preço Especial }
     try
-      PrecoEsp := ExcelWorksheet.Range['U'+ inttostr(linha),'U'+inttostr(linha)].Value;
+      PrecoEsp := ExcelWorksheet.Range['V'+ inttostr(linha),'V'+inttostr(linha)].Value;
     except
       PrecoEsp := 0.0;
     end;
 
-    { V - Total Preço Especial }
+    { Total Preço Especial }
     try
-      TotPrecoEsp := ExcelWorksheet.Range['V'+ inttostr(linha),'V'+inttostr(linha)].Value;
+      TotPrecoEsp := ExcelWorksheet.Range['W'+ inttostr(linha),'W'+inttostr(linha)].Value;
     except
       TotPrecoEsp := 0.0;
     end;
 
-    { W - TOTAL VOLUME IN M³ }
+    { TOTAL VOLUME IN M³ }
     try
-      VolumeTotal := ExcelWorksheet.Range['W'+ inttostr(linha),'W'+inttostr(linha)].Value;
+      VolumeTotal := ExcelWorksheet.Range['X'+ inttostr(linha),'X'+inttostr(linha)].Value;
     except
       VolumeTotal := 0;
     end;
 
-    { X - Peso Bruto }
+    { Peso Bruto }
     try
-      PesoBruto := ExcelWorksheet.Range['X'+ inttostr(linha),'X'+inttostr(linha)].Value;
+      PesoBruto := ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)].Value;
     except
       PesoBruto := 0.0;
     end;
 
-    { Y - Peso Liquido }
+    { Peso Liquido }
     try
-      PesoLiquido := ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)].Value;
-      if (ExcelWorksheet.Range['Y'+IntToStr(linha), 'Y'+IntToStr(linha)].MergeCells = True) then
+      PesoLiquido := ExcelWorksheet.Range['Z'+ inttostr(linha),'Z'+inttostr(linha)].Value;
+      if (ExcelWorksheet.Range['Z'+IntToStr(linha), 'Z'+IntToStr(linha)].MergeCells = True) then
          Mesclar := 'S'
       else
          Mesclar := 'N';
@@ -723,58 +720,58 @@ begin
         Erros := SetBit(Erros,10);
       end;
     end;
-    { Z - Quantidade de Caixas Standard }
+    { Quantidade de Caixas Standard }
     try
-      QtdeCaixas := ExcelWorksheet.Range['Z'+ inttostr(linha),'Z'+inttostr(linha)].Value;
+      QtdeCaixas := ExcelWorksheet.Range['AA'+ inttostr(linha),'AA'+inttostr(linha)].Value;
     except
       QtdeCaixas := 0;
     end;
 
-    { AB - UN/Master }
+    { UN/Master }
     try
-      UnMaster := ExcelWorksheet.Range['AB'+ inttostr(linha),'AB'+inttostr(linha)].Value;
+      UnMaster := ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)].Value;
     except
       UnMaster := 0.0;
     end;
 
-    { AC - Peso Bruto da Caixa }
+    { Peso Bruto da Caixa }
     try
-      PesoBrutoCaixa := ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)].Value;
+      PesoBrutoCaixa := ExcelWorksheet.Range['AD'+ inttostr(linha),'AD'+inttostr(linha)].Value;
     except
       PesoBrutoCaixa := 0.0;
     end;
 
-    { AD - VOLUME OF 1 PACKING }
+    { VOLUME OF 1 PACKING }
     try
-      VolumeCaixa := ExcelWorksheet.Range['AD'+ inttostr(linha),'AD'+inttostr(linha)].Value2;
+      VolumeCaixa := ExcelWorksheet.Range['AE'+ inttostr(linha),'AE'+inttostr(linha)].Value2;
     except
       VolumeCaixa := 0.0;
     end;
 
-    { AE - L (CM) }
+    { L (CM) }
     try
-      Comprimento := ExcelWorksheet.Range['AE'+ inttostr(linha),'AE'+inttostr(linha)].Value2;
+      Comprimento := ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)].Value2;
     except
       Comprimento := 0.0;
     end;
 
-    { AF - W (CM) }
+    { W (CM) }
     try
-      Largura := ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)].Value2;
+      Largura := ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)].Value2;
     except
       Largura := 0.0;
     end;
 
-    { AG - H (CM) }
+    { H (CM) }
     try
-      Altura := ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)].Value2;
+      Altura := ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)].Value2;
     except
       Altura := 0.0;
     end;
 
-    { AH - NET WEIGHT OF PRODUCT IN KG - Peso Unitário do Produto }
+    { NET WEIGHT OF PRODUCT IN KG - Peso Unitário do Produto }
     try
-      PesoUnitario := StrToFloat(ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)].Value);
+      PesoUnitario := StrToFloat(ExcelWorksheet.Range['AI'+ inttostr(linha),'AI'+inttostr(linha)].Value);
       PesoUnitario := PesoUnitario;
     except
       PesoUnitario := 0.0;
@@ -1042,42 +1039,42 @@ begin
     prod_list_itensnum_sequencia_org.Value := NumSequenciaOrg;
 
     { EMBALAGEM ESPECIAL }
-    if (ExcelWorksheet.Range['AA'+IntToStr(linha), 'AA'+IntToStr(linha)].MergeCells = True) and
-       (ExcelWorksheet.Range['AA'+IntToStr(linha), 'AA'+IntToStr(linha)].Text <> '') or
-       (ExcelWorksheet.Range['AA'+IntToStr(linha), 'AA'+IntToStr(linha)].Text <> '') then
+    if (ExcelWorksheet.Range['AB'+IntToStr(linha), 'AB'+IntToStr(linha)].MergeCells = True) and
+       (ExcelWorksheet.Range['AB'+IntToStr(linha), 'AB'+IntToStr(linha)].Text <> '') or
+       (ExcelWorksheet.Range['AB'+IntToStr(linha), 'AB'+IntToStr(linha)].Text <> '') then
     begin
       EmbEsp := True;
 
       Inc(SeqEmb);
       SeqItemEmb := 0;
 
-      { W - Volume Total das Caixas }
-      with ExcelWorksheet.Range['W'+ inttostr(linha),'W'+inttostr(linha)] do
+      { Volume Total das Caixas }
+      with ExcelWorksheet.Range['X'+ inttostr(linha),'X'+inttostr(linha)] do
       begin
         FormulaR1C1 := '=ROUND(RC[4]*RC[7],' + VolumeDecimais + ')';
         VolumeTotal := Value;
       end;
-      { X - Peso Bruto Total das Caixas }
-      with ExcelWorksheet.Range['X'+ inttostr(linha),'X'+inttostr(linha)] do
+      { Peso Bruto Total das Caixas }
+      with ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)] do
       begin
         FormulaR1C1 := '=ROUND(RC[3]*RC[5],2)';
         PesoBruto := Value;
       end;
-      { Y - Peso Liquido }
-      PesoLiquido := ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)].Value;
-      { AA - Quantidade de Caixas Especiais }
-      QtdeCaixas := ExcelWorksheet.Range['AA'+ inttostr(linha),'AA'+inttostr(linha)].Value;
+      { Peso Liquido }
+      PesoLiquido := ExcelWorksheet.Range['Z'+ inttostr(linha),'Z'+inttostr(linha)].Value;
+      { Quantidade de Caixas Especiais }
+      QtdeCaixas := ExcelWorksheet.Range['AB'+ inttostr(linha),'AB'+inttostr(linha)].Value;
       UnMaster := 0.0;
-      { AC - Peso Bruto da Caixa }
-      PesoBrutoCaixa := ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)].Value;
-      { AD - VOLUME OF 1 PACKING }
-      VolumeCaixa := ExcelWorksheet.Range['AD'+ inttostr(linha),'AD'+inttostr(linha)].Value2;
-      { AE - L (CM) }
-      Comprimento := ExcelWorksheet.Range['AE'+ inttostr(linha),'AE'+inttostr(linha)].Value2;
-      { AF - W (CM) }
-      Largura := ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)].Value2;
-      { AG - H (CM) }
-      Altura := ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)].Value2;
+      { Peso Bruto da Caixa }
+      PesoBrutoCaixa := ExcelWorksheet.Range['AD'+ inttostr(linha),'AD'+inttostr(linha)].Value;
+      { VOLUME OF 1 PACKING }
+      VolumeCaixa := ExcelWorksheet.Range['AE'+ inttostr(linha),'AE'+inttostr(linha)].Value2;
+      { L (CM) }
+      Comprimento := ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)].Value2;
+      { W (CM) }
+      Largura := ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)].Value2;
+      { H (CM) }
+      Altura := ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)].Value2;
 
       prod_list_itensies_emb_esp.Value := 'S';
       prod_list_itensseq_emb_esp.Value := SeqEmb;
@@ -1085,8 +1082,8 @@ begin
     end;
 
     { ITEM DA EMBALAGEM ESPECIAL }
-    if (ExcelWorksheet.Range['AA'+IntToStr(linha), 'AA'+IntToStr(linha)].MergeCells = True) or
-       (ExcelWorksheet.Range['AA'+IntToStr(linha), 'AA'+IntToStr(linha)].Text <> '') then
+    if (ExcelWorksheet.Range['AB'+IntToStr(linha), 'AB'+IntToStr(linha)].MergeCells = True) or
+       (ExcelWorksheet.Range['AB'+IntToStr(linha), 'AB'+IntToStr(linha)].Text <> '') then
     begin
       EmbEsp := True;
 
@@ -1153,26 +1150,26 @@ begin
     { PALLETS PACKAGES }
     if (Prod_Listies_pallets.AsString = 'S') then
     begin
-       if ((ExcelWorksheet.Range['AI'+IntToStr(linha), 'AI'+IntToStr(linha)].MergeCells = True) and
-           (ExcelWorksheet.Range['AI'+IntToStr(linha), 'AI'+IntToStr(linha)].Text <> '')) or
-           (ExcelWorksheet.Range['AI'+IntToStr(linha), 'AI'+IntToStr(linha)].Text <> '') then
+       if ((ExcelWorksheet.Range['AJ'+IntToStr(linha), 'AJ'+IntToStr(linha)].MergeCells = True) and
+           (ExcelWorksheet.Range['AJ'+IntToStr(linha), 'AJ'+IntToStr(linha)].Text <> '')) or
+           (ExcelWorksheet.Range['AJ'+IntToStr(linha), 'AJ'+IntToStr(linha)].Text <> '') then
        begin
-         { AI - QTD PALLET }
-         qtd_pallet := ExcelWorksheet.Range['AI'+IntToStr(linha), 'AI'+IntToStr(linha)].Value2;
-         { AJ - PESO PALLET VAZIO }
-         peso_pallet_vazio := ExcelWorksheet.Range['AJ'+IntToStr(linha), 'AJ'+IntToStr(linha)].Value2;
-         { AK - GROSS WEIGHT PALLET }
-         pes_bruto_pallet := ExcelWorksheet.Range['AK'+IntToStr(linha), 'AK'+IntToStr(linha)].Value2;
-         { AL - NET WEIGHT PALLET }
-         pes_liquido_pallet := ExcelWorksheet.Range['AL'+IntToStr(linha), 'AL'+IntToStr(linha)].Value2;
-         { AM - COMPRIMENTO (L) }
-         comprimento_pallet := ExcelWorksheet.Range['AM'+IntToStr(linha), 'AM'+IntToStr(linha)].Value2;
-         { AN - LARGURA (W) }
-         largura_pallet := ExcelWorksheet.Range['AN'+IntToStr(linha), 'AN'+IntToStr(linha)].Value2;
-         { AO - ALTURA (H) }
-         altura_pallet := ExcelWorksheet.Range['AO'+IntToStr(linha), 'AO'+IntToStr(linha)].Value2;
-         { AP - TOTAL VOLUME PALLET }
-         with ExcelWorksheet.Range['AP'+IntToStr(linha), 'AP'+IntToStr(linha)] do
+         { QTD PALLET }
+         qtd_pallet := ExcelWorksheet.Range['AJ'+IntToStr(linha), 'AJ'+IntToStr(linha)].Value2;
+         { PESO PALLET VAZIO }
+         peso_pallet_vazio := ExcelWorksheet.Range['AK'+IntToStr(linha), 'AK'+IntToStr(linha)].Value2;
+         { GROSS WEIGHT PALLET }
+         pes_bruto_pallet := ExcelWorksheet.Range['AL'+IntToStr(linha), 'AL'+IntToStr(linha)].Value2;
+         { NET WEIGHT PALLET }
+         pes_liquido_pallet := ExcelWorksheet.Range['AM'+IntToStr(linha), 'AM'+IntToStr(linha)].Value2;
+         { COMPRIMENTO (L) }
+         comprimento_pallet := ExcelWorksheet.Range['AN'+IntToStr(linha), 'AN'+IntToStr(linha)].Value2;
+         { LARGURA (W) }
+         largura_pallet := ExcelWorksheet.Range['AO'+IntToStr(linha), 'AO'+IntToStr(linha)].Value2;
+         { ALTURA (H) }
+         altura_pallet := ExcelWorksheet.Range['AP'+IntToStr(linha), 'AP'+IntToStr(linha)].Value2;
+         { TOTAL VOLUME PALLET }
+         with ExcelWorksheet.Range['AQ'+IntToStr(linha), 'AQ'+IntToStr(linha)] do
          begin
            NumberFormat := '#.##0,000';
            FormulaR1C1 := '=ROUND(ROUND(RC[-1]*RC[-2]*RC[-3]/1000000,4)*RC[-7],3)';
@@ -1193,8 +1190,8 @@ begin
        end;
 
        { ITEM PALLETS PACKAGES }
-       if ((ExcelWorksheet.Range['AI'+IntToStr(linha), 'AI'+IntToStr(linha)].MergeCells = True) or
-           (ExcelWorksheet.Range['AI'+IntToStr(linha), 'AI'+IntToStr(linha)].Text <> '')) then
+       if ((ExcelWorksheet.Range['AJ'+IntToStr(linha), 'AJ'+IntToStr(linha)].MergeCells = True) or
+           (ExcelWorksheet.Range['AJ'+IntToStr(linha), 'AJ'+IntToStr(linha)].Text <> '')) then
        begin
          prod_list_itensies_pallet.AsString := 'S';
          prod_list_itensseq_pallet.Value := SeqPallet;
@@ -1299,7 +1296,7 @@ begin
   Screen.Cursor := crHourGlass;
 
   { Mostrar colunas para Pallets Packages }
-  with ExcelWorksheet.Range['AI1','AP1'] do
+  with ExcelWorksheet.Range['AJ1','AQ1'] do
   begin
     EntireColumn.Hidden := False;
   end;
@@ -1708,12 +1705,12 @@ begin
       {HASH MD5 da linha do Excel}
       sMD5Excel := ExcelWorksheet.Range['BB'+IntToStr(linha), 'BB'+IntToStr(linha)].Text;
 
-      { AA - SPECIAL CARTON - Identificar se é Embalagem Especial }
-      if (ExcelWorksheet.Range['AA'+IntToStr(linha), 'AA'+IntToStr(linha)].MergeCells = True) or
-         (ExcelWorksheet.Range['AA'+IntToStr(linha), 'AA'+IntToStr(linha)].Text <> '') then
+      { SPECIAL CARTON - Identificar se é Embalagem Especial }
+      if (ExcelWorksheet.Range['AB'+IntToStr(linha), 'AB'+IntToStr(linha)].MergeCells = True) or
+         (ExcelWorksheet.Range['AB'+IntToStr(linha), 'AB'+IntToStr(linha)].Text <> '') then
          EmbEsp := True
       else EmbEsp := False;
-      { D - CLIENT'S CODE - CÓDIGO DO PRODUTO }
+      { CLIENT'S CODE - CÓDIGO DO PRODUTO }
       CodProduto := trim(ExcelWorksheet.Range['D'+ inttostr(linha),'D'+inttostr(linha)].Text);
       CodProduto := SemFmtProduto(clientescod_cliente.AsString, CodProduto);
 
@@ -1723,17 +1720,17 @@ begin
       if Not(ProcurarProduto(CodProduto, Clientescod_cliente.AsString, Fornecedorescod_fornecedor.AsInteger).Existe) then Continue;
 
 
-      { X - Peso Bruto }
+      { Peso Bruto }
       try
-        PesoBruto := ExcelWorksheet.Range['X'+ inttostr(linha),'X'+inttostr(linha)].Value;
+        PesoBruto := ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)].Value;
       except
         PesoBruto := 0.0;
       end;
 
-      { Y - Peso Liquido }
+      { Peso Liquido }
       try
-        PesoLiquido := ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)].Value;
-        if (ExcelWorksheet.Range['Y'+IntToStr(linha), 'Y'+IntToStr(linha)].MergeCells = True) then
+        PesoLiquido := ExcelWorksheet.Range['Z'+ inttostr(linha),'Z'+inttostr(linha)].Value;
+        if (ExcelWorksheet.Range['Z'+IntToStr(linha), 'Z'+IntToStr(linha)].MergeCells = True) then
             Mesclar := 'S'
         else
             Mesclar := 'N';
@@ -1741,11 +1738,11 @@ begin
         PesoLiquido := 0.0;
       end;
 
-      { AA - SPECIAL CARTONS }
+      { SPECIAL CARTONS }
       if (EmbEsp) then
       begin
          try
-           QtdCaixas := ExcelWorksheet.Range['AA'+IntToStr(linha), 'AA'+IntToStr(linha)].Value;
+           QtdCaixas := ExcelWorksheet.Range['AB'+IntToStr(linha), 'AB'+IntToStr(linha)].Value;
          except
            QtdCaixas := 0;
          end;
@@ -1756,50 +1753,50 @@ begin
 
       if Not(EmbEsp) then  { para itens normais }
       begin
-        { AB - QUANTITY OF UNITS INSIDE THE PACKING }
+        { QUANTITY OF UNITS INSIDE THE PACKING }
         try
-          cxMaster := StrToFloat(ExcelWorksheet.Range['AB'+ inttostr(linha),'AB'+inttostr(linha)].Value);
-          sHash := ExcelWorksheet.Range['AB'+ inttostr(linha),'AB'+inttostr(linha)].Text;
+          cxMaster := StrToFloat(ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)].Value);
+          sHash := ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)].Text;
         except
           Erros := SetBit(Erros,07);
         end;
-        { AC - GROSS WEIGHT OF 1 PACKAGE (Kg) - Peso Bruto da Caixa }
+        { GROSS WEIGHT OF 1 PACKAGE (Kg) - Peso Bruto da Caixa }
         try
-          cxPesoBruto := StrToFloat(ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)].Value);
-          sHash := sHash + ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)].Text;
+          cxPesoBruto := StrToFloat(ExcelWorksheet.Range['AD'+ inttostr(linha),'AD'+inttostr(linha)].Value);
+          sHash := sHash + ExcelWorksheet.Range['AD'+ inttostr(linha),'AD'+inttostr(linha)].Text;
         except
           Erros := SetBit(Erros,08);
         end;
 
-        { AE - L (CM) - comprimento }
+        { L (CM) - comprimento }
         try
-          cxComprimento := StrToFloat(ExcelWorksheet.Range['AE'+ inttostr(linha),'AE'+inttostr(linha)].Value);
-          sHash := sHash + ExcelWorksheet.Range['AE'+ inttostr(linha),'AE'+inttostr(linha)].Text;
+          cxComprimento := StrToFloat(ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)].Value);
+          sHash := sHash + ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)].Text;
           cxComprimento := cxComprimento;
         except
           Erros := SetBit(Erros,04);
         end;
-        { AF - W (CM) - Largura }
+        { W (CM) - Largura }
         try
-          cxLargura := StrToFloat(ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)].Value);
-          sHash := sHash + ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)].Text;
+          cxLargura := StrToFloat(ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)].Value);
+          sHash := sHash + ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)].Text;
           cxLargura := cxLargura;
         except
           Erros := SetBit(Erros,05);
         end;
-        { AG - H (CM) - Altura}
+        { H (CM) - Altura}
         try
-          cxAltura := StrToFloat(ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)].Value);
-          sHash := sHash + ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)].Text;
+          cxAltura := StrToFloat(ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)].Value);
+          sHash := sHash + ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)].Text;
           cxAltura := cxAltura;
         except
           Erros := SetBit(Erros,06);
         end;
 
-        { AH - NET WEIGHT OF PRODUCT IN KILOGRAMS - Peso Unitário do Produto }
+        { NET WEIGHT OF PRODUCT IN KILOGRAMS - Peso Unitário do Produto }
         try
-          pdPesoUnit := StrToFloat(ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)].Value);
-          sHash := sHash + ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)].Text;
+          pdPesoUnit := StrToFloat(ExcelWorksheet.Range['AI'+ inttostr(linha),'AI'+inttostr(linha)].Value);
+          sHash := sHash + ExcelWorksheet.Range['AI'+ inttostr(linha),'AI'+inttostr(linha)].Text;
         except
           Erros := SetBit(Erros,03);
         end;
@@ -1830,7 +1827,7 @@ begin
           Open;
           if Not(IsEmpty) then
           begin
-            pdPesoUnit := StrToFloat(ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)].Value);
+            pdPesoUnit := StrToFloat(ExcelWorksheet.Range['AI'+ inttostr(linha),'AI'+inttostr(linha)].Value);
 
             if (pdPesoUnit <> FieldByName('pes_unitario').AsFloat)  then
             begin
@@ -1877,7 +1874,6 @@ begin
                 flagAlteraCadastro := True;
               end;
               { Peso Bruto da Caixa Master }
-              //if (cxPesoBruto <> Arredonda(FieldByName('pes_bruto_cx').AsFloat, 2)) then
               if (cxPesoBruto <> FieldByName('pes_bruto_cx').AsFloat) then
               begin
                 if Not(State in [dsEdit]) then Edit;
@@ -2065,7 +2061,6 @@ begin
   Numromaneio := 0;                                                  
   with Clientes do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
   Fornecedores.Open;
@@ -2321,31 +2316,28 @@ begin
       { C - CONFIRMAÇÃO }
       Confirmacao := trim(ExcelWorksheet.Range['C'+ inttostr(linha),'C'+inttostr(linha)].Text);
 
-      { O - QUANTIDADE A SER EMBARCADA }
+      { QUANTIDADE A SER EMBARCADA }
       try
-        Q := (ExcelWorksheet.Range['O'+ inttostr(linha),'O'+inttostr(linha)].Value);
+        Q := (ExcelWorksheet.Range['P'+ inttostr(linha),'P'+inttostr(linha)].Value);
         Q := StringReplace(Q, '.', '', [rfReplaceAll]);
         qtEmbarque := StrToFloat(Q);
       except
         qtEmbarque := 0.00;
       end;
 
-      // 27.04.22 - retirei o comentário da linha abaixo
       if (qtEmbarque = 0) then Continue; { ignorar quantidade embarcada zero }
 
-      { P - INVOICE NUMBER }
-      Invoice := UpperCase(ExcelWorksheet.Range['P'+IntToStr(linha), 'P'+IntToStr(linha)].Value);
-      { Q - SEQ. INVOICE ITEM }
+      { INVOICE NUMBER }
+      Invoice := UpperCase(ExcelWorksheet.Range['Q'+IntToStr(linha), 'Q'+IntToStr(linha)].Value);
+      { SEQ. INVOICE ITEM }
       try
-        NumSeqNf := ExcelWorksheet.Range['Q'+IntToStr(linha), 'Q'+IntToStr(linha)].Value;
+        NumSeqNf := ExcelWorksheet.Range['R'+IntToStr(linha), 'R'+IntToStr(linha)].Value;
       except
         NumSeqNf := 0;
       end;
 
       { Retorna Status da Fatura N/F/E }
       iSitFatura := GetSitFatura(Invoice);
-      { Não ajustar Saldos para itens já Faturados }
-      //if ((iSitFatura = 'F') or (iSitFatura = 'E')) and (NumSeqNf > 0) then Continue;
 
       { ATUALIZAR SALDOS DE CONTROLE NOS ITENS DOS PEDIDOS }
       with pedido_produto do

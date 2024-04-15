@@ -92,10 +92,6 @@ end;
 procedure Tfr_Cad.fr_FmNavigator1ActionList1Execute(Action: TBasicAction;
   var Handled: Boolean);
 begin
-	if Action = fr_FmNavigator1.acInsert then Handled	:= not Permitir_Acesso(CtInsert, Buscar_Unit(ClassName));
-  if Action = fr_FmNavigator1.acEdit then   Handled	:= not Permitir_Acesso(CtEdit, Buscar_Unit(ClassName));
-  if Action = fr_FmNavigator1.acDelete then Handled	:= not Permitir_Acesso(CtDelete, Buscar_Unit(ClassName));
-
 	fr_FmNavigator1.ActionList1Execute(Action, Handled);
 end;
 

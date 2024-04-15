@@ -1,6 +1,6 @@
 object frmProdList: TfrmProdList
-  Left = 6
-  Top = 0
+  Left = 337
+  Top = 100
   AutoScroll = False
   Caption = 'Production List'
   ClientHeight = 614
@@ -589,7 +589,7 @@ object frmProdList: TfrmProdList
           item
             Expanded = False
             FieldName = 'calDenProduto'
-            Width = 345
+            Width = 330
             Visible = True
           end
           item
@@ -837,7 +837,7 @@ object frmProdList: TfrmProdList
           item
             Expanded = False
             FieldName = 'calDenProduto'
-            Width = 391
+            Width = 370
             Visible = True
           end
           item

@@ -113,6 +113,7 @@ type
     procedure FornecedoresBeforeOpen(DataSet: TDataSet);
     procedure ClientesBeforeOpen(DataSet: TDataSet);
     procedure dbcFornecedoresChange(Sender: TObject);
+    function GetCodClienteProduto(CodProduto: string):string;
     procedure actGerarExecute(Sender: TObject);
     Procedure PrintPedidos(Cliente: String; Fornecedor: Integer; Ano: String; CodProduto: String);
     procedure TotalFornecedor;
@@ -141,7 +142,8 @@ var
   AcaoMenu: TAcaoMenu;
   Linha, LinhaAnt : integer;
   g: array[1..6] of string; { total geral }
-
+  h, m, s, msec : word;
+  
 implementation
 
 uses unConnection, unMenuCompl, Math, SIGIMP01_045;
@@ -266,14 +268,31 @@ begin
      ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
      Open;
    end;
-   actImportar.Enabled := dbcClientes.Value <> '0'; 
+   actImportar.Enabled := dbcClientes.Value <> '0';
+end;
+
+function Tfr_HistoricoComprasEmbarque.GetCodClienteProduto(CodProduto: string):String;
+begin
+   with qryProdutos do
+   begin
+     Close;
+     ParamByName('cod_empresa').Value := vgCod_Empresa;
+     ParamByName('cod_produto').Value := trim(CodProduto);
+     Open;
+     if (IsEmpty) then
+     begin
+        Close;
+        Result := '';
+     end;
+     Result := qryProdutos.FieldByName('cod_cliente').AsString;
+     Close;
+   end;
 end;
 
 procedure Tfr_HistoricoComprasEmbarque.actGerarExecute(Sender: TObject);
 Var
   i, CodFornecedor: Integer;
   CodCliente : String;
-  h, m, s, msec : word;
 begin
   DecodeTime(Now, h, m, s, msec);
 
@@ -305,10 +324,14 @@ begin
   begin
     with ProdutoExiste(trim(edtCodProduto.Text)) do
     begin
-       if Not(Existe) then Exit;
-       CodFornecedor := 0;  // 06.06.21 - Trazer os produtos do Cliente para todos os Fornecedores. Ex.: 10766%
-       CodCliente := Cliente;
-
+       if (Existe) then
+       begin
+         CodFornecedor := Fornecedor;
+         CodCliente := Cliente;
+       end else
+       begin
+          CodCliente := GetCodClienteProduto(trim(edtCodProduto.Text));
+       end;
        dbcClientes.KeyValue := CodCliente;
        dbcFornecedores.KeyValue := CodFornecedor;
     end;
@@ -547,7 +570,6 @@ begin
            Close;
            ParamByName('cod_empresa').Value := vgCod_Empresa;
            ParamByName('cod_produto').Value := trim(memListaProdutos.Lines[i]);
-           ParamByName('cod_cliente').Value := trim(dbcClientes.Text);
            Open;
            if (IsEmpty) then
            begin
@@ -769,6 +791,8 @@ begin
          SQL.Add('select DISTINCT a."cod_cliente", a."cod_fornecedor", a."cod_produto", b."nom_fornecedor" ');
          SQL.Add('from "produto" a, "t_histcompras" b                                                      ');
          SQL.Add('where a."cod_empresa" = :cod_empresa                                                     ');
+         SQL.Add('  and b."login" = :login                                                                 ');
+         SQL.Add('  and b."t_idx" = :t_idx                                                                 ');
          SQL.Add('  and b."cod_cliente" = a."cod_cliente"                                                  ');
          SQL.Add('  and b."cod_fornecedor" = a."cod_fornecedor"                                            ');
          SQL.Add('  and b."cod_produto" = a."cod_produto"                                                  ');
@@ -787,6 +811,9 @@ begin
          SQL.Add('order by 1,4,3                                                                           ');
 
          ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
+         ParamByName('login').Value := vgLogin;
+         ParamByName('t_idx').Value := msec;
+
       end;
       Open;
 
@@ -799,22 +826,22 @@ begin
       if (Produtos.FieldByName('cod_fornecedor').AsInteger <> Fornecedor) then
       begin
          TotalFornecedor;
-
          Fornecedor := Produtos.FieldByName('cod_fornecedor').AsInteger;
-         with ExcelWorksheet.Range['A'+ inttostr(linha),'U'+inttostr(linha)] do
-         begin
-            Value := 'CLIENT/SUPPLIER: ' + Produtos.FieldByName('cod_cliente').AsString + ' / ' + Produtos.FieldByName('nom_fornecedor').AsString;
-            Font.Bold := False;
-            Font.Size := 10;
-            Font.ColorIndex := 0;
-            Interior.ColorIndex := 45;
-            HorizontalAlignment := xlLeft;
-            VerticalAlignment := xlCenter;
-            MergeCells := True;
-         end;
-         Inc(Linha);
-         LinhaAnt := Linha;
       end;
+
+      with ExcelWorksheet.Range['A'+ inttostr(linha),'U'+inttostr(linha)] do
+      begin
+         Value := 'CLIENT/SUPPLIER: ' + Produtos.FieldByName('cod_cliente').AsString + ' / ' + Produtos.FieldByName('nom_fornecedor').AsString;
+         Font.Bold := False;
+         Font.Size := 10;
+         Font.ColorIndex := 0;
+         Interior.ColorIndex := 45;
+         HorizontalAlignment := xlLeft;
+         VerticalAlignment := xlCenter;
+         MergeCells := True;
+      end;
+      Inc(Linha);
+      LinhaAnt := Linha;
 
 
       { A - ITEM  }
@@ -1326,6 +1353,7 @@ begin
      SQL.Add('   and a."ies_tip_pedido" = ''P''                         ');
     SQL.Add('group by 1                                            ');
     SQL.Add('order by 1                                            ');
+
     ParamByName('cod_empresa').AsInteger := vgCod_Empresa;
     Open;
   end;

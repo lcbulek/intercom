@@ -595,11 +595,6 @@ begin
         1: SQL.Text := SQL.Text + '  and p."ies_situacao" = ''I''';
      end;
 
-     SQL.Add('  and p."cod_cliente" in (select "cod_cliente"        ');
-     SQL.Add('                            from "usuario_cliente"    ');
-     SQL.Add('                           where "login" = :login)    ');
-     ParamByName('login').Value := vgLogin;
-
      case (rgOrdem.ItemIndex) of
        0: SQL.Text := SQL.Text +  ' order by p."cod_produto" ';
        1: SQL.Text := SQL.Text +  ' order by p."den_produto" ';
@@ -775,7 +770,6 @@ begin
   { combo dos cliente }
   with Cliente do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
     while NOT(EOF) do
     begin
@@ -790,7 +784,7 @@ begin
   with Fornecedor do
   begin
     Close;
-    ParamByName('login').Value := vgLogin;
+
     Open;
     Last;
     dbxFornecedor.KeyValue := 0;
@@ -881,14 +875,10 @@ begin
         SQL.Add('    and b."cod_cliente" = :cod_cliente                                                                                  ');
         ParamByName('cod_cliente').AsString := trim(cbClientes.Text);
       end;
-      SQL.Add('    and a."cod_fornecedor" in (select "cod_fornecedor"                                                                    ');
-      SQL.Add('                                from "usuario_fornecedor"                                                                ');
-      SQL.Add('                               where "login" = :login)                                                                   ');
       SQL.Add('group by 1,2                                                                                                            ');
       SQL.Add('order by 1                                                                                                              ');
 
       ParamByName('cod_empresa').Value := vgCod_Empresa;
-      ParamByName('login').Value := vgLogin;
 
       Open;
       dbxFornecedor.KeyValue := 0;
@@ -984,7 +974,7 @@ begin
 
  with fornecedores do
  begin
-   ParamByName('login').Value := vgLogin;
+
    Open;
    while not(EOF) do
    begin
@@ -1003,7 +993,6 @@ begin
 
  with clientes do
  begin
-   ParamByName('login').Value := vgLogin;
    Open;
    while not(EOF) do
    begin

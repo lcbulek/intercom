@@ -1,6 +1,6 @@
 object frmProdList: TfrmProdList
-  Left = -1
-  Top = 55
+  Left = 337
+  Top = 100
   AutoScroll = False
   Caption = 'Production List'
   ClientHeight = 614
@@ -529,7 +529,7 @@ object frmProdList: TfrmProdList
     Top = 76
     Width = 1350
     Height = 265
-    ActivePage = tsPackList
+    ActivePage = tsItensPrl
     Align = alTop
     TabOrder = 5
     OnChange = pgItensProdListChange

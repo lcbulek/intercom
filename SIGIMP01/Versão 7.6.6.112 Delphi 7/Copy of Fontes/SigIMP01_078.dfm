@@ -1,6 +1,6 @@
 object frmRelComissoes: TfrmRelComissoes
   Left = 882
-  Top = 364
+  Top = 365
   HelpType = htKeyword
   HelpKeyword = '071'
   BorderIcons = [biSystemMenu]
@@ -249,6 +249,8 @@ object frmRelComissoes: TfrmRelComissoes
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = ClientesBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_cliente"'
       
@@ -259,10 +261,6 @@ object frmRelComissoes: TfrmRelComissoes
       '  and b."num_nota_fiscal" = a."num_nota_fiscal"'
       '  and b."serie" = a."serie"'
       '  and c."cod_cliente" = a."cod_cliente"'
-      '  and c."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
-      ''
       'group by 1'
       'order by 1')
     Left = 80
@@ -271,11 +269,6 @@ object frmRelComissoes: TfrmRelComissoes
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Clientescod_cliente: TIBStringField
@@ -293,6 +286,8 @@ object frmRelComissoes: TfrmRelComissoes
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = FornecedoresBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '/* Selecionar Fornecedor para Relat'#243'rio de Comiss'#245'es */'
       
@@ -311,12 +306,7 @@ object frmRelComissoes: TfrmRelComissoes
       
         '  and b."serie" = a."serie"                                     ' +
         '      '
-      
-        '  and c."cod_fornecedor" = b."cod_fornecedor"                   ' +
-        '      '
-      '  and a."cod_cliente" in (select "cod_cliente"'
-      '                            from "usuario_cliente"'
-      '                           where "login" = :login)'
+      '  and c."cod_fornecedor" = b."cod_fornecedor" '
       
         'group by 1,2                                                    ' +
         '      '
@@ -329,11 +319,6 @@ object frmRelComissoes: TfrmRelComissoes
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorescod_fornecedor: TSmallintField
@@ -353,6 +338,8 @@ object frmRelComissoes: TfrmRelComissoes
   object Produtos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select  a."num_sequencia", b."num_pedido_cli", a."cod_produto", ' +
@@ -465,6 +452,8 @@ object frmRelComissoes: TfrmRelComissoes
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_comercial"'
       'where "cod_empresa" = :cod_empresa')
@@ -519,6 +508,8 @@ object frmRelComissoes: TfrmRelComissoes
   object Faturas: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."dat_liquidacao", b."num_fatura", b."num_ref_volume", b' +
@@ -625,6 +616,8 @@ object frmRelComissoes: TfrmRelComissoes
   object TotalComissaoFatura: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_totais_fat_comissao"(:cod_empresa, :num_nota_' +

@@ -18,7 +18,6 @@ type
     Label11: TLabel;
     dbeddat_cadastro: TDBEdit;
     Label3: TLabel;
-    spr_add_usuario_cliente: TIBStoredProc;
     Label4: TLabel;
     dbeMascara: TDBEdit;
     Label5: TLabel;
@@ -75,7 +74,6 @@ type
     IBDataSetendereco: TMemoField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure IBDataSetBeforeOpen(DataSet: TDataSet);
     procedure IBDataSetNewRecord(DataSet: TDataSet);
     procedure fr_FmNavigator1acF3Execute(Sender: TObject);
     procedure IBDataSetBeforeInsert(DataSet: TDataSet);
@@ -94,7 +92,6 @@ type
 
 var
   fr_CadCliente : Tfr_CadCliente;
-  ClienteNovo : boolean;
 
 implementation
 
@@ -115,12 +112,6 @@ begin
   Set_Value;
 end;
 
-procedure Tfr_CadCliente.IBDataSetBeforeOpen(DataSet: TDataSet);
-begin
-  inherited;
-  IBDataSet.ParamByName('login').Value := vgLogin;
-end;
-
 procedure Tfr_CadCliente.IBDataSetNewRecord(DataSet: TDataSet);
 begin
    inherited;
@@ -134,7 +125,6 @@ begin
    IBDataSetncm_formato_fat.Value     := '####.##.##';
    IBDataSetncm_formato_pkl.Value     := '####.##.##';
    IBDataSetncm_formato_bol.Value     := '####.##.##';         
-   ClienteNovo := True;
 end;
 
 procedure Tfr_CadCliente.fr_FmNavigator1acF3Execute(Sender: TObject);
@@ -166,7 +156,6 @@ procedure Tfr_CadCliente.Set_Value;
 begin
   inherited;
   OpenTable(IBDataSet);
-  ClienteNovo := False;
 end;
 
 procedure Tfr_CadCliente.IBDataSetAfterDelete(DataSet: TDataSet);
@@ -193,23 +182,6 @@ begin
       Transaction.CommitRetaining;
    except
    	Transaction.RollbackRetaining;
-   end;
-
-   if ClienteNovo then
-   begin                                         
-    with spr_add_usuario_cliente do
-    begin
-     ParamByName('cod_cliente').Value := IBDataSetcod_cliente.AsString;
-     ParamByName('ies_tipo').Value := vgTipo;
-     ExecProc;
-     try
-       Transaction.CommitRetaining;
-     except
-       Transaction.RollbackRetaining;
-     end;
-     ClienteNovo := False;
-   end;
-
    end;
 end;
 

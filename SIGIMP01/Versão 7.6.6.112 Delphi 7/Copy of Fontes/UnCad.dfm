@@ -1,6 +1,6 @@
 object fr_Cad: Tfr_Cad
-  Left = 611
-  Top = 294
+  Left = 615
+  Top = 261
   BorderStyle = bsToolWindow
   Caption = 'Cadastro'
   ClientHeight = 162
@@ -119,6 +119,8 @@ object fr_Cad: Tfr_Cad
     OnEditError = IBDataSetDeleteError
     OnPostError = IBDataSetDeleteError
     OnUpdateError = IBDataSetUpdateError
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 328
     Top = 40
   end
@@ -130,6 +132,8 @@ object fr_Cad: Tfr_Cad
   object QrAux: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 375
     Top = 40
   end

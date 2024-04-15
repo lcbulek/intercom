@@ -16444,7 +16444,6 @@ end;
 procedure Tfr_ManNF.FornecedorBeforeOpen(DataSet: TDataSet);
 begin
   Fornecedor.ParamByName('cod_empresa').Value := vgCod_Empresa;
-  Fornecedor.ParamByName('login').Value := vgLogin;
 end;
 
 procedure Tfr_ManNF.FabricantesAfterOpen(DataSet: TDataSet);

@@ -846,18 +846,9 @@ inherited fr_CadLista: Tfr_CadLista
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente_reduz"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 351
     Top = 48
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object QrAuxcod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -880,12 +871,15 @@ inherited fr_CadLista: Tfr_CadLista
   object qrAux2: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 352
     Top = 112
   end
   object Deletar_ListaPreco: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
     CachedUpdates = True
     SQL.Strings = (
       'delete from "lista_preco"'
@@ -908,6 +902,8 @@ inherited fr_CadLista: Tfr_CadLista
   object Fornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."raz_social_reduz",  "cod_fornecedor"'
       'from "fornecedor" a'
@@ -945,6 +941,8 @@ inherited fr_CadLista: Tfr_CadLista
   object up_lista_preco: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'update "lista_preco"'
       '  set "dat_cadastro" = :dat_cadastro'

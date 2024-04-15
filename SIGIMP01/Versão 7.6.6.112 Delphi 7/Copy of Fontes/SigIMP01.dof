@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=sig sig2006 2 0 0 0 0
+RunParams=
 HostApplication=
 Launcher=
 UseLauncher=0

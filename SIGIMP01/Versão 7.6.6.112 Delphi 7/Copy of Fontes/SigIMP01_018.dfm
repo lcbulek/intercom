@@ -198,21 +198,14 @@ object frm_PesquisaListaPreco: Tfrm_PesquisaListaPreco
   object Cliente: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente_reduz"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 208
     Top = 146
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientecod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -229,6 +222,8 @@ object frm_PesquisaListaPreco: Tfrm_PesquisaListaPreco
   object Fornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."cod_fornecedor", b."raz_social_reduz"'
       'from "produto" a, "fornecedor" b'
@@ -267,6 +262,8 @@ object frm_PesquisaListaPreco: Tfrm_PesquisaListaPreco
   object Lista: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."num_lista", a."den_lista"||'#39'('#39'||a."num_lista"||'#39')'#39' "de' +

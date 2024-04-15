@@ -1280,13 +1280,11 @@ procedure TfrmPagamentosPedidos.FormCreate(Sender: TObject);
 begin
   with Clientes do
   begin
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
   with Fornecedores do
   begin
     ParamByName('cod_empresa').Value := vgCod_Empresa;
-    ParamByName('login').Value := vgLogin;
     Open;
   end;
 
@@ -1308,12 +1306,6 @@ begin
      begin
         SQL.Add('   and a."cod_cliente" = :cod_cliente                     ');
         ParamByName('cod_cliente').AsString := Clientescod_cliente.AsString;
-     end else
-     begin
-        SQL.Add('  and a."cod_cliente" in (select "cod_cliente"');
-        SQL.Add('                            from "usuario_cliente"');
-        SQL.Add('                           where "login" = :login)');
-        ParamByName('login').Value := vgLogin;
      end;
 
      SQL.Add('   and b."cod_empresa" = a."cod_empresa"                  ');

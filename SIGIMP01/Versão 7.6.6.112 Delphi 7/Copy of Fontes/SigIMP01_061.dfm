@@ -1,6 +1,6 @@
 object frm_PesquisaPedImportados: Tfrm_PesquisaPedImportados
   Left = 616
-  Top = 353
+  Top = 235
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Pesquisar Pedidos em Prepara'#231#227'o'
@@ -648,21 +648,14 @@ object frm_PesquisaPedImportados: Tfrm_PesquisaPedImportados
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterOpen = ClientesAfterOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente_reduz"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 216
     Top = 170
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientescod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -679,6 +672,8 @@ object frm_PesquisaPedImportados: Tfrm_PesquisaPedImportados
   object Fornecedores: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."raz_social_reduz",  a."cod_fornecedor"'
       '  from "fornecedor" a, "produto" b'
@@ -718,6 +713,8 @@ object frm_PesquisaPedImportados: Tfrm_PesquisaPedImportados
   object Pedidos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "imp_ped_cli" a'
       'where 1=2')
@@ -796,6 +793,8 @@ object frm_PesquisaPedImportados: Tfrm_PesquisaPedImportados
   object qryFornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social_reduz"'
       'from "fornecedor"'

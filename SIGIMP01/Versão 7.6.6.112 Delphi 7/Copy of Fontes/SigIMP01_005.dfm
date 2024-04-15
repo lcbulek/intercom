@@ -426,6 +426,8 @@ inherited fr_CadLista_Preco: Tfr_CadLista_Preco
   object qryProduto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."cod_produto", a."den_produto", a."cod_cliente", b."raz' +
@@ -503,6 +505,8 @@ inherited fr_CadLista_Preco: Tfr_CadLista_Preco
   object Fornecedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "fornecedor"')
     Left = 382
@@ -522,6 +526,7 @@ inherited fr_CadLista_Preco: Tfr_CadLista_Preco
   object Deletar_ListaPreco: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
     CachedUpdates = True
     SQL.Strings = (
       'delete from "lista_preco"'
@@ -546,6 +551,7 @@ inherited fr_CadLista_Preco: Tfr_CadLista_Preco
     Transaction = dmConnection.TransSig
     AfterDelete = man_lista_precoAfterDelete
     AfterPost = man_lista_precoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "lista_preco"'
@@ -635,6 +641,8 @@ inherited fr_CadLista_Preco: Tfr_CadLista_Preco
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select "cod_empresa", "ies_modelo", "mod_lista_preco", "dir_plan' +
@@ -680,6 +688,8 @@ inherited fr_CadLista_Preco: Tfr_CadLista_Preco
   object Produtos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_produto", "den_produto_detpor", "den_produto"'
       'from "produto"'
@@ -728,6 +738,8 @@ inherited fr_CadLista_Preco: Tfr_CadLista_Preco
   object produtos_lista: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '/* Produtos da Cota'#231#227'o Recebida */'
       

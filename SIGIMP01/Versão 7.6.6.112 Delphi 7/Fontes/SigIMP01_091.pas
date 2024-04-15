@@ -78,6 +78,7 @@ type
     ProdListGrupos: TIBQuery;
     ProdListEmbEsp: TIBQuery;
     ProdListPallets: TIBQuery;
+    Saldosqtd_faturada: TIBBCDField;
   private
     { Private declarations }
   public
@@ -88,6 +89,7 @@ type
 
     procedure AbrirExcel(Var Caminho: String; Visivel: boolean = False);
     procedure FecharExcel;
+
     procedure AtualizarItensExcel(DataSet: TDataSet; Var pLinha: Integer; pNumFatura: String; fGrupo: Boolean = True);
     procedure AtualizarProdList(NumProdList: Integer; fPallet: boolean; Gerar: Boolean = False);
     procedure GerarExcelProdList(NumProdList: Integer; Abrir: boolean = False; ShowMsg: boolean = True);
@@ -227,7 +229,7 @@ Var
   i : real;
   SeqEmbEsp, SeqPallet : Integer;
   fPallet: boolean;
-  xlCorPallet, xlCorCalculos, xlCorErros, xlVerde, xlAmarelo, xlRoxo, xlCorFaturas : integer;
+  xlCorPallet, xlCorCalculos, xlCorErros, xlVerde, xlAmarelo, xlRoxo, xlCorFaturas, xlTurquesa : integer;
   sHash, sMD5: WideString;
 
   { Gerar linhas para os items da Prod List }
@@ -237,9 +239,7 @@ Var
     begin
       sHash := '';
 
-      // TO DO: mostrar form com progresso 
-
-      { A - SEQUENCIA DO ITEM NO PEDIDO }
+      { SEQUENCIA DO ITEM NO PEDIDO }
       with ExcelWorksheet.Range['A'+ inttostr(linha),'A'+inttostr(linha)] do
       begin
         Value := FieldByName('num_seq_pedido').AsInteger;
@@ -249,7 +249,7 @@ Var
         else
            Interior.ColorIndex := xlVerde;
       end;
-      { B - ORDER }
+      { ORDER }
       with ExcelWorksheet.Range['B'+ inttostr(linha),'B'+inttostr(linha)] do
       begin
         Value := trim(FieldByName('num_pedido_cli').AsString);
@@ -260,7 +260,7 @@ Var
         else
            Interior.ColorIndex := xlVerde;
       end;
-      { C - CONFIRMATION }
+      { CONFIRMATION }
       with ExcelWorksheet.Range['C'+ inttostr(linha),'C'+inttostr(linha)] do
       begin
         Value := trim(FieldByName('num_pedido_for').AsString);
@@ -271,7 +271,7 @@ Var
         else
            Interior.ColorIndex := xlVerde;
       end;
-      { D - PRODUTO }
+      { PRODUTO }
       with ExcelWorksheet.Range['D'+ inttostr(linha),'D'+inttostr(linha)] do
       begin
         NumberFormat := '@';
@@ -280,7 +280,7 @@ Var
            Interior.ColorIndex := xlCorErros
         else
            Interior.ColorIndex := xlVerde;
-        { Indicar com Negrito e Sublinhado se houve mudanças cadastrais }   
+        { Indicar com Negrito e Sublinhado se houve mudanças cadastrais }
         if FieldByName('ies_cadastro').AsString = 'S' then
         begin
           Font.Bold := True;
@@ -298,14 +298,14 @@ Var
         ParamByName('cod_produto').Value := DataSetItem.FieldByName('cod_produto').Value;
         ParamByName('num_seq_pedido').Value := DataSetItem.FieldByName('num_seq_pedido').Value;
         Open;
-        { E - QUANTITY CONFIRMED IN THE PROFORMA }
+        { QUANTITY CONFIRMED IN THE PROFORMA }
         with ExcelWorksheet.Range['E'+ inttostr(linha),'E'+inttostr(linha)] do
         begin
           NumberFormat := '#.##0,0';
           Value := Saldos.FieldByName('qtd_confirmada').AsFloat;
           Interior.ColorIndex := xlVerde;
         end;
-        { F - QUANTITY ALREADY  SHIPPED }
+        { QUANTITY ALREADY  SHIPPED }
         with ExcelWorksheet.Range['F'+ inttostr(linha),'F'+inttostr(linha)] do
         begin
           NumberFormat := '#.##0,0';
@@ -313,7 +313,7 @@ Var
           Value := Saldos.FieldByName('qtd_embarcada').AsFloat;
           Interior.ColorIndex := xlVerde;
         end;
-        { G - QUANTITY PENDING OF SHIPMENT }
+        { QUANTITY PENDING OF SHIPMENT }
         with ExcelWorksheet.Range['G'+ inttostr(linha),'G'+inttostr(linha)] do
         begin
           NumberFormat := '#.##0,0';
@@ -321,10 +321,18 @@ Var
           Value := Saldos.FieldByName('qtd_pendente').AsFloat;
           Interior.ColorIndex := xlVerde;
         end;
+        { QUANTITY ALREADY INVOICED, BUT NOT SHIPPED YET - QTDE FATURADA }
+        with ExcelWorksheet.Range['H'+ inttostr(linha),'H'+inttostr(linha)] do
+        begin
+          NumberFormat := '#.##0,0';
+          { quantidade faturada }
+          Value := Saldos.FieldByName('qtd_faturada').AsFloat;
+          Interior.ColorIndex := xlTurquesa;
+        end;
         Close;
       end;
-      { H - PRODUTO DESCRIÇÃO }
-      with ExcelWorksheet.Range['H'+ inttostr(linha),'H'+inttostr(linha)] do
+      { PRODUTO DESCRIÇÃO }
+      with ExcelWorksheet.Range['I'+ inttostr(linha),'I'+inttostr(linha)] do
       begin
         with ProdutoDet(FieldByName('cod_produto').AsString, clientecod_cliente.AsString, fornecedorcod_fornecedor.AsInteger) do
         begin
@@ -343,32 +351,32 @@ Var
         Interior.ColorIndex := xlVerde;
       end;
 
-      { I - DATE OF BEGINNING OF PRODUCTION - Data de Confirmação do Pedido }
-      with ExcelWorksheet.Range['I'+ inttostr(linha),'I'+inttostr(linha)] do
+      { DATE OF BEGINNING OF PRODUCTION - Data de Confirmação do Pedido }
+      with ExcelWorksheet.Range['J'+ inttostr(linha),'J'+inttostr(linha)] do
       begin
         if Not(FieldByName('dat_ini_producao').IsNull) then
            Value := FormatDateTime('DD.MM.YY', FieldByName('dat_ini_producao').AsDateTime)
         else Value := '';
         Interior.ColorIndex := xlVerde;
       end;
-      { J - ETD FACTORY - Data estimada para a produção }
-      with ExcelWorksheet.Range['J'+ inttostr(linha),'J'+inttostr(linha)] do
+      { ETD FACTORY - Data estimada para a produção }
+      with ExcelWorksheet.Range['K'+ inttostr(linha),'K'+inttostr(linha)] do
       begin
         if Not(FieldByName('etd_factory').IsNull) then
            Value := FormatDateTime('DD.MM.YY', FieldByName('etd_factory').AsDateTime)
         else Value := '';
         Interior.ColorIndex := xlVerde;
       end;
-      { K - UPDATED ETD FACTORY }
-      with ExcelWorksheet.Range['K'+ inttostr(linha),'K'+inttostr(linha)] do
+      { UPDATED ETD FACTORY }
+      with ExcelWorksheet.Range['L'+ inttostr(linha),'L'+inttostr(linha)] do
       begin
         if Not(FieldByName('dat_upd_etd').IsNull) then
            Value := FormatDateTime('DD.MM.YY', FieldByName('dat_upd_etd').AsDateTime)
         else Value := '';
         Interior.ColorIndex := xlAmarelo;
       end;
-      { L - STATUS OF PRODUCTION }
-      with ExcelWorksheet.Range['L'+ inttostr(linha),'L'+inttostr(linha)] do
+      { STATUS OF PRODUCTION }
+      with ExcelWorksheet.Range['M'+ inttostr(linha),'M'+inttostr(linha)] do
       begin
         s := trim(StringReplace(FieldByName('txt_status_producao').AsString, #$D#$A, ' ', [rfReplaceAll, rfIgnoreCase]));
         i := (length(s) / 80);
@@ -381,22 +389,22 @@ Var
         //RowHeight := 11.25 * i;
         Interior.ColorIndex := xlAmarelo;
       end;
-      { M - DATE OF INSPECTION }
-      with ExcelWorksheet.Range['M'+ inttostr(linha),'M'+inttostr(linha)] do
+      { DATE OF INSPECTION }
+      with ExcelWorksheet.Range['N'+ inttostr(linha),'N'+inttostr(linha)] do
       begin
         if Not(FieldByName('dat_inspecao').IsNull) then
            Value := FormatDateTime('DD.MM.YY', FieldByName('dat_inspecao').AsDateTime)
         else Value := ' ';
         Interior.ColorIndex := xlAmarelo;
       end;
-      { N - RESULT OF INSPECTION }
-      with ExcelWorksheet.Range['N'+ inttostr(linha),'N'+inttostr(linha)] do
+      { RESULT OF INSPECTION }
+      with ExcelWorksheet.Range['O'+ inttostr(linha),'O'+inttostr(linha)] do
       begin
         Value :=  SetResultInspecao(FieldByName('ies_result_inspecao').AsString);
         Interior.ColorIndex := xlAmarelo;
       end;
-      { O - QUANTITY SUGGESTED FOR THE NEXT SHIPMENT }
-      with ExcelWorksheet.Range['O'+ inttostr(linha),'O'+inttostr(linha)] do
+      { QUANTITY SUGGESTED FOR THE NEXT SHIPMENT }
+      with ExcelWorksheet.Range['P'+ inttostr(linha),'P'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,0';
         Value := FieldByName('qtd_romanear').AsFloat;
@@ -407,8 +415,8 @@ Var
         else
            Interior.ColorIndex := xlAmarelo;
       end;
-      { P - INVOICE NUMER }
-      with ExcelWorksheet.Range['P'+ inttostr(linha),'P'+inttostr(linha)] do
+      { INVOICE NUMER }
+      with ExcelWorksheet.Range['Q'+ inttostr(linha),'Q'+inttostr(linha)] do
       begin
         Value := trim(FieldByName('num_fatura').AsString);
         if (FieldByName('ies_sit_fat').AsString = 'F') then
@@ -416,8 +424,8 @@ Var
         else
            Interior.ColorIndex := xlAmarelo;
       end;
-      { Q - SEQ. INVOICE ITEM }
-      with ExcelWorksheet.Range['Q'+ inttostr(linha),'Q'+inttostr(linha)] do
+      { SEQ. INVOICE ITEM }
+      with ExcelWorksheet.Range['R'+ inttostr(linha),'R'+inttostr(linha)] do
       begin
         if (FieldByName('num_seq_nf').AsInteger > 0) then
            Value := FieldByName('num_seq_nf').AsInteger
@@ -425,16 +433,16 @@ Var
         if (FieldByName('ies_sit_fat').AsString = 'F') then
            Interior.ColorIndex := xlCorFaturas
         else
-           Interior.ColorIndex := xlVerde;
+           Interior.ColorIndex := xlAmarelo;
       end;
-      { R - UNIT (UNIDADE DE MEDIDA) }
-      with ExcelWorksheet.Range['R'+ inttostr(linha),'R'+inttostr(linha)] do
+      { UNIT (UNIDADE DE MEDIDA) }
+      with ExcelWorksheet.Range['S'+ inttostr(linha),'S'+inttostr(linha)] do
       begin
         Value := UN_I;
         Interior.ColorIndex := xlVerde;
       end;
-      { S - PRICE IN US$ }
-      with ExcelWorksheet.Range['S'+ inttostr(linha),'S'+inttostr(linha)] do
+      { PRICE IN US$ }
+      with ExcelWorksheet.Range['T'+ inttostr(linha),'T'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,000000';
         Value := FieldByName('preco_real').AsFloat;
@@ -443,16 +451,16 @@ Var
         else
            Interior.ColorIndex := xlVerde;
       end;
-      { T - TOTAL US$ }
-      with ExcelWorksheet.Range['T'+ inttostr(linha),'T'+inttostr(linha)] do
+      { TOTAL US$ }
+      with ExcelWorksheet.Range['U'+ inttostr(linha),'U'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         FormulaR1C1 := '=ROUND(RC[-5]*RC[-1],2)';
         Font.ColorIndex := 0;
         Interior.ColorIndex := xlVerde;
       end;
-      { U - PRICE IN US$ - Preço especial }
-      with ExcelWorksheet.Range['U'+ inttostr(linha),'U'+inttostr(linha)] do
+      { PRICE IN US$ - Preço especial }
+      with ExcelWorksheet.Range['V'+ inttostr(linha),'V'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,000000';
         Value := FieldByName('preco_esp').AsFloat;
@@ -466,8 +474,8 @@ Var
         if GetBit(FieldByName('ies_erros').AsInteger,8) = 1 then
            Interior.ColorIndex := xlCorErros;
       end;
-      { V - TOTAL US$ - Total Preço Especial}
-      with ExcelWorksheet.Range['V'+ inttostr(linha),'V'+inttostr(linha)] do
+      { TOTAL US$ - Total Preço Especial}
+      with ExcelWorksheet.Range['W'+ inttostr(linha),'W'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         FormulaR1C1 := '=ROUND(RC[-7]*RC[-1],2)';
@@ -478,8 +486,8 @@ Var
           else
              Interior.ColorIndex := xlRoxo;
       end;
-      { W - TOTAL VOLUME IN M³ }
-      with ExcelWorksheet.Range['W'+ inttostr(linha),'W'+inttostr(linha)] do
+      { TOTAL VOLUME IN M³ }
+      with ExcelWorksheet.Range['X'+ inttostr(linha),'X'+inttostr(linha)] do
       begin
         NumberFormat := VolumeNumberFormat;
         if (FieldByName('ies_emb_esp').AsString = 'N') then
@@ -488,8 +496,8 @@ Var
            FormulaR1C1 := '=ROUND(RC[4]*RC[7],' + VolumeDecimais + ')';
         Interior.ColorIndex := xlVerde;
       end;
-      { X - TOTAL GROSS WEIGHT (Kg) }
-      with ExcelWorksheet.Range['X'+ inttostr(linha),'X'+inttostr(linha)] do
+      { TOTAL GROSS WEIGHT (Kg) }
+      with ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         if (FieldByName('ies_emb_esp').AsString = 'N') then
@@ -502,8 +510,8 @@ Var
         else
            Interior.ColorIndex := xlVerde;
       end;
-      { Y - TOTAL NET WEIGHT (Kg) }
-      with ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)] do
+      { TOTAL NET WEIGHT (Kg) }
+      with ExcelWorksheet.Range['Z'+ inttostr(linha),'Z'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         Font.Size := 8;
@@ -515,8 +523,8 @@ Var
         else
            Interior.ColorIndex := xlVerde;
       end;
-      { Z - TOTAL QUANTITY OF PACKINGS }
-      with ExcelWorksheet.Range['Z'+ inttostr(linha),'Z'+inttostr(linha)] do
+      { TOTAL QUANTITY OF PACKINGS }
+      with ExcelWorksheet.Range['AA'+ inttostr(linha),'AA'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0';
         if (FieldByName('ies_emb_esp').AsString = 'N') then
@@ -534,16 +542,16 @@ Var
         end;
         Interior.ColorIndex := xlVerde;
       end;
-      { AA - SPECIAL CARTONS }
-      with ExcelWorksheet.Range['AA'+ inttostr(linha),'AA'+inttostr(linha)] do
+      { SPECIAL CARTONS }
+      with ExcelWorksheet.Range['AB'+ inttostr(linha),'AB'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0';
         if (FieldByName('ies_emb_esp').AsString = 'S') then
            Value := FieldByName('qtd_caixas').AsFloat;
         Interior.ColorIndex := xlAmarelo;
       end;
-      { AB - QUANTITY OF UNITS INSIDE THE PACKING }
-      with ExcelWorksheet.Range['AB'+ inttostr(linha),'AB'+inttostr(linha)] do
+      { QUANTITY OF UNITS INSIDE THE PACKING }
+      with ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)] do
       begin
         if (FieldByName('ies_emb_esp').AsString = 'N') then
         begin
@@ -553,8 +561,8 @@ Var
         sHash := Text;
         Interior.ColorIndex := xlAmarelo;
       end;
-      { AC - Peso Bruto de 1 Caixa - Gross Weight 1 PACKING }
-      with ExcelWorksheet.Range['AC'+ inttostr(linha),'AC'+inttostr(linha)] do
+      { Peso Bruto de 1 Caixa - Gross Weight 1 PACKING }
+      with ExcelWorksheet.Range['AD'+ inttostr(linha),'AD'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         Value := FieldByName('pes_bruto_cx').AsFloat;
@@ -564,39 +572,39 @@ Var
         else
            Interior.ColorIndex := xlAmarelo;
       end;
-      { AD - Volume }
-      with ExcelWorksheet.Range['AD'+ inttostr(linha),'AD'+inttostr(linha)] do
+      { Volume }
+      with ExcelWorksheet.Range['AE'+ inttostr(linha),'AE'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,0000';
         FormulaR1C1 := '=ROUND(RC[1]*RC[2]*RC[3]/1000000,4)';
         Interior.ColorIndex := xlVerde;
       end;
-      { AE - Comprimento }
-      with ExcelWorksheet.Range['AE'+ inttostr(linha),'AE'+inttostr(linha)] do
+      { Comprimento }
+      with ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,0';
         Value := FieldByName('comprimento_cx').AsFloat;
         sHash := sHash + Text;
         Interior.ColorIndex := xlAmarelo;
       end;
-      { AF - Largura }
-      with ExcelWorksheet.Range['AF'+ inttostr(linha),'AF'+inttostr(linha)] do
+      { Largura }
+      with ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,0';
         Value := FieldByName('largura_cx').AsFloat;
         sHash := sHash + Text;
         Interior.ColorIndex := xlAmarelo;
       end;
-      { AG - Altura }
-      with ExcelWorksheet.Range['AG'+ inttostr(linha),'AG'+inttostr(linha)] do
+      { Altura }
+      with ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,0';
         Value := FieldByName('altura_cx').AsFloat;
         sHash := sHash + Text;
         Interior.ColorIndex := xlAmarelo;
       end;
-      { AH - NET WEIGHT OF THE PRODUCT (Kg) }
-      with ExcelWorksheet.Range['AH'+ inttostr(linha),'AH'+inttostr(linha)] do
+      { NET WEIGHT OF THE PRODUCT (Kg) }
+      with ExcelWorksheet.Range['AI'+ inttostr(linha),'AI'+inttostr(linha)] do
       begin
         NumberFormat := '##0,0000';
         Interior.ColorIndex := xlAmarelo;
@@ -610,9 +618,8 @@ Var
              Interior.ColorIndex := xlAmarelo;
         end;
       end;
-
-      { AI - QUANTITY OF PALLETS }
-      with ExcelWorksheet.Range['AI'+ inttostr(linha),'AI'+inttostr(linha)] do
+      { QUANTITY OF PALLETS }
+      with ExcelWorksheet.Range['AJ'+ inttostr(linha),'AJ'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0';
         if (FieldByName('qtd_pallet').AsInteger > 0) then
@@ -620,8 +627,8 @@ Var
         else Value := '';
         Interior.ColorIndex := xlCorPallet;
       end;
-      { AJ - PESO PALLET VAZIO }
-      with ExcelWorksheet.Range['AJ'+ inttostr(linha),'AJ'+inttostr(linha)] do
+      { PESO PALLET VAZIO }
+      with ExcelWorksheet.Range['AK'+ inttostr(linha),'AK'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         if (FieldByName('pes_pallet_vazio').AsFloat > 0) then
@@ -629,8 +636,8 @@ Var
         else Value := '';
         Interior.ColorIndex := xlCorPallet;
       end;
-      { AK - PALLET GROSS WEIGHT }
-      with ExcelWorksheet.Range['AK'+ inttostr(linha),'AK'+inttostr(linha)] do
+      { PALLET GROSS WEIGHT }
+      with ExcelWorksheet.Range['AL'+ inttostr(linha),'AL'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         if (FieldByName('pes_bruto_pallet').AsFloat > 0) then
@@ -640,8 +647,8 @@ Var
         VerticalAlignment := xlCenter;
         Interior.ColorIndex := xlCorPallet;
       end;
-      { AL - PALLET NET WEIGHT }
-      with ExcelWorksheet.Range['AL'+ inttostr(linha),'AL'+inttostr(linha)] do
+      { PALLET NET WEIGHT }
+      with ExcelWorksheet.Range['AM'+ inttostr(linha),'AM'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         if (FieldByName('pes_liquido_pallet').AsFloat > 0) then
@@ -651,8 +658,8 @@ Var
         VerticalAlignment := xlCenter;
         Interior.ColorIndex := xlCorPallet;
       end;
-      { AM - COMPRIMENTO DO PALLET }
-      with ExcelWorksheet.Range['AM'+ inttostr(linha),'AM'+inttostr(linha)] do
+      { COMPRIMENTO DO PALLET }
+      with ExcelWorksheet.Range['AN'+ inttostr(linha),'AN'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0';
         if (FieldByName('comprimento_pallet').AsFloat > 0) then
@@ -662,8 +669,8 @@ Var
         VerticalAlignment := xlCenter;
         Interior.ColorIndex := xlCorPallet;
       end;
-      { AN - LARGURA DO PALLET }
-      with ExcelWorksheet.Range['AN'+ inttostr(linha),'AN'+inttostr(linha)] do
+      { LARGURA DO PALLET }
+      with ExcelWorksheet.Range['AO'+ inttostr(linha),'AO'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0';
         if (FieldByName('largura_pallet').AsFloat > 0) then
@@ -673,8 +680,8 @@ Var
         VerticalAlignment := xlCenter;
         Interior.ColorIndex := xlCorPallet;
       end;
-      { AO - ALTURA DO PALLET }
-      with ExcelWorksheet.Range['AO'+ inttostr(linha),'AO'+inttostr(linha)] do
+      { ALTURA DO PALLET }
+      with ExcelWorksheet.Range['AP'+ inttostr(linha),'AP'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0';
         if (FieldByName('altura_pallet').AsFloat > 0) then
@@ -684,8 +691,8 @@ Var
         VerticalAlignment := xlCenter;
         Interior.ColorIndex := xlCorPallet;
       end;
-      { AP - PALLET VOLUME }
-      with ExcelWorksheet.Range['AP'+ inttostr(linha),'AP'+inttostr(linha)] do
+      { PALLET VOLUME }
+      with ExcelWorksheet.Range['AQ'+ inttostr(linha),'AQ'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,000';
         FormulaR1C1 := '=ROUND(ROUND(RC[-1]*RC[-2]*RC[-3]/1000000,4)*RC[-7],3)';
@@ -696,8 +703,8 @@ Var
 
       { INFORMAÇÕES CALCULADAS PELO PROGRAMA }
 
-      { AQ - TOTAL US$ }
-      with ExcelWorksheet.Range['AQ'+ inttostr(linha),'AQ'+inttostr(linha)] do
+      { TOTAL US$ }
+      with ExcelWorksheet.Range['AR'+ inttostr(linha),'AR'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         Interior.ColorIndex := xlCorCalculos;
@@ -712,8 +719,8 @@ Var
           Comment.Visible := False;
         end else Value := null;
       end;
-      { AR - TOTAL US$ }
-      with ExcelWorksheet.Range['AR'+ inttostr(linha),'AR'+inttostr(linha)] do
+      { TOTAL US$ }
+      with ExcelWorksheet.Range['AS'+ inttostr(linha),'AS'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         Interior.ColorIndex := xlCorCalculos;
@@ -728,8 +735,8 @@ Var
           Comment.Visible := False;
           end else Value := null;
       end;
-      { AS - TOTAL VOLUME }
-      with ExcelWorksheet.Range['AS'+ inttostr(linha),'AS'+inttostr(linha)] do
+      { TOTAL VOLUME }
+      with ExcelWorksheet.Range['AT'+ inttostr(linha),'AT'+inttostr(linha)] do
       begin
         NumberFormat := VolumeNumberFormat;
         Interior.ColorIndex := xlCorCalculos;
@@ -747,8 +754,8 @@ Var
           end;
           end else Value := null;
       end;
-      { AT - TOTAL GROSS WEIGHT }
-      with ExcelWorksheet.Range['AT'+ inttostr(linha),'AT'+inttostr(linha)] do
+      { TOTAL GROSS WEIGHT }
+      with ExcelWorksheet.Range['AU'+ inttostr(linha),'AU'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         Interior.ColorIndex := xlCorCalculos;
@@ -767,8 +774,8 @@ Var
           end;
         end else Value := null;
       end;
-      { AU - TOTAL NET WEIGHT }
-      with ExcelWorksheet.Range['AU'+ inttostr(linha),'AU'+inttostr(linha)] do
+      { TOTAL NET WEIGHT }
+      with ExcelWorksheet.Range['AV'+ inttostr(linha),'AV'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,00';
         Interior.ColorIndex := xlCorCalculos;
@@ -796,8 +803,8 @@ Var
         end else Value := null;
 
       end;
-      { AV - TOTAL QUANTITY OF PACKINGS }
-      with ExcelWorksheet.Range['AV'+ inttostr(linha),'AV'+inttostr(linha)] do
+      { TOTAL QUANTITY OF PACKINGS }
+      with ExcelWorksheet.Range['AW'+ inttostr(linha),'AW'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0';
         Interior.ColorIndex := xlCorCalculos;
@@ -815,21 +822,18 @@ Var
           end;
         end else Value := null;
       end;
-      { AW - VOLUME OF 1 PACKING }
-      with ExcelWorksheet.Range['AW'+ inttostr(linha),'AW'+inttostr(linha)] do
+      { VOLUME OF 1 PACKING }
+      with ExcelWorksheet.Range['AX'+ inttostr(linha),'AX'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,0000';
         Interior.ColorIndex := xlCorCalculos;
         if Not(FieldByName('cal_volume_caixa').IsNull) then
         begin
           Value := FieldByName('cal_volume_caixa').AsFloat;
-          //if (FieldByName('volume_caixa').AsFloat <> FieldByName('cal_volume_caixa').AsFloat) then
-          //   Interior.ColorIndex := xlCorErros
-          //else Interior.ColorIndex := xlCorCalculos;
         end else Value := null;
       end;
-      { AX - PRICE IN US$ }
-      with ExcelWorksheet.Range['AX'+ inttostr(linha),'AX'+inttostr(linha)] do
+      { PRICE IN US$ }
+      with ExcelWorksheet.Range['AY'+ inttostr(linha),'AY'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,000000';
         Interior.ColorIndex := xlCorCalculos;
@@ -841,8 +845,8 @@ Var
           else Interior.ColorIndex := xlCorCalculos;
         end else Value := null;
       end;
-      { AY - PRICE IN US$ }
-      with ExcelWorksheet.Range['AY'+ inttostr(linha),'AY'+inttostr(linha)] do
+      { PRICE IN US$ }
+      with ExcelWorksheet.Range['AZ'+ inttostr(linha),'AZ'+inttostr(linha)] do
       begin
         NumberFormat := '#.##0,000000';
         Interior.ColorIndex := xlCorCalculos;
@@ -862,26 +866,26 @@ Var
       finally
         free;
       end;
-      {BB - HASH MD5 }
+      { HASH MD5 }
       with ExcelWorksheet.Range['BB' + IntToStr(Linha),'BB' + IntToStr(Linha)] do
            Value := sMD5;
 
-      {BC - Sequencia da Packing List }
+      { Sequencia da Packing List }
       with ExcelWorksheet.Range['BC' + IntToStr(Linha),'BC' + IntToStr(Linha)] do
            Value := FieldByName('seq_pkl').Value;
 
-      {BD - Sequencia de Origem }
+      { Sequencia de Origem }
       with ExcelWorksheet.Range['BD' + IntToStr(Linha),'BD' + IntToStr(Linha)] do
            Value := FieldByName('num_sequencia_org').Value;
 
       { centralizar as células }
-      with ExcelWorksheet.Range['A' + IntToStr(Linha),'AY' + IntToStr(Linha)] do
+      with ExcelWorksheet.Range['A' + IntToStr(Linha),'AZ' + IntToStr(Linha)] do
       begin
         HorizontalAlignment := xlCenter;
         VerticalAlignment := xlCenter;
       end;
       { Descrição do Produto }
-      with ExcelWorkSheet.Range['H' + IntToStr(Linha),'H' + IntToStr(Linha)] do
+      with ExcelWorkSheet.Range['I' + IntToStr(Linha),'I' + IntToStr(Linha)] do
       begin
         WrapText := True;
         ShrinkToFit := False;
@@ -895,7 +899,7 @@ Var
         MergeCells          := False;
       end;
       { Status da Produção }
-      with ExcelWorkSheet.Range['L' + IntToStr(Linha),'L' + IntToStr(Linha)] do
+      with ExcelWorkSheet.Range['M' + IntToStr(Linha),'M' + IntToStr(Linha)] do
       begin
         WrapText := True;
         ShrinkToFit := False;
@@ -909,7 +913,7 @@ Var
         MergeCells          := False;
       end;
       {bordas desde o cabeçalho até ultima linha}
-      with ExcelWorkSheet.Range['A' + IntToStr(Linha),'AY' + IntToStr(Linha)] do
+      with ExcelWorkSheet.Range['A' + IntToStr(Linha),'AZ' + IntToStr(Linha)] do
       begin
           with Borders[xlInsideVertical] do
           begin
@@ -984,7 +988,7 @@ Var
         Item(ProdListEmbEsp);
         Next;
       end;
-      with ExcelWorkSheet.Range['W'+IntToStr(LinIniEmbEsp),'W'+IntToStr(Linha-1)] do
+      with ExcelWorkSheet.Range['X'+IntToStr(LinIniEmbEsp),'X'+IntToStr(Linha-1)] do
       begin
         MergeCells := True;
         Interior.ColorIndex := xlVerde;
@@ -993,7 +997,7 @@ Var
         WrapText := True;
         ShrinkToFit := False;
       end;
-      with ExcelWorkSheet.Range['X'+IntToStr(LinIniEmbEsp),'X'+IntToStr(Linha-1)] do
+      with ExcelWorkSheet.Range['Y'+IntToStr(LinIniEmbEsp),'Y'+IntToStr(Linha-1)] do
       begin
         MergeCells := True;
         if (GetBit(DataSet.FieldByName('ies_erros').AsInteger,10) = 1) then
@@ -1008,7 +1012,7 @@ Var
       // Mesclar coluna Peso Líquido para emb esp ?
       if (Mesclar = 'S') then
       begin
-         with ExcelWorkSheet.Range['Y'+IntToStr(LinIniEmbEsp),'Y'+IntToStr(Linha-1)] do
+         with ExcelWorkSheet.Range['Z'+IntToStr(LinIniEmbEsp),'Z'+IntToStr(Linha-1)] do
          begin
            MergeCells := True;
            Interior.ColorIndex := xlVerde;
@@ -1018,19 +1022,10 @@ Var
            ShrinkToFit := False;
          end;
       end;
-      with ExcelWorkSheet.Range['Z'+IntToStr(LinIniEmbEsp),'Z'+IntToStr(Linha-1)] do
-      begin
-        MergeCells := True;
-        Interior.ColorIndex := xlVerde;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlCenter;
-        WrapText := True;
-        ShrinkToFit := False;
-      end;
       with ExcelWorkSheet.Range['AA'+IntToStr(LinIniEmbEsp),'AA'+IntToStr(Linha-1)] do
       begin
         MergeCells := True;
-        Interior.ColorIndex := xlAmarelo;
+        Interior.ColorIndex := xlVerde;
         HorizontalAlignment := xlCenter;
         VerticalAlignment := xlCenter;
         WrapText := True;
@@ -1057,7 +1052,7 @@ Var
       with ExcelWorkSheet.Range['AD'+IntToStr(LinIniEmbEsp),'AD'+IntToStr(Linha-1)] do
       begin
         MergeCells := True;
-        Interior.ColorIndex := xlVerde;
+        Interior.ColorIndex := xlAmarelo;
         HorizontalAlignment := xlCenter;
         VerticalAlignment := xlCenter;
         WrapText := True;
@@ -1066,7 +1061,7 @@ Var
       with ExcelWorkSheet.Range['AE'+IntToStr(LinIniEmbEsp),'AE'+IntToStr(Linha-1)] do
       begin
         MergeCells := True;
-        Interior.ColorIndex := xlAmarelo;
+        Interior.ColorIndex := xlVerde;
         HorizontalAlignment := xlCenter;
         VerticalAlignment := xlCenter;
         WrapText := True;
@@ -1081,18 +1076,6 @@ Var
         WrapText := True;
         ShrinkToFit := False;
       end;
-      if (Mesclar = 'S') then
-      begin
-         with ExcelWorkSheet.Range['AH'+IntToStr(LinIniEmbEsp),'AH'+IntToStr(Linha-1)] do
-         begin
-           MergeCells := True;
-           Interior.ColorIndex := xlAmarelo;
-           HorizontalAlignment := xlCenter;
-           VerticalAlignment := xlCenter;
-           WrapText := True;
-           ShrinkToFit := False;
-         end;
-      end;
       with ExcelWorkSheet.Range['AG'+IntToStr(LinIniEmbEsp),'AG'+IntToStr(Linha-1)] do
       begin
         MergeCells := True;
@@ -1102,8 +1085,29 @@ Var
         WrapText := True;
         ShrinkToFit := False;
       end;
+      if (Mesclar = 'S') then
+      begin
+         with ExcelWorkSheet.Range['AI'+IntToStr(LinIniEmbEsp),'AI'+IntToStr(Linha-1)] do
+         begin
+           MergeCells := True;
+           Interior.ColorIndex := xlAmarelo;
+           HorizontalAlignment := xlCenter;
+           VerticalAlignment := xlCenter;
+           WrapText := True;
+           ShrinkToFit := False;
+         end;
+      end;
+      with ExcelWorkSheet.Range['AH'+IntToStr(LinIniEmbEsp),'AH'+IntToStr(Linha-1)] do
+      begin
+        MergeCells := True;
+        Interior.ColorIndex := xlAmarelo;
+        HorizontalAlignment := xlCenter;
+        VerticalAlignment := xlCenter;
+        WrapText := True;
+        ShrinkToFit := False;
+      end;
       { campos calculados pelo sistema }
-      with ExcelWorkSheet.Range['AS'+IntToStr(LinIniEmbEsp),'AS'+IntToStr(Linha-1)] do
+      with ExcelWorkSheet.Range['AT'+IntToStr(LinIniEmbEsp),'AT'+IntToStr(Linha-1)] do
       begin
          MergeCells := True;
          HorizontalAlignment := xlCenter;
@@ -1111,7 +1115,7 @@ Var
          WrapText := True;
          ShrinkToFit := False;
       end;
-      with ExcelWorkSheet.Range['AT'+IntToStr(LinIniEmbEsp),'AT'+IntToStr(Linha-1)] do
+      with ExcelWorkSheet.Range['AU'+IntToStr(LinIniEmbEsp),'AU'+IntToStr(Linha-1)] do
       begin
          MergeCells := True;
          HorizontalAlignment := xlCenter;
@@ -1122,7 +1126,7 @@ Var
       // Mesclar coluna Peso Líquido calculado para emb esp ?
       if (Mesclar = 'S') then
       begin
-         with ExcelWorkSheet.Range['AU'+IntToStr(LinIniEmbEsp),'AU'+IntToStr(Linha-1)] do
+         with ExcelWorkSheet.Range['AV'+IntToStr(LinIniEmbEsp),'AV'+IntToStr(Linha-1)] do
          begin
            MergeCells := True;
            HorizontalAlignment := xlCenter;
@@ -1131,7 +1135,7 @@ Var
            ShrinkToFit := False;
          end;
       end;
-      with ExcelWorkSheet.Range['AV'+IntToStr(LinIniEmbEsp),'AV'+IntToStr(Linha-1)] do
+      with ExcelWorkSheet.Range['AW'+IntToStr(LinIniEmbEsp),'AW'+IntToStr(Linha-1)] do
       begin
          MergeCells := True;
          HorizontalAlignment := xlCenter;
@@ -1139,7 +1143,7 @@ Var
          WrapText := True;
          ShrinkToFit := False;
       end;
-      with ExcelWorkSheet.Range['AW'+IntToStr(LinIniEmbEsp),'AW'+IntToStr(Linha-1)] do
+      with ExcelWorkSheet.Range['AX'+IntToStr(LinIniEmbEsp),'AX'+IntToStr(Linha-1)] do
       begin
          MergeCells := True;
          HorizontalAlignment := xlCenter;
@@ -1173,14 +1177,6 @@ Var
            EmbalagemEspecial(FieldByName('num_prod_list').AsInteger, FieldByName('seq_emb_esp').AsInteger);
 
         Next;
-      end;
-      with ExcelWorkSheet.Range['AI'+IntToStr(LinIniPallet),'AI'+IntToStr(Linha-1)] do
-      begin
-        MergeCells := True;
-        HorizontalAlignment := xlCenter;
-        VerticalAlignment := xlCenter;
-        WrapText := True;
-        ShrinkToFit := False;
       end;
       with ExcelWorkSheet.Range['AJ'+IntToStr(LinIniPallet),'AJ'+IntToStr(Linha-1)] do
       begin
@@ -1224,13 +1220,21 @@ Var
       end;
       with ExcelWorkSheet.Range['AO'+IntToStr(LinIniPallet),'AO'+IntToStr(Linha-1)] do
       begin
+        MergeCells := True;
+        HorizontalAlignment := xlCenter;
+        VerticalAlignment := xlCenter;
+        WrapText := True;
+        ShrinkToFit := False;
+      end;
+      with ExcelWorkSheet.Range['AP'+IntToStr(LinIniPallet),'AP'+IntToStr(Linha-1)] do
+      begin
        MergeCells := True;
        HorizontalAlignment := xlCenter;
        VerticalAlignment := xlCenter;
        WrapText := True;
        ShrinkToFit := False;
       end;
-      with ExcelWorkSheet.Range['AP'+IntToStr(LinIniPallet),'AP'+IntToStr(Linha-1)] do
+      with ExcelWorkSheet.Range['AQ'+IntToStr(LinIniPallet),'AQ'+IntToStr(Linha-1)] do
       begin
        MergeCells := True;
        HorizontalAlignment := xlCenter;
@@ -1241,7 +1245,7 @@ Var
       { alternar cores entre as embalagens }
       if (fPallet) then xlCorPallet := 44 else xlCorPallet := 45;
       fPallet := Not(fPallet);
-      with ExcelWorkSheet.Range['AI'+IntToStr(LinIniPallet),'AP'+IntToStr(Linha-1)] do
+      with ExcelWorkSheet.Range['AJ'+IntToStr(LinIniPallet),'AQ'+IntToStr(Linha-1)] do
       begin
         Interior.ColorIndex := xlCorPallet;
       end;
@@ -1261,6 +1265,7 @@ begin
   xlAmarelo := 6;
   xlRoxo := 7;
   xlCorFaturas := 8;
+  xlTurquesa := 8;
 
   Linha := pLinha;
 
@@ -1330,41 +1335,33 @@ begin
 
   { TOTAIS GERAL }
   Inc(Linha);
-  ExcelWorksheet.Range['H'+ inttostr(linha),'H'+inttostr(linha)].Value := 'TOTAL : ';
+  ExcelWorksheet.Range['I'+ inttostr(linha),'I'+inttostr(linha)].Value := 'TOTAL : ';
 
-  { T - TOTAL US$ }
-  with ExcelWorksheet.Range['T'+ inttostr(linha),'T'+inttostr(linha)] do
+  { TOTAL US$ }
+  with ExcelWorksheet.Range['U'+ inttostr(linha),'U'+inttostr(linha)] do
   begin
     NumberFormat := '#.##0,00';
-    Formula := '=ROUND(SUM(T'+IntTostr(pLinha)+':T'+IntTostr(Linha-1)+'),2)';
+    Formula := '=ROUND(SUM(U'+IntTostr(pLinha)+':U'+IntTostr(Linha-1)+'),2)';
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { V - TOTAL US$ ESPECIAL }
-  with ExcelWorksheet.Range['V'+ inttostr(linha),'V'+inttostr(linha)] do
-  begin
-    NumberFormat := '#.##0,00';
-    Formula := '=ROUND(SUM(V'+IntTostr(pLinha)+':V'+IntTostr(Linha-1)+'),2)';
-    Interior.ColorIndex := 0;
-    Font.ColorIndex := 0;
-  end;
-  { W - VOLUME TOTAL }
+  { TOTAL US$ ESPECIAL }
   with ExcelWorksheet.Range['W'+ inttostr(linha),'W'+inttostr(linha)] do
   begin
-    NumberFormat := VolumeNumberFormat;
-    Formula := '=ROUND(SUM(W'+IntTostr(pLinha)+':W'+IntTostr(Linha-1)+'),' + VolumeDecimaisTotal + ')';
+    NumberFormat := '#.##0,00';
+    Formula := '=ROUND(SUM(W'+IntTostr(pLinha)+':W'+IntTostr(Linha-1)+'),2)';
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { X - PESO BRUTO }
+  { VOLUME TOTAL }
   with ExcelWorksheet.Range['X'+ inttostr(linha),'X'+inttostr(linha)] do
   begin
-    NumberFormat := '#.##0,00';
-    Formula := '=ROUND(SUM(X'+IntTostr(pLinha)+':X'+IntTostr(Linha-1)+'),2)';
+    NumberFormat := VolumeNumberFormat;
+    Formula := '=ROUND(SUM(X'+IntTostr(pLinha)+':X'+IntTostr(Linha-1)+'),' + VolumeDecimaisTotal + ')';
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { Y - PESO LÍQUIDO }
+  { PESO BRUTO }
   with ExcelWorksheet.Range['Y'+ inttostr(linha),'Y'+inttostr(linha)] do
   begin
     NumberFormat := '#.##0,00';
@@ -1372,15 +1369,15 @@ begin
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { Z - QUANTIDADE DE CAIXAS DE EXPORTAÇÃO - STANDARD }
+  { PESO LÍQUIDO }
   with ExcelWorksheet.Range['Z'+ inttostr(linha),'Z'+inttostr(linha)] do
   begin
-    NumberFormat := '##.##0';
-    Formula := '=SUM(Z'+IntTostr(pLinha)+':Z'+IntTostr(Linha-1)+')';
+    NumberFormat := '#.##0,00';
+    Formula := '=ROUND(SUM(Z'+IntTostr(pLinha)+':Z'+IntTostr(Linha-1)+'),2)';
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { AA - CAIXAS ESPECIAIS }
+  { QUANTIDADE DE CAIXAS DE EXPORTAÇÃO - STANDARD }
   with ExcelWorksheet.Range['AA'+ inttostr(linha),'AA'+inttostr(linha)] do
   begin
     NumberFormat := '##.##0';
@@ -1388,24 +1385,24 @@ begin
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { Totais dos Pallets }
-  { AI - QUANTIDADE }
-  with ExcelWorksheet.Range['AI'+ inttostr(linha),'AI'+inttostr(linha)] do
+  { CAIXAS ESPECIAIS }
+  with ExcelWorksheet.Range['AB'+ inttostr(linha),'AB'+inttostr(linha)] do
   begin
     NumberFormat := '##.##0';
-    Formula := '=SUM(AI'+IntTostr(pLinha)+':AI'+IntTostr(Linha-1)+')';
+    Formula := '=SUM(AB'+IntTostr(pLinha)+':AB'+IntTostr(Linha-1)+')';
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { AK - PESO BRUTO }
-  with ExcelWorksheet.Range['AK'+ inttostr(linha),'AK'+inttostr(linha)] do
+  { Totais dos Pallets }
+  { QUANTIDADE }
+  with ExcelWorksheet.Range['AJ'+ inttostr(linha),'AJ'+inttostr(linha)] do
   begin
-    NumberFormat := '#.##0,00';
-    Formula := '=ROUND(SUM(AK'+IntTostr(pLinha)+':AK'+IntTostr(Linha-1)+'),2)';
+    NumberFormat := '##.##0';
+    Formula := '=SUM(AJ'+IntTostr(pLinha)+':AJ'+IntTostr(Linha-1)+')';
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { AL - PESO LÍQUIDO }
+  { PESO BRUTO }
   with ExcelWorksheet.Range['AL'+ inttostr(linha),'AL'+inttostr(linha)] do
   begin
     NumberFormat := '#.##0,00';
@@ -1413,49 +1410,57 @@ begin
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
-  { AP - VOLUME }
-  with ExcelWorksheet.Range['AP'+ inttostr(linha),'AP'+inttostr(linha)] do
+  { PESO LÍQUIDO }
+  with ExcelWorksheet.Range['AM'+ inttostr(linha),'AM'+inttostr(linha)] do
   begin
     NumberFormat := '#.##0,00';
-    Formula := '=ROUND(SUM(AP'+IntTostr(pLinha)+':AP'+IntTostr(Linha-1)+'),2)';
+    Formula := '=ROUND(SUM(AM'+IntTostr(pLinha)+':AM'+IntTostr(Linha-1)+'),2)';
+    Interior.ColorIndex := 0;
+    Font.ColorIndex := 0;
+  end;
+  { VOLUME }
+  with ExcelWorksheet.Range['AQ'+ inttostr(linha),'AQ'+inttostr(linha)] do
+  begin
+    NumberFormat := '#.##0,00';
+    Formula := '=ROUND(SUM(AQ'+IntTostr(pLinha)+':AQ'+IntTostr(Linha-1)+'),2)';
     Interior.ColorIndex := 0;
     Font.ColorIndex := 0;
   end;
   { Totais Calculados pelo sistema }
-  { AQ - TOTAL US$ - REAL }
-  with ExcelWorksheet.Range['AQ'+ inttostr(linha),'AQ'+inttostr(linha)] do
-  begin
-    Formula := '=ROUND(SUM(AQ'+IntTostr(pLinha)+':AQ'+IntTostr(Linha-1)+'),2)';
-    NumberFormat := '#.##0,00';
-  end;
-  { AR - TOTAL US$ - ESPECIAL }
+  { TOTAL US$ - REAL }
   with ExcelWorksheet.Range['AR'+ inttostr(linha),'AR'+inttostr(linha)] do
   begin
     Formula := '=ROUND(SUM(AR'+IntTostr(pLinha)+':AR'+IntTostr(Linha-1)+'),2)';
     NumberFormat := '#.##0,00';
   end;
-  { AS - TOTAL VOLUME IN M³ }
+  { TOTAL US$ - ESPECIAL }
   with ExcelWorksheet.Range['AS'+ inttostr(linha),'AS'+inttostr(linha)] do
   begin
-    Formula := '=ROUND(SUM(AS'+IntTostr(pLinha)+':AS'+IntTostr(Linha-1)+'),' + VolumeDecimaisTotal + ')';
-    NumberFormat := VolumeNumberFormat;
-  end;
-  { AT - TOTAL GROSS WEIGHT }
-  with ExcelWorksheet.Range['AT'+ inttostr(linha),'AT'+inttostr(linha)] do
-  begin
-    Formula := '=ROUND(SUM(AT'+IntTostr(pLinha)+':AT'+IntTostr(Linha-1)+'),2)';
+    Formula := '=ROUND(SUM(AS'+IntTostr(pLinha)+':AS'+IntTostr(Linha-1)+'),2)';
     NumberFormat := '#.##0,00';
   end;
-  { AU - TOTAL NET WEIGHT }
+  { TOTAL VOLUME IN M³ }
+  with ExcelWorksheet.Range['AT'+ inttostr(linha),'AT'+inttostr(linha)] do
+  begin
+    Formula := '=ROUND(SUM(AT'+IntTostr(pLinha)+':AT'+IntTostr(Linha-1)+'),' + VolumeDecimaisTotal + ')';
+    NumberFormat := VolumeNumberFormat;
+  end;
+  { TOTAL GROSS WEIGHT }
   with ExcelWorksheet.Range['AU'+ inttostr(linha),'AU'+inttostr(linha)] do
   begin
     Formula := '=ROUND(SUM(AU'+IntTostr(pLinha)+':AU'+IntTostr(Linha-1)+'),2)';
     NumberFormat := '#.##0,00';
   end;
-  { AV - TOTAL QUANTITY OF PACKINGS }
+  { TOTAL NET WEIGHT }
   with ExcelWorksheet.Range['AV'+ inttostr(linha),'AV'+inttostr(linha)] do
   begin
     Formula := '=ROUND(SUM(AV'+IntTostr(pLinha)+':AV'+IntTostr(Linha-1)+'),2)';
+    NumberFormat := '#.##0,00';
+  end;
+  { TOTAL QUANTITY OF PACKINGS }
+  with ExcelWorksheet.Range['AW'+ inttostr(linha),'AW'+inttostr(linha)] do
+  begin
+    Formula := '=ROUND(SUM(AW'+IntTostr(pLinha)+':AW'+IntTostr(Linha-1)+'),2)';
     NumberFormat := '##.##0';
   end;
 
@@ -1480,7 +1485,7 @@ begin
   LinhaFim := ExcelWorksheet.Cells.SpecialCells(xlLastCell,1).Row;
 
   { Limpar todas as linhas da planilha a partir da 7ª linha }
-  with ExcelWorksheet.Range['A7','AY' + IntToStr(LinhaFim)] do
+  with ExcelWorksheet.Range['A7','AZ' + IntToStr(LinhaFim)] do
   begin
     Clear;
     Interior.ColorIndex := 0;
@@ -1546,20 +1551,20 @@ begin
   LinhaFim := ExcelWorksheet.Cells.SpecialCells(xlLastCell,1).Row;
 
   { Mudar fonte a partir da linha 7 até o fim }
-  with ExcelWorksheet.Range['A7','AY' + IntToStr(LinhaFim)] do
+  with ExcelWorksheet.Range['A7','AZ' + IntToStr(LinhaFim)] do
   begin
     Font.Size := 8;
     Font.Name := 'Arial';
   end;
 
   { Mostrar/Esconder colunas para Pallets Packages }
-  with ExcelWorksheet.Range['AI' + IntToStr(Linha),'AP' + IntToStr(Linha)] do
+  with ExcelWorksheet.Range['AJ' + IntToStr(Linha),'AQ' + IntToStr(Linha)] do
   begin
     if (fPallet) then EntireColumn.Hidden := False
     else EntireColumn.Hidden := True;
   end;
   ExcelWorkSheet.Range['BB1','BD1'].EntireColumn.Hidden := True;
-  ExcelWorkSheet.Range['AJ1','AJ1'].EntireColumn.Hidden := True; // Peso pallets vazio
+  ExcelWorkSheet.Range['AK1','AK1'].EntireColumn.Hidden := True; // Peso pallets vazio
   ExcelWorkSheet.Range['E7','E7'].Select;
   ExcelApplication.ActiveWindow.FreezePanes := True;
 

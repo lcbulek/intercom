@@ -1,6 +1,6 @@
 object frmProductionList: TfrmProductionList
-  Left = 754
-  Top = 265
+  Left = 755
+  Top = 232
   HelpType = htKeyword
   HelpKeyword = '059'
   BorderIcons = [biSystemMenu]
@@ -404,6 +404,7 @@ object frmProductionList: TfrmProductionList
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = Prod_ListAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "prod_list"'
@@ -522,12 +523,16 @@ object frmProductionList: TfrmProductionList
   object QrAux: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     Left = 191
     Top = 76
   end
   object parametro_comercial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "parametro_comercial"'
       'where "cod_empresa" = :cod_empresa')
@@ -582,6 +587,7 @@ object frmProductionList: TfrmProductionList
     Transaction = dmConnection.TransSig
     AfterOpen = ProdutoEmbAfterOpen
     AfterPost = ProdutoEmbAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "produto"'
@@ -654,6 +660,7 @@ object frmProductionList: TfrmProductionList
     Transaction = dmConnection.TransSig
     AfterPost = EmbalagemEmbAfterPost
     BeforePost = EmbalagemEmbBeforePost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "embalagem"'
@@ -829,6 +836,7 @@ object frmProductionList: TfrmProductionList
     Transaction = dmConnection.TransSig
     AfterPost = Embalagem_HistAfterPost
     OnNewRecord = Embalagem_HistNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "embalagem_hist"'
@@ -1030,21 +1038,14 @@ object frmProductionList: TfrmProductionList
   object Clientes: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_cliente", "nom_cliente_reduz"'
       'from "cliente"'
-      'where "cod_cliente" in (select "cod_cliente"'
-      '                          from "usuario_cliente"'
-      '                         where "login" = :login)'
       'order by 1')
     Left = 24
     Top = 8
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'login'
-        ParamType = ptUnknown
-      end>
     object Clientescod_cliente: TIBStringField
       FieldName = 'cod_cliente'
       Origin = '"cliente"."cod_cliente"'
@@ -1061,6 +1062,8 @@ object frmProductionList: TfrmProductionList
   object Fornecedores: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."cod_fornecedor", c."raz_social_reduz"'
       'from "pedido" a, "pedido_complemento" b, "fornecedor" c'
@@ -1103,6 +1106,7 @@ object frmProductionList: TfrmProductionList
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = pedido_produtoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_produto"'
@@ -1408,6 +1412,8 @@ object frmProductionList: TfrmProductionList
   object ProxSequencia: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "pedido_produto" a'
@@ -1442,6 +1448,7 @@ object frmProductionList: TfrmProductionList
     Transaction = dmConnection.TransSig
     AfterDelete = prod_list_itensAfterDelete
     AfterPost = prod_list_itensAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "prod_list_itens"'
@@ -2029,6 +2036,8 @@ object frmProductionList: TfrmProductionList
   object spr_check_result: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_check_result"(:cod_empresa, :num_prod_list, :' +
@@ -2073,6 +2082,8 @@ object frmProductionList: TfrmProductionList
   object qryRomaneio: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "num_romaneio", "ies_situacao"'
       '  from "romaneio"'
@@ -2119,6 +2130,7 @@ object frmProductionList: TfrmProductionList
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     OnCalcFields = FaturasNovasPrlCalcFields
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "prod_list_itens"'
@@ -2258,6 +2270,7 @@ object frmProductionList: TfrmProductionList
   end
   object sqlMarcarFaturadas: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'update "prod_list_itens"'
       '   set "ies_sit_fat" = '#39'F'#39','
@@ -2300,6 +2313,8 @@ object frmProductionList: TfrmProductionList
   object ProdListEmbEsp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "prod_list_itens"                           '
       ' where "cod_empresa" = :cod_empresa                       '
@@ -2328,6 +2343,8 @@ object frmProductionList: TfrmProductionList
   object ProdListPallets: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "prod_list_itens"                           '
       ' where "cod_empresa" = :cod_empresa                       '
@@ -2356,6 +2373,8 @@ object frmProductionList: TfrmProductionList
   object Saldos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "spr_saldos_produtos"(:cod_empresa, :num_pedido, :' +
@@ -2424,6 +2443,8 @@ object frmProductionList: TfrmProductionList
   object Faturas: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."num_nota_fiscal", a."serie", a."dat_embarque"'
       'from  "nota_fiscal_saida" a, "nf_saida_complemento" b'
@@ -2464,6 +2485,8 @@ object frmProductionList: TfrmProductionList
   object qryNotaFiscal: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "num_nota_fiscal"'
       'from "nf_saida_complemento"'
@@ -2492,6 +2515,8 @@ object frmProductionList: TfrmProductionList
   object qryNotaFiscalProdutos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."num_nota_fiscal"'
       'from "nf_saida_complemento" a, "nota_fiscal_saida_produto" b'
@@ -2523,6 +2548,8 @@ object frmProductionList: TfrmProductionList
   object qryNumProdList: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX("num_prod_list") "num_prod_list"'
       'from "prod_list"'
@@ -2542,6 +2569,8 @@ object frmProductionList: TfrmProductionList
   object ProdListGrupos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "prod_list_itens"'
@@ -2577,6 +2606,7 @@ object frmProductionList: TfrmProductionList
   end
   object sqlDesagrupar: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       '  update "prod_list_itens"'
       '    set "grupo" = null,'
@@ -2598,6 +2628,7 @@ object frmProductionList: TfrmProductionList
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterPost = Produto_FaturaAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "nota_fiscal_saida_produto"'

@@ -903,7 +903,6 @@ procedure TfrmImportarPedidoCliente.FormShow(Sender: TObject);
 begin
   inherited;
   Panel1Enter(nil);
-  Clientes.ParamByName('login').Value := vgLogin;
   Clientes.Open;
   Fornecedores.Open;
   Fabricantes.Open;

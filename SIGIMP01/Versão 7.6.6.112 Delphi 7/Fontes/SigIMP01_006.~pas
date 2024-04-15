@@ -985,6 +985,8 @@ type
     procedure actHistPrecosExecute(Sender: TObject);
     procedure pedido_adic_descvlr_adic_descValidate(Sender: TField);
     procedure pedido_adic_descvlr_adic_desc_espValidate(Sender: TField);
+    procedure ExcelBorders(Col1, Col2: string; LinIni, LinFim: integer);
+    procedure PackagesInformation(Col1, Col2: String);
     procedure GerarPedido(Tipo: String);
     procedure GerarShipMarks;
     procedure actExcelGerarExecute(Sender: TObject);
@@ -1053,7 +1055,7 @@ var
   SavePlace: TBookmark; { salvar a posição na tabela de produtos }
   DocGerado, IdiomaExporter : String;
   fComissao : boolean;
-  Linha : Integer;
+  Linha, LinhaAux : Integer;
   mi : Integer;
 
   m : TMemo;
@@ -2227,6 +2229,173 @@ begin
    AbrirExcel(FileName, True);
 end;
 
+procedure Tfr_ManPedido.ExcelBorders(Col1, Col2: string; LinIni, LinFim: integer);
+begin
+   with ExcelWorkSheet.Range[Col1 + IntToStr(LinIni), Col2 + IntToStr(LinFim)] do
+   begin
+    with Borders[xlEdgeLeft] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeTop] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeBottom] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeRight] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    Borders[xlInsideVertical].LineStyle := xlNone;
+    Borders[xlInsideHorizontal].LineStyle := xlNone;
+    Borders[xlDiagonalDown].LineStyle := xlNone;
+    Borders[xlDiagonalUp].LineStyle := xlNone;
+    VerticalAlignment := xlTop;
+   end;
+end;
+
+procedure Tfr_ManPedido.PackagesInformation(Col1, Col2: String);
+begin
+   { PACKAGES INFORMATION }
+   LinhaAux := Linha;
+
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+      MergeCells := True;
+      if (IdiomaExporter= 'I') then
+      begin
+        Value := 'PACKAGES INFORMATION:'
+      end else if (IdiomaExporter= 'P') then
+      begin
+        Value := 'INFORMAÇÕES SOBRE EMBALAGENS:';
+      end else if (IdiomaExporter= 'E') then
+      begin
+        Value := 'INFORMACIONES SOBRE EMBALAJES:';
+      end;
+      Font.Bold := True;
+      Font.Name := 'Arial';
+      Font.Size := 10;
+      Interior.ColorIndex := 0;
+      Borders.LineStyle := xlContinuous;
+      HorizontalAlignment := xlCenter;
+      VerticalAlignment := xlCenter;
+   end;
+
+   { TOTAL VOLUME }
+   Inc(Linha);
+   s := '';
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        s := 'TOTAL VOLUME:'
+     else if (IdiomaExporter= 'P') then
+        s := 'VOLUME TOTAL:'
+     else if (IdiomaExporter= 'E') then
+        s := 'VOLUMEM TOTAL:';
+
+     s := s +  FormatFloat(VolumeNumberFormatTotal, Arredonda(pedido_complementovol_geral.AsFloat, -2, rmUp));
+     Value2 := s ;
+     Font.Name := 'Arial';
+     Font.Size := 10;
+     Font.Bold := True;
+     HorizontalAlignment := xlLeft;
+   end;
+
+   { TOTAL GROSS WEIGHT }
+   Inc(Linha);
+   s := '';
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        s := 'TOTAL GROSS WEIGHT:'
+     else if (IdiomaExporter= 'P') then
+        s := 'PESO BRUTO TOTAL:'
+     else if (IdiomaExporter= 'E') then
+        s := 'PESO BRUTO TOTAL:';
+
+     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_bru_geral.AsFloat);
+     Value2 := s ;
+     Font.Name := 'Arial';
+     Font.Bold := True;
+     Font.Size := 10;
+     HorizontalAlignment := xlLeft;
+   end;
+
+   { TOTAL NET WEIGHT }
+   Inc(Linha);
+   s := '';
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+        s := 'TOTAL NET WEIGHT:'
+     else if (IdiomaExporter= 'P') then
+        s := 'PESO LÍQUIDO TOTAL:'
+     else if (IdiomaExporter= 'E') then
+        s := 'PESO NETO TOTAL:';
+
+     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_liq_geral.AsFloat);
+     Value2 := s ;
+     Font.Name := 'Arial';
+     Font.Bold := True;
+     Font.Size := 10;
+     HorizontalAlignment := xlLeft;
+   end;
+
+   { QUANTITY OF CARTONS }
+   Inc(Linha);
+   s := '';
+   with ExcelWorkSheet.Range[Col1 + IntToStr(Linha), Col2 + IntToStr(Linha)] do
+   begin
+      MergeCells := True;
+      if (IdiomaExporter= 'I') then
+      begin
+         s := 'QUANTITY OF CARTONS:'
+      end else if (IdiomaExporter= 'P') then
+      begin
+         s := 'QUANTIDADE DE EMBALAGENS:'
+      end else if (IdiomaExporter= 'E') then
+      begin
+         s := 'CANTIDAD DE EMBALAJES:'
+      end;
+
+      if (qryPedidoies_pallets.Value = 'S') then
+      begin
+         if (pedido_complementocxs_outpallet.Value > 0) then
+            s := s + ' ' + FormatFloat(' #,##0', pedido_complementocxs_outpallet.Value) + ' CARTONS AND ';
+         s := s + FormatFloat('  #,##0', pedido_complementoqtd_pallets.Value) + ' PALLETS';
+      end else
+         s := s + FormatFloat('  #,##0', pedido_complementoqtd_caixas.value) + ' CARTONS';
+
+      Value2 := s;
+      Font.Bold := True;
+      Font.Name := 'Arial';
+      Font.Size := 10;
+      Interior.ColorIndex := 0;
+      Borders.LineStyle := xlNone;
+      HorizontalAlignment := xlLeft;
+      VerticalAlignment := xlTop;
+      WrapText := True;
+      ShrinkToFit := False;
+   end;
+
+   ExcelBorders(Col1, Col2, LinhaAux, Linha);
+
+end;
+
 procedure Tfr_ManPedido.GerarPedido(Tipo: String);
 Var
   DIR_PLANILHAS, PATH : String;
@@ -2591,206 +2760,15 @@ begin
 
    if (qryPedidoies_pallets.AsString = 'N') then s := 'S' else s := 'W';
 
-   with ExcelWorkSheet.Range['C' + IntToStr(LinhaAux),s + IntToStr(Linha)] do
-   begin
-      with Borders[xlInsideHorizontal] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlInsideVertical] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeLeft] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeTop] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeRight] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeBottom] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-   end;
+   ExcelBorders('C', s, LinhaAux, Linha);
+
    ExcelWorkSheet.Range['J' + IntToStr(LinhaAux),s + IntToStr(Linha)].HorizontalAlignment := xlCenter;
 
   { Totais Gerais }
   Linha := Linha + 2;
-  LinhaAux := Linha;
 
-   { PACKAGES INFORMATION }
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-      MergeCells := True;
-      if (IdiomaExporter= 'I') then
-      begin
-        Value := 'PACKAGES INFORMATION:'
-      end else if (IdiomaExporter= 'P') then
-      begin
-        Value := 'INFORMAÇÕES SOBRE EMBALAGENS:';
-      end else if (IdiomaExporter= 'E') then
-      begin
-        Value := 'INFORMACIONES SOBRE EMBALAJES:';
-      end;
-      Font.Bold := True;
-      Font.Name := 'Arial';
-      Font.Size := 10;
-      Interior.ColorIndex := 0;
-      Borders.LineStyle := xlContinuous;
-      HorizontalAlignment := xlCenter;
-      VerticalAlignment := xlCenter;
-   end;
-
-   { TOTAL VOLUME }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL VOLUME:'
-     else if (IdiomaExporter= 'P') then
-        s := 'VOLUME TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'VOLUMEM TOTAL:';
-
-     s := s +  FormatFloat(VolumeNumberFormatTotal, Arredonda(pedido_complementovol_geral.AsFloat, -2, rmUp));
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Size := 10;
-     Font.Bold := True;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { TOTAL GROSS WEIGHT }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL GROSS WEIGHT:'
-     else if (IdiomaExporter= 'P') then
-        s := 'PESO BRUTO TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'PESO BRUTO TOTAL:';
-
-     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_bru_geral.AsFloat);
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { TOTAL NET WEIGHT }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL NET WEIGHT:'
-     else if (IdiomaExporter= 'P') then
-        s := 'PESO LÍQUIDO TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'PESO NETO TOTAL:';
-
-     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_liq_geral.AsFloat);
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { QUANTITY OF CARTONS }
-   Inc(Linha);
-   s := '';
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
-   begin
-      MergeCells := True;
-      if (IdiomaExporter= 'I') then
-      begin
-         s := 'QUANTITY OF CARTONS:'
-      end else if (IdiomaExporter= 'P') then
-      begin
-         s := 'QUANTIDADE DE EMBALAGENS:'
-      end else if (IdiomaExporter= 'E') then
-      begin
-         s := 'CANTIDAD DE EMBALAJES:'
-      end;
-
-      if (qryPedidoies_pallets.Value = 'S') then
-      begin
-         if (pedido_complementocxs_outpallet.Value > 0) then
-            s := s + ' ' + FormatFloat(' #,##0', pedido_complementocxs_outpallet.Value) + ' CARTONS AND ';
-         s := s + FormatFloat('  #,##0', pedido_complementoqtd_pallets.Value) + ' PALLETS';
-      end else
-         s := s + FormatFloat('  #,##0', pedido_complementoqtd_caixas.value) + ' CARTONS';
-
-      Value2 := s;
-      Font.Bold := True;
-      Font.Name := 'Arial';
-      Font.Size := 10;
-      Interior.ColorIndex := 0;
-      Borders.LineStyle := xlNone;
-      HorizontalAlignment := xlLeft;
-      VerticalAlignment := xlTop;
-      WrapText := True;
-      ShrinkToFit := False;
-   end;
-
-  with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'C'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
+  { PACKAGES INFORMATION }
+  PackagesInformation('A', 'C');
 
    { Definir área de impressão }
    if (qryPedidoies_pallets.AsString = 'N') then
@@ -2869,6 +2847,12 @@ var
   ind : integer;
 
 begin
+   { Criar a página de CONDITIONS antes da página de SPECIFICATION }
+   WkBk.Worksheets.Add(WkBk.Worksheets['Specification'], EmptyParam, 1, EmptyParam, lcid);
+   ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
+   ExcelWorksheet.Activate(lcid);
+   ExcelWorksheet.Name := 'Conditions';
+
    { PÁGINA DAS CONDIÇÕES - CONDITIONS PAGE }
    Linha := 1;
 
@@ -2933,37 +2917,7 @@ begin
      if (Tipo = 'B') then Font.ColorIndex := 5;
    end;
 
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-   end;
+   ExcelBorders('A', 'J', Linha, Linha);
 
    Inc(Linha);
    Inc(Linha);
@@ -3034,38 +2988,7 @@ begin
    end;
    FreeAndNil(Endereco);
 
-   with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-   begin
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;                                                      
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
+   ExcelBorders('A', 'J', LinhaAux, Linha);
 
    { IMPORTER - Dados do Importador }
    Linha := Linha + 2;
@@ -3135,39 +3058,7 @@ begin
    end;
    FreeAndNil(Endereco);
 
-   with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-   begin
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
-
+   ExcelBorders('A', 'J', LinhaAux, Linha);
    { fim IMPORTER }
 
    { MANUFACTURER - Dados do Fabricante }
@@ -3200,7 +3091,7 @@ begin
       { Nome do Fabricante }
       with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
       begin
-        MergeCells := True;      
+        MergeCells := True;
         Value := Fabricantesnome.AsString;
         Font.Name := 'Arial';
         Font.Bold := True;
@@ -3239,38 +3130,7 @@ begin
       end;
       FreeAndNil(Endereco);
 
-      with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-      begin
-       with Borders[xlEdgeLeft] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeTop] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeBottom] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeRight] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       Borders[xlInsideVertical].LineStyle := xlNone;
-       Borders[xlInsideHorizontal].LineStyle := xlNone;
-       Borders[xlDiagonalDown].LineStyle := xlNone;
-       Borders[xlDiagonalUp].LineStyle := xlNone;
-       VerticalAlignment := xlTop;
-      end;
+      ExcelBorders('A', 'J', LinhaAux, Linha);
    end;
    { fim MANUFACTURER }
 
@@ -3460,44 +3320,8 @@ begin
       end;
     end;
    Linha := Linha2;
-   with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-   begin
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    with Borders[xlInsideHorizontal] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlThin;
-        ColorIndex := xlAutomatic;
-    end;
-    end;
-    VerticalAlignment := xlTop;
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-   end;
+
+   ExcelBorders('A', 'J', LinhaAux, Linha);
 
    Inc(Linha);
    Inc(Linha);
@@ -3541,38 +3365,8 @@ begin
      WrapText := True;
      ShrinkToFit := False;
    end;
-   with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha2)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
+
+   ExcelBorders('A', 'J', LinhaAux, Linha2);
 
    { TIPOS DOS PRODUTOS + NCMS }
    Linha := Linha2 + 2;
@@ -3603,44 +3397,14 @@ begin
    end;
    FreeAndNil(tncm);
    Dec(Linha);
-   with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
+
+   ExcelBorders('A', 'J', LinhaAux, Linha);
 
    Inc(Linha);
    Inc(Linha);
    with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha+1)] do
    begin
-     MergeCells := True;   
+     MergeCells := True;
      if (IdiomaExporter= 'I') then
      begin
        if qryPedidoies_tip_pedido.AsString = 'O' then { orçamento }
@@ -3675,197 +3439,12 @@ begin
      ShrinkToFit := False;
    end;
 
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha+1)] do
-   begin
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    VerticalAlignment := xlTop;
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-   end;
+   ExcelBorders('A', 'J', Linha, Linha+1);
 
    Linha := Linha + 3;
-   LinhaAux := Linha;
 
    { PACKAGES INFORMATION }
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-      MergeCells := True;   
-      if (IdiomaExporter= 'I') then
-      begin
-        Value := 'PACKAGES INFORMATION:'
-      end else if (IdiomaExporter= 'P') then
-      begin
-        Value := 'INFORMAÇÕES SOBRE EMBALAGENS:';
-      end else if (IdiomaExporter= 'E') then
-      begin
-        Value := 'INFORMACIONES SOBRE EMBALAJES:';
-      end;
-      Font.Bold := True;
-      Font.Name := 'Arial';
-      Font.Size := 10;
-      Interior.ColorIndex := 0;
-      Borders.LineStyle := xlContinuous;
-      HorizontalAlignment := xlCenter;
-      VerticalAlignment := xlCenter;
-   end;
-
-   { TOTAL VOLUME }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     MergeCells := True;   
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL VOLUME:'
-     else if (IdiomaExporter= 'P') then
-        s := 'VOLUME TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'VOLUMEN TOTAL:';
-
-     s := s +  FormatFloat(VolumeNumberFormatTotal, Arredonda(pedido_complementovol_geral.AsFloat, -2, rmUp));
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Size := 10;
-     Font.Bold := True;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { TOTAL GROSS WEIGHT }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL GROSS WEIGHT:'
-     else if (IdiomaExporter= 'P') then
-        s := 'PESO BRUTO TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'PESO BRUTO TOTAL:';
-
-     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_bru_geral.AsFloat);
-     MergeCells := True;     
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { TOTAL NET WEIGHT }
-   Inc(Linha);
-   s := '';
-   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     if (IdiomaExporter= 'I') then
-        s := 'TOTAL NET WEIGHT:'
-     else if (IdiomaExporter= 'P') then
-        s := 'PESO LÍQUIDO TOTAL:'
-     else if (IdiomaExporter= 'E') then
-        s := 'PESO NETO TOTAL:';
-
-     s := s + FormatFloat('  #,##0.00 Kg', pedido_complementopes_liq_geral.AsFloat);
-     MergeCells := True;
-     Value2 := s ;
-     Font.Name := 'Arial';
-     Font.Bold := True;
-     Font.Size := 10;
-     HorizontalAlignment := xlLeft;
-   end;
-
-   { QUANTITY OF CARTONS }
-   Inc(Linha);
-   s := '';
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-      if (IdiomaExporter= 'I') then
-      begin
-         s := 'QUANTITY OF CARTONS:'
-      end else if (IdiomaExporter= 'P') then
-      begin
-         s := 'QUANTIDADE DE EMBALAGENS:'
-      end else if (IdiomaExporter= 'E') then
-      begin
-         s := 'CANTIDAD DE EMBALAJES:'
-      end;
-
-      if (qryPedidoies_pallets.Value = 'S') then
-      begin
-         if (pedido_complementocxs_outpallet.Value > 0) then
-            s := s + ' ' + FormatFloat(' #,##0', pedido_complementocxs_outpallet.Value) + ' CARTONS AND ';
-         s := s + FormatFloat('  #,##0', pedido_complementoqtd_pallets.Value) + ' PALLETS';
-      end else
-         s := s + FormatFloat('  #,##0', pedido_complementoqtd_caixas.value) + ' CARTONS';
-
-      MergeCells := True;         
-      Value2 := s;
-      Font.Bold := True;
-      Font.Name := 'Arial';
-      Font.Size := 10;
-      Interior.ColorIndex := 0;
-      Borders.LineStyle := xlNone;
-      HorizontalAlignment := xlLeft;
-      VerticalAlignment := xlTop;
-      WrapText := True;
-      ShrinkToFit := False;
-   end;
-
-  with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
+   PackagesInformation('A', 'J');
 
    { início - CONTAINERS }
    Inc(Linha);
@@ -3914,6 +3493,31 @@ begin
      ShrinkToFit := False;
    end;
    {fim }
+
+   Inc(Linha);
+
+   { início }
+   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+   begin
+     MergeCells := True;
+     if (IdiomaExporter= 'I') then
+     begin
+        FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
+        Characters[1,15].Font.Bold := True;
+        Characters[16,10].Font.Bold := False;
+     end else if (IdiomaExporter= 'P') then
+     begin
+        FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
+        Characters[1,21].Font.Bold := True;
+        Characters[22,10].Font.Bold := False;
+     end else if (IdiomaExporter= 'E') then begin
+        FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
+        Characters[1,22].Font.Bold := True;
+        Characters[23,10].Font.Bold := False;
+     end;
+     Font.Name := 'Arial';
+     Font.Size := 9;
+   end;
 
    Inc(Linha);
 
@@ -4176,38 +3780,7 @@ begin
      ShrinkToFit := False;
    end;
 
-  with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlContinuous;
-    Borders[xlInsideHorizontal].LineStyle := xlContinuous;
-    VerticalAlignment := xlTop;
-   end;
+   ExcelBorders('A', 'J', LinhaAux, Linha);
 
    { início }
    Linha := Linha + 1;
@@ -4260,38 +3833,9 @@ begin
      HorizontalAlignment := xlLeft;
      ShrinkToFit := False;
    end;
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha1),'J'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlContinuous;
-    Borders[xlInsideHorizontal].LineStyle := xlContinuous;
-    VerticalAlignment := xlTop;
-   end;
+
+   ExcelBorders('A', 'J', Linha1, Linha);
+
    inc(Linha);
    Linha1 := Linha;
 
@@ -4499,74 +4043,14 @@ begin
      ShrinkToFit := False;
    end;
 
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha1),'E'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
-   with ExcelWorkSheet.Range['F'+IntToStr(Linha1),'J'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
-   // fim Shipping Marks
+   ExcelBorders('A', 'E', Linha1, Linha);
+   ExcelBorders('F', 'J', Linha1, Linha);
+
+   { fim Shipping Marks }
 
    Linha := Linha + 2;
    LinhaAux := Linha;
+   
    { INFORMAÇÕES PARA PAGAMENTO }
    with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
    begin
@@ -4662,15 +4146,6 @@ begin
    end;
    FreeAndNil(Endereco);
 
-   with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-   begin
-     with Borders[xlEdgeBottom] do
-     begin
-        LineStyle := xlContinuous;
-        Weight := xlThin;
-        ColorIndex := xlAutomatic;
-     end;
-   end;
    { Informações Bancárias }
    Bank := TStringList.Create;
    Bank.Text := Bancotxt_descricao.AsString;
@@ -4698,40 +4173,10 @@ begin
    end;
    FreeAndNil(Bank);
 
-  with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
-   begin
-    Borders[xlDiagonalDown].LineStyle := xlNone;
-    Borders[xlDiagonalUp].LineStyle := xlNone;
-    with Borders[xlEdgeLeft] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeTop] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeBottom] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    with Borders[xlEdgeRight] do
-    begin
-        LineStyle := xlContinuous;
-        Weight := xlMedium;
-        ColorIndex := xlAutomatic;
-    end;
-    Borders[xlInsideVertical].LineStyle := xlNone;
-    Borders[xlInsideHorizontal].LineStyle := xlNone;
-    VerticalAlignment := xlTop;
-   end;
+   ExcelBorders('A', 'J', LinhaAux, Linha);
 
    Linha := Linha + 1;
+
    { ajustar propriedades para impressão da página de condições }
    ExcelWorksheet.PageSetup.PrintArea := '$A$1:$J$'+IntToStr(Linha);
    with ExcelWorksheet.PageSetup do
@@ -4876,14 +4321,6 @@ begin
    end;
 
    EspecificationPage(Tipo);
-
-   { Criar a página de CONDITIONS antes da página de SPECIFICATION }
-   WkBk.Worksheets.Add(WkBk.Worksheets['Specification'], EmptyParam, 1, EmptyParam, lcid);
-   ExcelWorksheet.ConnectTo(WkBk.Worksheets[1] as _Worksheet);
-   ExcelWorksheet.Activate(lcid);
-   ExcelWorksheet.Name := 'Conditions';
-
-   { Página das Condições para Pedidos e Confirmações }
    ConditionPage(Tipo);
 
    { Salvar a planilha }
@@ -5403,7 +4840,7 @@ Var
 begin
   IdiomaImporter := Importadoridioma_shipmarks.Value;
 
-  Linha := 23;
+  Linha := 24;
 
   with produtos_xls do
   begin
@@ -5636,70 +5073,9 @@ begin
      end;
 
      { bordas }
-     with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'A'+IntToStr(Linha)] do
-     begin
-      Borders[xlDiagonalDown].LineStyle := xlNone;
-      Borders[xlDiagonalUp].LineStyle := xlNone;
-      with Borders[xlEdgeLeft] do
-      begin
-          LineStyle := xlContinuous;
-          Weight := xlMedium;
-          ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeTop] do
-      begin
-          LineStyle := xlContinuous;
-          Weight := xlMedium;
-          ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeBottom] do
-      begin
-          LineStyle := xlContinuous;
-          Weight := xlMedium;
-          ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeRight] do
-      begin
-          LineStyle := xlContinuous;
-          Weight := xlMedium;
-          ColorIndex := xlAutomatic;
-      end;
-      Borders[xlInsideVertical].LineStyle := xlNone;
-      Borders[xlInsideHorizontal].LineStyle := xlNone;
-      VerticalAlignment := xlTop;
-     end;
-     with ExcelWorkSheet.Range['C'+IntToStr(LinhaAux),'C'+IntToStr(Linha)] do
-     begin
-      Borders[xlDiagonalDown].LineStyle := xlNone;
-      Borders[xlDiagonalUp].LineStyle := xlNone;
-      with Borders[xlEdgeLeft] do
-      begin
-          LineStyle := xlContinuous;
-          Weight := xlMedium;
-          ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeTop] do
-      begin
-          LineStyle := xlContinuous;
-          Weight := xlMedium;
-          ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeBottom] do
-      begin
-          LineStyle := xlContinuous;
-          Weight := xlMedium;
-          ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeRight] do
-      begin
-          LineStyle := xlContinuous;
-          Weight := xlMedium;
-          ColorIndex := xlAutomatic;                                       
-      end;
-      Borders[xlInsideVertical].LineStyle := xlNone;
-      Borders[xlInsideHorizontal].LineStyle := xlNone;
-      VerticalAlignment := xlTop;
-     end;
+     ExcelBorders('A', 'A', LinhaAux, Linha);
+     ExcelBorders('C', 'C', LinhaAux, Linha);
+
      Inc(Linha);
      Next;
    end;
@@ -5707,7 +5083,7 @@ begin
   end;
 
   { Congelar Painéis }
-  ExcelWorkSheet.Range['A23','A23'].Select;
+  ExcelWorkSheet.Range['A24','A24'].Select;
   ExcelApplication.ActiveWindow.FreezePanes := True;
 end;
 
@@ -6045,80 +5421,10 @@ begin
 
        {bordas desde o cabeçalho até ultima linha}
        if (qryPedidoies_pallets.AsString = 'S') then
-       begin
-         with ExcelWorkSheet.Range['A' + IntToStr(Linha),'W' + IntToStr(Linha)] do
-         begin
-             Font.Name := 'Arial';
-             Font.Size := 10;
-             with Borders[xlInsideVertical] do
-             begin
-                LineStyle := xlContinuous;
-                Weight := xlThin;
-                ColorIndex := xlAutomatic;
-             end;
-             with Borders[xlEdgeTop] do
-             begin
-                LineStyle := xlContinuous;
-                Weight := xlThin;
-                ColorIndex := xlAutomatic;
-             end;
-             with Borders[xlEdgeRight] do
-             begin
-                LineStyle := xlContinuous;
-                Weight := xlThin;
-                ColorIndex := xlAutomatic;
-             end;
-             with Borders[xlEdgeLeft] do
-             begin
-                LineStyle := xlContinuous;
-                Weight := xlThin;
-                ColorIndex := xlAutomatic;
-             end;
-             with Borders[xlEdgeBottom] do
-             begin
-                LineStyle := xlContinuous;
-                Weight := xlThin;
-                ColorIndex := xlAutomatic;
-             end;
-         end;
-       end else
-       begin
-        with ExcelWorkSheet.Range['A' + IntToStr(Linha),'S' + IntToStr(Linha)] do
-        begin
-            Font.Name := 'Arial';
-            Font.Size := 10;
-            with Borders[xlInsideVertical] do
-            begin
-               LineStyle := xlContinuous;
-               Weight := xlThin;
-               ColorIndex := xlAutomatic;
-            end;
-            with Borders[xlEdgeTop] do
-            begin
-               LineStyle := xlContinuous;
-               Weight := xlThin;
-               ColorIndex := xlAutomatic;
-            end;
-            with Borders[xlEdgeRight] do
-            begin
-               LineStyle := xlContinuous;
-               Weight := xlThin;
-               ColorIndex := xlAutomatic;
-            end;
-            with Borders[xlEdgeLeft] do
-            begin
-               LineStyle := xlContinuous;
-               Weight := xlThin;
-               ColorIndex := xlAutomatic;
-            end;
-            with Borders[xlEdgeBottom] do
-            begin
-               LineStyle := xlContinuous;
-               Weight := xlThin;
-               ColorIndex := xlAutomatic;
-            end;
-        end;
-       end;
+         ExcelBorders('A', 'W', Linha, Linha)
+       else
+         ExcelBorders('A', 'S', Linha, Linha);
+
        ExcelWorkSheet.Range['C' + IntToStr(Linha),'C' + IntToStr(Linha)].Font.Size := 8;
        ExcelWorkSheet.Range['H' + IntToStr(Linha),'H' + IntToStr(Linha)].Font.Size := 8;
      Next;
@@ -7220,46 +6526,7 @@ begin
     end;
 
     { Bordas na área ocupada da planilha }
-    with ExcelWorkSheet.Range['A'+IntToStr(LinAux),'I' + IntToStr(Linha)] do
-    begin
-     with Borders[xlInsideVertical] do
-     begin
-        LineStyle := xlContinuous;
-        Weight := xlThin;
-        ColorIndex := xlAutomatic;
-     end;
-     with Borders[xlInsideHorizontal] do
-     begin
-        LineStyle := xlContinuous;
-        Weight := xlThin;
-        ColorIndex := xlAutomatic;
-     end;
-     with Borders[xlEdgeTop] do
-     begin
-        LineStyle := xlContinuous;
-        Weight := xlThin;
-        ColorIndex := xlAutomatic;
-     end;
-     with Borders[xlEdgeRight] do
-     begin
-        LineStyle := xlContinuous;
-        Weight := xlThin;
-        ColorIndex := xlAutomatic;
-     end;
-     with Borders[xlEdgeLeft] do
-     begin
-        LineStyle := xlContinuous;
-        Weight := xlThin;
-        ColorIndex := xlAutomatic;
-     end;
-     with Borders[xlEdgeBottom] do
-     begin
-        LineStyle := xlContinuous;
-        Weight := xlThin;
-        ColorIndex := xlAutomatic;
-     end;
-     Font.Size := 8;
-    end;
+    ExcelBorders('A', 'I', LinhaAux, Linha);
   end;
 end;
 
@@ -7438,45 +6705,7 @@ begin
     AtualizarItensExcel(ProdutosExcelAlteracao, Linha);
 
     { Bordas na área ocupada da planilha }
-    with ExcelWorkSheet.Range['A4', 'AU' + IntToStr(Linha)] do
-    begin
-      with Borders[xlInsideVertical] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlInsideHorizontal] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeTop] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeRight] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeLeft] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeBottom] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-    end;
+    ExcelBorders('A', 'AU', 4, Linha);
 
     GerarAdicionaisDescontos;
   end;
@@ -8483,46 +7712,8 @@ begin
   end;
 
   { Bordas na área ocupada da planilha }
-  with ExcelWorkSheet.Range['A4','AU' + IntToStr(Linha)] do
-  begin
-   with Borders[xlInsideVertical] do
-   begin
-      LineStyle := xlContinuous;
-      Weight := xlThin;
-      ColorIndex := xlAutomatic;
-   end;
-   with Borders[xlInsideHorizontal] do
-   begin
-      LineStyle := xlContinuous;
-      Weight := xlThin;
-      ColorIndex := xlAutomatic;
-   end;
-   with Borders[xlEdgeTop] do
-   begin
-      LineStyle := xlContinuous;
-      Weight := xlThin;
-      ColorIndex := xlAutomatic;
-   end;
-   with Borders[xlEdgeRight] do
-   begin
-      LineStyle := xlContinuous;
-      Weight := xlThin;
-      ColorIndex := xlAutomatic;
-   end;
-   with Borders[xlEdgeLeft] do
-   begin
-      LineStyle := xlContinuous;
-      Weight := xlThin;
-      ColorIndex := xlAutomatic;
-   end;
-   with Borders[xlEdgeBottom] do
-   begin
-      LineStyle := xlContinuous;
-      Weight := xlThin;
-      ColorIndex := xlAutomatic;
-   end;
-   Font.Size := 8;
-  end;
+  ExcelBorders('A', 'AU', 4, Linha);
+
   { DESCONTOS E ADICIONAIS }
   Tbr := '=F'+IntToStr(Linha);
   Tbe := '=I'+IntToStr(Linha);
@@ -9793,40 +8984,8 @@ Var
          end;
       end;
 
-      { formatar linhas dos itens }
-      with ExcelWorkSheet.Range['A' + IntToStr(Linha), 'AU' + IntToStr(Linha)] do
-      begin
-          with Borders[xlInsideVertical] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-          with Borders[xlEdgeTop] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-          with Borders[xlEdgeRight] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-          with Borders[xlEdgeLeft] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-          with Borders[xlEdgeBottom] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-      end;
+      { bordas }
+      ExcelBorders('A', 'AU', Linha, Linha);
     end; { with DataSetItem do ... }
     Inc(Linha);
   end;
@@ -10552,41 +9711,9 @@ Var
         Value := emb_padraopes_unit_prod.AsFloat;
       end;
 
-      { formatar linhas dos itens }
-      with ExcelWorkSheet.Range['A' + IntToStr(Linha), 'Y' + IntToStr(Linha)] do
-      begin
-          with Borders[xlInsideVertical] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-          with Borders[xlEdgeTop] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-          with Borders[xlEdgeRight] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-          with Borders[xlEdgeLeft] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-          with Borders[xlEdgeBottom] do
-          begin
-             LineStyle := xlContinuous;
-             Weight := xlThin;
-             ColorIndex := xlAutomatic;
-          end;
-      end;
-    end; { with DataSetItem do ... }                                
+      { Bordas }
+      ExcelBorders('A', 'Y', Linha, Linha);
+    end; { with DataSetItem do ... }
     Inc(Linha);
   end;
 
@@ -10682,46 +9809,8 @@ begin
     ExcelWorksheet.Range['E' + IntToStr(Linha),'G' + IntToStr(Linha)].Interior.ColorIndex := 35;
     ExcelWorksheet.Range['H' + IntToStr(Linha),'J' + IntToStr(Linha)].Interior.ColorIndex := 07;
 
-   { Bordas no cabeçalho }
-   with ExcelWorkSheet.Range['A' + IntToStr(Linha),'Y' + IntToStr(LinhaAux)] do
-   begin
-      with Borders[xlInsideVertical] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeTop] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeRight] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeLeft] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      with Borders[xlEdgeBottom] do
-      begin
-         LineStyle := xlContinuous;
-         Weight := xlThin;
-         ColorIndex := xlAutomatic;
-      end;
-      Font.Size := 8;
-      HorizontalAlignment := xlCenter;
-      VerticalAlignment := xlCenter;
-      WrapText := True;
-      ShrinkToFit := False;
-      Font.Bold := True;
-    end;
+    { Bordas no cabeçalho }
+    ExcelBorders('A', 'Y', Linha, LinhaAux);
 
     Inc(Linha);
 

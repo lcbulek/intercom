@@ -1,6 +1,6 @@
 object fr_ManPedido: Tfr_ManPedido
-  Left = 386
-  Top = 204
+  Left = 8
+  Top = 25
   HelpType = htKeyword
   HelpKeyword = '006'
   AutoScroll = False
@@ -1759,9 +1759,9 @@ object fr_ManPedido: Tfr_ManPedido
           end
         end
         object ToolBar1: TToolBar
-          Left = 658
+          Left = 660
           Top = 0
-          Width = 684
+          Width = 682
           Height = 42
           Align = alRight
           AutoSize = True
@@ -1826,7 +1826,7 @@ object fr_ManPedido: Tfr_ManPedido
             Style = tbsDropDown
           end
           object ToolButton1: TToolButton
-            Left = 502
+            Left = 500
             Top = 0
             Width = 8
             Caption = 'ToolButton1'
@@ -1834,12 +1834,12 @@ object fr_ManPedido: Tfr_ManPedido
             Style = tbsSeparator
           end
           object ToolButton6: TToolButton
-            Left = 510
+            Left = 508
             Top = 0
             Action = actHistPrecos
           end
           object ToolButton10: TToolButton
-            Left = 589
+            Left = 587
             Top = 0
             Width = 8
             Caption = 'ToolButton10'
@@ -1847,7 +1847,7 @@ object fr_ManPedido: Tfr_ManPedido
             Style = tbsSeparator
           end
           object btnValidar: TToolButton
-            Left = 597
+            Left = 595
             Top = 0
             Action = actValidar
           end
@@ -2003,9 +2003,9 @@ object fr_ManPedido: Tfr_ManPedido
           end
           object DBNavigator2: TDBNavigator
             Left = 791
-            Top = 107
+            Top = 104
             Width = 160
-            Height = 19
+            Height = 18
             DataSource = ds_pedido_pagamento
             VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast, nbInsert, nbDelete, nbPost, nbCancel]
             TabOrder = 7
@@ -3627,6 +3627,8 @@ object fr_ManPedido: Tfr_ManPedido
     OnNewRecord = qryPedidoNewRecord
     OnPostError = qryPedidoDeleteError
     OnUpdateError = qryPedidoUpdateError
+    BufferChunks = 1000
+    CachedUpdates = False
     DeleteSQL.Strings = (
       'delete from "pedido"'
       'where'
@@ -3798,7 +3800,6 @@ object fr_ManPedido: Tfr_ManPedido
       FieldName = 'cod_moeda'
       Origin = '"pedido"."cod_moeda"'
       Required = True
-      OnValidate = qryPedidocod_moedaValidate
     end
     object qryPedidoies_situacao: TIBStringField
       DisplayLabel = 'Situa'#231#227'o'
@@ -4072,6 +4073,8 @@ object fr_ManPedido: Tfr_ManPedido
     Transaction = dmConnection.TransSig
     AfterClose = clienteAfterClose
     AfterScroll = clienteAfterScroll
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."cod_cliente", a."nom_cliente", a."mas_cod_produto", a.' +
@@ -4118,6 +4121,8 @@ object fr_ManPedido: Tfr_ManPedido
   object qryVendedor: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_vendedor", "nom_vendedor", "cnpj", "ies_situacao"'
       'from "vendedor"')
@@ -4182,6 +4187,7 @@ object fr_ManPedido: Tfr_ManPedido
     OnNewRecord = qryPedidoProdutoNewRecord
     OnPostError = qryPedidoDeleteError
     OnUpdateError = qryPedidoUpdateError
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_produto"'
@@ -4781,6 +4787,8 @@ object fr_ManPedido: Tfr_ManPedido
   object qryProduto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select'
       '  a."cod_produto",'
@@ -4859,6 +4867,8 @@ object fr_ManPedido: Tfr_ManPedido
   object cliente_endereco: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select b."cod_unidade_federativa"'
       'from "cliente_endereco" a'
@@ -4882,6 +4892,8 @@ object fr_ManPedido: Tfr_ManPedido
   object cliente_contato: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_contato", a."nom_contato"'
       'from "cliente_contato" a'
@@ -4912,6 +4924,8 @@ object fr_ManPedido: Tfr_ManPedido
   object qryMoeda: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_moeda", "den_moeda"'
       'from "moeda"'
@@ -4935,6 +4949,8 @@ object fr_ManPedido: Tfr_ManPedido
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = FornecedorBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."cod_fornecedor", a."raz_social_reduz", a."ies_idioma",' +
@@ -4944,9 +4960,6 @@ object fr_ManPedido: Tfr_ManPedido
       '        b."cod_empresa" = :cod_empresa'
       '    and b."ies_situacao" = '#39'A'#39
       '    and b."cod_fornecedor" = a."cod_fornecedor"'
-      '    and b."cod_cliente" in (select "cod_cliente"'
-      '                              from "usuario_cliente"'
-      '                             where "login" = :login)'
       'group by 1,2,3,4'
       'order by 2')
     Left = 530
@@ -4955,11 +4968,6 @@ object fr_ManPedido: Tfr_ManPedido
       item
         DataType = ftUnknown
         Name = 'cod_empresa'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftUnknown
-        Name = 'login'
         ParamType = ptUnknown
       end>
     object Fornecedorcod_fornecedor: TSmallintField
@@ -4994,6 +5002,8 @@ object fr_ManPedido: Tfr_ManPedido
   object produtos_xls: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."cod_produto", a."vlr_unitario",'
       '       MIN(a."num_sequencia") "num_sequencia",'
@@ -5031,6 +5041,8 @@ object fr_ManPedido: Tfr_ManPedido
   object embalagem: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_calc_embalagem"(:cod_empresa, :cod_produto, :' +
@@ -5177,6 +5189,8 @@ object fr_ManPedido: Tfr_ManPedido
   object Exportador: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_fornecedor", "raz_social", "raz_social_reduz",'
       '       "pais_origem", "pais_aquisicao", "pais_procedencia",'
@@ -5233,6 +5247,8 @@ object fr_ManPedido: Tfr_ManPedido
   object Importador: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "nom_cliente", "endereco", "idioma_shipmarks"'
       'from "cliente"'
@@ -5267,6 +5283,8 @@ object fr_ManPedido: Tfr_ManPedido
   object grupo_produto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a."den_gru_produto", a."den_gru_produto_ing"'
       'from "grupo_produto" a'
@@ -5325,6 +5343,8 @@ object fr_ManPedido: Tfr_ManPedido
     AfterPost = pedido_complementoAfterPost
     BeforeOpen = pedido_complementoBeforeOpen
     OnNewRecord = pedido_complementoNewRecord
+    BufferChunks = 1000
+    CachedUpdates = False
     DeleteSQL.Strings = (
       'delete from "pedido_complemento"'
       'where'
@@ -5664,6 +5684,8 @@ object fr_ManPedido: Tfr_ManPedido
   object portos_embarque: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "portos"'
       'where "ies_tipo" = '#39'E'#39
@@ -5692,6 +5714,8 @@ object fr_ManPedido: Tfr_ManPedido
   object portos_desembarque: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "portos"'
       'where "ies_tipo" = '#39'D'#39
@@ -5720,6 +5744,8 @@ object fr_ManPedido: Tfr_ManPedido
   object condicao_venda: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "condicao_venda"')
     Left = 500
@@ -5744,6 +5770,8 @@ object fr_ManPedido: Tfr_ManPedido
   object ProxSequencia: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "pedido_produto" a'
@@ -5772,6 +5800,7 @@ object fr_ManPedido: Tfr_ManPedido
     AfterDelete = pedido_containerAfterDelete
     AfterPost = pedido_containerAfterPost
     OnNewRecord = pedido_containerNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_container"'
@@ -5904,6 +5933,8 @@ object fr_ManPedido: Tfr_ManPedido
   object Containers: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "containers"')
     Left = 93
@@ -5972,6 +6003,8 @@ object fr_ManPedido: Tfr_ManPedido
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     BeforeOpen = BancoBeforeOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_banco", "nom_banco", "txt_descricao"'
       'from "banco"'
@@ -6006,6 +6039,8 @@ object fr_ManPedido: Tfr_ManPedido
   object del_pedido_produto: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'delete from "pedido_produto"'
       'where'
@@ -6032,6 +6067,7 @@ object fr_ManPedido: Tfr_ManPedido
     AfterPost = emb_especial_pedAfterPost
     AfterScroll = emb_especial_pedAfterScroll
     BeforeDelete = emb_especial_pedBeforeDelete
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "emb_especial_ped"'
@@ -6212,6 +6248,7 @@ object fr_ManPedido: Tfr_ManPedido
     AfterDelete = emb_especial_item_pedAfterDelete
     AfterPost = emb_especial_item_pedAfterPost
     OnCalcFields = emb_especial_item_pedCalcFields
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "emb_especial_item_ped"'
@@ -6333,6 +6370,8 @@ object fr_ManPedido: Tfr_ManPedido
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterOpen = PagamentoAfterOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "pagamento"'
       'order by "den_pagamento"')
@@ -6358,6 +6397,7 @@ object fr_ManPedido: Tfr_ManPedido
     AfterPost = pedido_pagamentoAfterPost
     BeforeDelete = pedido_pagamentoBeforeDelete
     OnNewRecord = pedido_pagamentoNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_pagamento"'
@@ -6502,6 +6542,7 @@ object fr_ManPedido: Tfr_ManPedido
     BeforePost = pedido_adic_descBeforePost
     OnCalcFields = pedido_adic_descCalcFields
     OnNewRecord = pedido_adic_descNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_adic_desc"'
@@ -6634,6 +6675,8 @@ object fr_ManPedido: Tfr_ManPedido
   object SeqPedidoPagamento: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "pedido_pagamento" a'
@@ -6659,6 +6702,8 @@ object fr_ManPedido: Tfr_ManPedido
   object SeqPedidoAdicDesc: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "pedido_adic_desc" a'
@@ -6684,6 +6729,8 @@ object fr_ManPedido: Tfr_ManPedido
   object qryAdicDesc: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "pedido_adic_desc" a'
       'where a."cod_empresa" = :cod_empresa'
@@ -6736,6 +6783,8 @@ object fr_ManPedido: Tfr_ManPedido
   object cby_pedido_pagamento_totais: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_pedido_pagamento_totais"(:cod_empresa, :num_p' +
@@ -6808,6 +6857,7 @@ object fr_ManPedido: Tfr_ManPedido
     AfterPost = PedidoProdutoImpAfterPost
     BeforePost = qryPedidoProdutoBeforePost
     OnNewRecord = qryPedidoProdutoNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "pedido_produto"'
@@ -7245,6 +7295,8 @@ object fr_ManPedido: Tfr_ManPedido
   object ItensPedidoFatura: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select b."num_nota_fiscal", b."num_fatura", a."num_sequencia",  ' +
@@ -7343,6 +7395,7 @@ object fr_ManPedido: Tfr_ManPedido
     Transaction = dmConnection.TransSig
     AfterDelete = nota_fiscal_saida_produtoAfterDelete
     AfterPost = nota_fiscal_saida_produtoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "nota_fiscal_saida_produto"'
@@ -7672,6 +7725,8 @@ object fr_ManPedido: Tfr_ManPedido
   object ProxSequenciaNF: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select MAX(a."num_sequencia") + 1 "prox_sequencia"'
       'from "nota_fiscal_saida_produto" a'
@@ -7703,6 +7758,8 @@ object fr_ManPedido: Tfr_ManPedido
   object ProdutosExcelAlteracao: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a.*'
       '  from "pedido_produto" a'
@@ -8015,6 +8072,7 @@ object fr_ManPedido: Tfr_ManPedido
     Transaction = dmConnection.TransSig
     AfterDelete = adicional_descontoAfterDelete
     AfterPost = adicional_descontoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "adicional_desconto"'
@@ -8140,6 +8198,8 @@ object fr_ManPedido: Tfr_ManPedido
   object emb_esp_ped: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a.*'
       'from "emb_especial_ped" a'
@@ -8257,6 +8317,8 @@ object fr_ManPedido: Tfr_ManPedido
   object produtos_pkl: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       '/* Pedido Packing */'
       
@@ -8345,6 +8407,7 @@ object fr_ManPedido: Tfr_ManPedido
   end
   object excluir_item_emb_esp: TIBSQL
     Database = dmConnection.dbSig
+    ParamCheck = True
     SQL.Strings = (
       'delete from "emb_especial_item_ped"'
       'where "cod_empresa" = :cod_empresa'
@@ -8365,6 +8428,8 @@ object fr_ManPedido: Tfr_ManPedido
   object spr_faturas_pedido: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "spr_faturas_pedido"(:cod_empresa, :num_pedido);')
     Left = 758
@@ -8426,6 +8491,7 @@ object fr_ManPedido: Tfr_ManPedido
     Transaction = dmConnection.TransSig
     AfterDelete = fatura_pagamentoAfterDelete
     AfterPost = fatura_pagamentoAfterPost
+    BufferChunks = 1000
     CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from "fatura_pagamento"'
@@ -8567,6 +8633,8 @@ object fr_ManPedido: Tfr_ManPedido
   object ProdutosDuplicados: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select "cod_produto", count(*) "conta"'
       'from "pedido_produto"'
@@ -8600,6 +8668,8 @@ object fr_ManPedido: Tfr_ManPedido
   object emb_padrao: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select * from "cby_calc_embalagem"(:cod_empresa, :cod_produto, :' +
@@ -8748,6 +8818,8 @@ object fr_ManPedido: Tfr_ManPedido
   object ProdutosEmbEsp: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a.*'
       '  from "pedido_produto" a'
@@ -8778,6 +8850,8 @@ object fr_ManPedido: Tfr_ManPedido
   object ProdutosPallets: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select a.*'
       '  from "pedido_produto" a'
@@ -8808,6 +8882,8 @@ object fr_ManPedido: Tfr_ManPedido
   object Pallets: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select a."qtd_pallet", a."pes_pallet_vazio", a."pes_bruto_pallet' +
@@ -8882,6 +8958,8 @@ object fr_ManPedido: Tfr_ManPedido
   object cliente_filial: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select 0 "seq_filial", "nom_cliente" "nome", "endereco" "enderec' +
@@ -8931,6 +9009,8 @@ object fr_ManPedido: Tfr_ManPedido
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
     AfterOpen = FabricantesAfterOpen
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select * from "fabricantes"'
       'order by "nome"')
@@ -8962,6 +9042,8 @@ object fr_ManPedido: Tfr_ManPedido
   object emb_esp_item_ped: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       'select *'
       'from "emb_especial_item_ped"'
@@ -8996,6 +9078,8 @@ object fr_ManPedido: Tfr_ManPedido
   object Produtos: TIBQuery
     Database = dmConnection.dbSig
     Transaction = dmConnection.TransSig
+    BufferChunks = 1000
+    CachedUpdates = False
     SQL.Strings = (
       
         'select "cod_produto", "den_produto_detpor", "den_produto", "pes_' +

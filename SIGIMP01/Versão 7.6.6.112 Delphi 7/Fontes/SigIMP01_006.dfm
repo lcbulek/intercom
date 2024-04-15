@@ -1759,7 +1759,7 @@ object fr_ManPedido: Tfr_ManPedido
           end
         end
         object ToolBar1: TToolBar
-          Left = 673
+          Left = 660
           Top = 0
           Width = 682
           Height = 42
