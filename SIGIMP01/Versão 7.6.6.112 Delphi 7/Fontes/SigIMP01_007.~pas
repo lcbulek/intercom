@@ -1160,6 +1160,8 @@ type
     OrdersListnum_pedido_for: TIBStringField;
     OrdersListnum_pedido_cli: TIBStringField;
     OrdersListdat_liberacao: TDateField;
+    Label38: TLabel;
+    dbcMaterialPack: TJvDBComboBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure nota_fiscal_saidaAfterCancel(DataSet: TDataSet);
     procedure nota_fiscal_saidaAfterClose(DataSet: TDataSet);
@@ -2889,7 +2891,7 @@ begin
       begin
         MergeCells := True;
         if (IdiomaExporter = 'I') then
-           Value := 'MANUFACTURER (FACTORY):'
+           Value := 'MANUFACTURER:'
         else if (IdiomaExporter = 'P') then
            Value := 'FABRICANTE:'
         else if (IdiomaExporter = 'E') then
@@ -2920,7 +2922,7 @@ begin
         WrapText := True;
         ShrinkToFit := False;
       end;
-      { Endereço Fabricante }
+      { EndereÃ§o Fabricante }
       Inc(Linha);
       Endereco := TStringList.Create;
       Endereco.Text := Fabricantesdescricao.AsString;
@@ -2947,43 +2949,72 @@ begin
       end;
       FreeAndNil(Endereco);
 
-      with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
+   end;
+
+   if ((nota_fiscal_saidacod_fabricante.IsNull) or (nota_fiscal_saidacod_fabricante.Value = 0)) then
+   begin
+      Linha := Linha + 2;
+      LinhaAux := Linha;
+
+      with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
       begin
-       with Borders[xlEdgeLeft] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeTop] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeBottom] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeRight] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       Borders[xlInsideVertical].LineStyle := xlNone;
-       Borders[xlInsideHorizontal].LineStyle := xlNone;
-       Borders[xlDiagonalDown].LineStyle := xlNone;
-       Borders[xlDiagonalUp].LineStyle := xlNone;
-       VerticalAlignment := xlTop;
+        MergeCells := True;
+        if (IdiomaExporter = 'I') then
+           Value := 'MANUFACTURER: MANUFACTURER IS THE SAME AS SHIPPER'
+        else if (IdiomaExporter = 'P') then
+           Value := 'FABRICANTE: FABRICANTE Ã‰ O MESMO QUE O FORNECEDOR'
+        else if (IdiomaExporter = 'E') then
+           Value := 'FABRICANTE: FABRICANTE Ã‰ O MESMO QUE O FORNECEDOR';
+
+        FOnt.Name := 'Arial';
+        Characters[1, 13].Font.Bold := True;
+        Font.Size := 10;
+        Interior.ColorIndex := 0;
+        Borders.LineStyle := xlContinuous;
+        HorizontalAlignment := xlLeft;
+        VerticalAlignment := xlTop;
+        WrapText := True;
+        ShrinkToFit := False;
       end;
    end;
+
+   with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
+   begin
+    with Borders[xlEdgeLeft] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeTop] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeBottom] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeRight] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    Borders[xlInsideVertical].LineStyle := xlNone;
+    Borders[xlInsideHorizontal].LineStyle := xlNone;
+    Borders[xlDiagonalDown].LineStyle := xlNone;
+    Borders[xlDiagonalUp].LineStyle := xlNone;
+    VerticalAlignment := xlTop;
+   end;
+
+   Linha := Linha + 2;
+   LinhaAux := Linha;
    { fim MANUFACTURER }
 
-   Inc(Linha);
-   Inc(Linha);
    with ExcelWorksheet.Range['A'+IntToStr(Linha),'C'+IntToStr(Linha)] do
    begin
     MergeCells := True;
@@ -3556,30 +3587,23 @@ begin
 
   Inc(Linha);
 
-  { início }
+  { WOODEN PACKAGE }
   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
   begin
+    Value2 := dbcMaterialPack.Text;
     MergeCells := True;
-    if (IdiomaExporter= 'I') then
-    begin
-       FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
-       Characters[1,15].Font.Bold := True;
-       Characters[16,10].Font.Bold := False;
-    end else if (IdiomaExporter= 'P') then
-    begin
-       FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
-       Characters[1,21].Font.Bold := True;
-       Characters[22,10].Font.Bold := False;
-    end else if (IdiomaExporter= 'E') then begin
-       FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
-       Characters[1,22].Font.Bold := True;
-       Characters[23,10].Font.Bold := False;
-    end;
+    Characters[1,15].Font.Bold := True;
     Font.Name := 'Arial';
     Font.Size := 9;
+    Interior.ColorIndex := 0;
+    HorizontalAlignment := xlLeft;
+    VerticalAlignment := xlTop;
+    WrapText := True;
+    ShrinkToFit := False;
+    Rows.RowHeight := 12.75;
   end;
 
-  inc(Linha);
+  Inc(Linha);
 
    { início }
    if (IdiomaExporter = 'I') then s := 'LOT NUMBER: '
@@ -4289,14 +4313,14 @@ begin
       ShrinkToFit := False;
    end;
 
-   { TOTAL NET WEIGHT }
+   { NET WEIGHT }
    if Not(bBl) then
    begin
       Inc(Linha);
       s := '';
       with ExcelWorksheet.Range[C1+IntToStr(Linha),C2+IntToStr(Linha)] do
       begin
-        s := 'TOTAL NET WEIGHT:';
+        s := 'NET WEIGHT:';
         s := s + FormatFloat('  #,##0.00 Kg', DataSet.FieldByName('pes_liq_geral').AsFloat);
         if (bPallets = true) then
            s := s + ' (OF THE' + FormatFloat('  #,##0', DataSet.FieldByName('qtd_caixas').value) + ' CARTONS)';
@@ -4310,13 +4334,13 @@ begin
       end;
    end;
 
-   { TOTAL GROSS WEIGHT }
+   { GROSS WEIGHT }
    Inc(Linha);
    s := '';
    with ExcelWorksheet.Range[C1+IntToStr(Linha),C2+IntToStr(Linha)] do
    begin
      MergeCells := True;
-     s := 'TOTAL GROSS WEIGHT:';
+     s := 'GROSS WEIGHT:';
      s := s + FormatFloat('  #,##0.00 Kg', DataSet.FieldByName('pes_bru_geral').AsFloat);
      if ((bPallets = true) and (bCaixas = false)) then s := s + ' (OF THE PALLETS)';
      if ((bPallets = true) and (bCaixas = true))  then s := s + ' (CARTONS + PALLETS)';
@@ -4328,13 +4352,13 @@ begin
      Borders[xlEdgeLeft].LineStyle := xlNone;
    end;
 
-   { TOTAL VOLUME }
+   { VOLUME }
    Inc(Linha);
    s := '';
    with ExcelWorksheet.Range[C1+IntToStr(Linha),C2+IntToStr(Linha)] do
    begin
      MergeCells := True;
-     s := 'TOTAL VOLUME:';
+     s := 'VOLUME:';
      s := s +  FormatFloat(VolumeNumberFormatTotal, Arredonda(DataSet.FieldByName('vol_geral').AsFloat, -2, rmUp));
      if ((bPallets = true) and (bCaixas = false)) then s := s + ' (OF THE PALLETS)';
      if ((bPallets = true) and (bCaixas = true))  then s := s + ' (CARTONS + PALLETS)';
@@ -4944,13 +4968,12 @@ begin
       begin
         MergeCells := True;
         if (IdiomaExporter = 'I') then
-           Value := 'MANUFACTURER (FACTORY):'
+           Value := 'MANUFACTURER:'
         else if (IdiomaExporter = 'P') then
            Value := 'FABRICANTE:'
         else if (IdiomaExporter = 'E') then
            Value := 'FABRICANTE:';
-
-        FOnt.Name := 'Arial';
+        Font.Name := 'Arial';
         Font.Bold := True;
         Font.Size := 10;
         Interior.ColorIndex := 0;
@@ -4976,7 +4999,7 @@ begin
         WrapText := True;
         ShrinkToFit := False;
       end;
-      { Endereço Fabricante }
+      { EndereÃ§o Fabricante }
       Inc(Linha);
       Endereco := TStringList.Create;
       Endereco.Text := Fabricantesdescricao.AsString;
@@ -4984,10 +5007,10 @@ begin
       begin
         with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
         begin
-          MergeCells := True;
           s := StringReplace(Trim(Endereco[ind]), #13#10#09, ' ', [rfReplaceAll]);
           i := (length(s) / 90);
           i := i + 1;
+          MergeCells := True;
           Value2 := s;
           Font.Name := 'Arial';
           Font.Size := 10;
@@ -5003,44 +5026,71 @@ begin
       end;
       FreeAndNil(Endereco);
 
-      with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
+   end;
+
+   if ((nota_fiscal_saidacod_fabricante.IsNull) or (nota_fiscal_saidacod_fabricante.Value = 0)) then
+   begin
+      Linha := Linha + 2;
+      LinhaAux := Linha;
+
+      with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
       begin
-       with Borders[xlEdgeLeft] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeTop] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeBottom] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       with Borders[xlEdgeRight] do
-       begin
-           LineStyle := xlContinuous;
-           Weight := xlMedium;
-           ColorIndex := xlAutomatic;
-       end;
-       Borders[xlInsideVertical].LineStyle := xlNone;
-       Borders[xlInsideHorizontal].LineStyle := xlNone;
-       Borders[xlDiagonalDown].LineStyle := xlNone;
-       Borders[xlDiagonalUp].LineStyle := xlNone;
-       VerticalAlignment := xlTop;
+        MergeCells := True;
+        if (IdiomaExporter = 'I') then
+           Value := 'MANUFACTURER: MANUFACTURER IS THE SAME AS SHIPPER'
+        else if (IdiomaExporter = 'P') then
+           Value := 'FABRICANTE: FABRICANTE Ã‰ O MESMO QUE O FORNECEDOR'
+        else if (IdiomaExporter = 'E') then
+           Value := 'FABRICANTE: FABRICANTE Ã‰ O MESMO QUE O FORNECEDOR';
+
+        FOnt.Name := 'Arial';
+        Characters[1, 13].Font.Bold := True;
+        Font.Size := 10;
+        Interior.ColorIndex := 0;
+        Borders.LineStyle := xlContinuous;
+        HorizontalAlignment := xlLeft;
+        VerticalAlignment := xlTop;
+        WrapText := True;
+        ShrinkToFit := False;
       end;
    end;
-   { fim MANUFACTURER }
 
-   Inc(Linha);
-   Inc(Linha);
+   with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
+   begin
+    with Borders[xlEdgeLeft] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeTop] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeBottom] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeRight] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    Borders[xlInsideVertical].LineStyle := xlNone;
+    Borders[xlInsideHorizontal].LineStyle := xlNone;
+    Borders[xlDiagonalDown].LineStyle := xlNone;
+    Borders[xlDiagonalUp].LineStyle := xlNone;
+    VerticalAlignment := xlTop;
+   end;
+
+   Linha := Linha + 2;
    LinhaAux := Linha;
+   { fim MANUFACTURER }
 
    if (IdiomaExporter = 'I') then s := 'VALUE OF THE INVOICE: US$ '
    else if (IdiomaExporter = 'P') then s := 'VALOR DA FATURA: US$ '
@@ -5626,30 +5676,23 @@ begin
 
   Inc(Linha);
 
-  { início }
+  { WOODEN PACKAGE }
   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
   begin
+    Value2 := dbcMaterialPack.Text;
     MergeCells := True;
-    if (IdiomaExporter= 'I') then
-    begin
-       FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
-       Characters[1,15].Font.Bold := True;
-       Characters[16,10].Font.Bold := False;
-    end else if (IdiomaExporter= 'P') then
-    begin
-       FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
-       Characters[1,21].Font.Bold := True;
-       Characters[22,10].Font.Bold := False;
-    end else if (IdiomaExporter= 'E') then begin
-       FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
-       Characters[1,22].Font.Bold := True;
-       Characters[23,10].Font.Bold := False;
-    end;
+    Characters[1,15].Font.Bold := True;
     Font.Name := 'Arial';
     Font.Size := 9;
+    Interior.ColorIndex := 0;
+    HorizontalAlignment := xlLeft;
+    VerticalAlignment := xlTop;
+    WrapText := True;
+    ShrinkToFit := False;
+    Rows.RowHeight := 12.75;
   end;
 
-  inc(Linha);
+  Inc(Linha);
 
    { início }
    if (IdiomaExporter = 'I') then s := 'LOT NUMBER: '
@@ -7246,31 +7289,25 @@ begin
   end;
   { fim }
 
-   Inc(linha);
-
+  Inc(Linha);
+  
+  { WOODEN PACKAGE }
   with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
   begin
+    Value2 := dbcMaterialPack.Text;
     MergeCells := True;
-    if (IdiomaExporter= 'I') then
-    begin
-       FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
-       Characters[1,15].Font.Bold := True;
-       Characters[16,10].Font.Bold := False;
-    end else if (IdiomaExporter= 'P') then
-    begin
-       FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
-       Characters[1,21].Font.Bold := True;
-       Characters[22,10].Font.Bold := False;
-    end else if (IdiomaExporter= 'E') then begin
-       FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
-       Characters[1,22].Font.Bold := True;
-       Characters[23,10].Font.Bold := False;
-    end;
+    Characters[1,15].Font.Bold := True;
     Font.Name := 'Arial';
     Font.Size := 9;
+    Interior.ColorIndex := 0;
+    HorizontalAlignment := xlLeft;
+    VerticalAlignment := xlTop;
+    WrapText := True;
+    ShrinkToFit := False;
+    Rows.RowHeight := 12.75;
   end;
 
-  inc(Linha);
+  Inc(Linha);
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
    begin
@@ -11548,12 +11585,12 @@ begin
   s := StringReplace(s, '\', '-', [rfReplaceAll]);
   Result := s;
 end;
-                                                           
+
 procedure Tfr_ManNF.actBlCombinadoExecute(Sender: TObject);
-Var                                                                      
-  i : Real;                                                 
+Var
+  i : Real;
   DIR_PLANILHAS, PATH : String;
-  s, s1, s2, s3, Fat : String;                                         
+  s, s1, s2, s3, Fat : String;
   cmd : String;
   Ind : Integer;
   bPallets, bCaixas: boolean;
@@ -11640,7 +11677,7 @@ begin
    Fat := trim(nf_saida_complementonum_ref_volume.AsString);
    Fat := StringReplace(Fat, '/', '-', [rfReplaceAll]);
    Fat := StringReplace(Fat, '\', '-', [rfReplaceAll]);
-                                                                                                     
+
    { Diretório Principal \ Cliente \ LOTS \LOT +  Nº do Lote }
    DIR_PLANILHAS := DIR_PLANILHAS + '\' + 'LOT ' + Fat;
    if not DirectoryExists(DIR_PLANILHAS) then
@@ -12251,7 +12288,7 @@ begin
      VerticalAlignment := xlTop;
      WrapText := True;
      ShrinkToFit := False;
-   end;                                                     
+   end;
    { Endereço Transportador }
    Inc(Linha);
    Endereco := TStringList.Create;
@@ -12432,6 +12469,24 @@ begin
    end;
 
   inc(Linha);
+
+  { WOODEN PACKAGE }
+  with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+  begin
+    Value2 := dbcMaterialPack.Text;
+    MergeCells := True;
+    Characters[1,15].Font.Bold := True;
+    Font.Name := 'Arial';
+    Font.Size := 9;
+    Interior.ColorIndex := 0;
+    HorizontalAlignment := xlLeft;
+    VerticalAlignment := xlTop;
+    WrapText := True;
+    ShrinkToFit := False;
+    Rows.RowHeight := 12.75;
+  end;
+
+  Inc(Linha);
 
    with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
    begin
@@ -12970,28 +13025,6 @@ begin
          RowHeight := 12.75;
       end;
       Inc(linha);
-
-      with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
-      begin
-        MergeCells := True;
-        if (IdiomaExporter= 'I') then
-        begin
-           FormulaR1C1 := 'WOODEN PACKAGE: NOT USED';
-           //Characters[1,15].Font.Bold := True;
-           //Characters[16,10].Font.Bold := False;
-        end else if (IdiomaExporter= 'P') then
-        begin
-           FormulaR1C1 := 'EMBALAGEM DE MADEIRA: NÃO USADA ';
-           //Characters[1,21].Font.Bold := True;
-           //Characters[22,10].Font.Bold := False;
-        end else if (IdiomaExporter= 'E') then begin
-           FormulaR1C1 := 'EMBALAJENS DE MADEIRA: NÃO USADA';
-           //Characters[1,22].Font.Bold := True;
-           //Characters[23,10].Font.Bold := False;
-        end;
-        Font.Name := 'Arial';
-        Font.Size := 8;
-      end;
 
       Next;
 

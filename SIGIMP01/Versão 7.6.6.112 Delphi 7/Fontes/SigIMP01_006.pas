@@ -3069,9 +3069,9 @@ begin
 
       with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
       begin
-        MergeCells := True;      
+        MergeCells := True;
         if (IdiomaExporter = 'I') then
-           Value := 'MANUFACTURER (FACTORY):'
+           Value := 'MANUFACTURER:'
         else if (IdiomaExporter = 'P') then
            Value := 'FABRICANTE:'
         else if (IdiomaExporter = 'E') then
@@ -3103,7 +3103,7 @@ begin
         WrapText := True;
         ShrinkToFit := False;
       end;
-      { Endereço Fabricante }
+      { EndereÃ§o Fabricante }
       Inc(Linha);
       Endereco := TStringList.Create;
       Endereco.Text := Fabricantesdescricao.AsString;
@@ -3111,7 +3111,7 @@ begin
       begin
         with ExcelWorkSheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
         begin
-          MergeCells := True;        
+          MergeCells := True;
           s := StringReplace(Trim(Endereco[ind]), #13#10#09, ' ', [rfReplaceAll]);
           i := (length(s) / 90);
           i := i + 1;
@@ -3129,13 +3129,72 @@ begin
         Inc(Linha);
       end;
       FreeAndNil(Endereco);
-
-      ExcelBorders('A', 'J', LinhaAux, Linha);
    end;
-   { fim MANUFACTURER }
+
+   if ((qryPedidocod_fabricante.IsNull) or (qryPedidocod_fabricante.Value = 0)) then
+   begin
+      Linha := Linha + 2;
+      LinhaAux := Linha;
+
+      with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
+      begin
+        MergeCells := True;
+        if (IdiomaExporter = 'I') then
+           Value := 'MANUFACTURER: MANUFACTURER IS THE SAME AS SHIPPER'
+        else if (IdiomaExporter = 'P') then
+           Value := 'FABRICANTE: FABRICANTE Ã‰ O MESMO QUE O FORNECEDOR'
+        else if (IdiomaExporter = 'E') then
+           Value := 'FABRICANTE: FABRICANTE Ã‰ O MESMO QUE O FORNECEDOR';
+
+        FOnt.Name := 'Arial';
+        Characters[1, 13].Font.Bold := True;
+        Font.Size := 10;
+        Interior.ColorIndex := 0;
+        Borders.LineStyle := xlContinuous;
+        HorizontalAlignment := xlLeft;
+        VerticalAlignment := xlTop;
+        WrapText := True;
+        ShrinkToFit := False;
+      end;
+   end;
+
+   with ExcelWorkSheet.Range['A'+IntToStr(LinhaAux),'J'+IntToStr(Linha)] do
+   begin
+    with Borders[xlEdgeLeft] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeTop] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeBottom] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    with Borders[xlEdgeRight] do
+    begin
+        LineStyle := xlContinuous;
+        Weight := xlMedium;
+        ColorIndex := xlAutomatic;
+    end;
+    Borders[xlInsideVertical].LineStyle := xlNone;
+    Borders[xlInsideHorizontal].LineStyle := xlNone;
+    Borders[xlDiagonalDown].LineStyle := xlNone;
+    Borders[xlDiagonalUp].LineStyle := xlNone;
+    VerticalAlignment := xlTop;
+   end;
 
    Linha := Linha + 2;
    LinhaAux := Linha;
+
+   { fim MANUFACTURER }
 
     if qryPedidoies_tip_pedido.AsString = 'P' then // PROFORMA INVOICE
     begin
@@ -3458,7 +3517,7 @@ begin
       VerticalAlignment := xlCenter;
    end;
 
-   Inc(Linha);
+   //Inc(Linha);
    s := '';
    with pedido_container do
    begin
@@ -3496,7 +3555,7 @@ begin
 
    Inc(Linha);
 
-   { início }
+   { 30/04/24 - Comentei
    with ExcelWorksheet.Range['A'+IntToStr(Linha),'J'+IntToStr(Linha)] do
    begin
      MergeCells := True;
@@ -3520,8 +3579,8 @@ begin
    end;
 
    Inc(Linha);
+   }
 
-   { início }
    with ExcelWorksheet.Range['A'+IntToStr(Linha),'A'+IntToStr(Linha)] do
    begin
      if (IdiomaExporter= 'I') then

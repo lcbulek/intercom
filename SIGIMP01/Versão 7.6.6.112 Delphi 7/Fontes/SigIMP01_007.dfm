@@ -1,6 +1,6 @@
 object fr_ManNF: Tfr_ManNF
-  Left = -10
-  Top = 54
+  Left = 290
+  Top = 53
   Width = 1366
   Height = 738
   HelpType = htKeyword
@@ -1841,11 +1841,11 @@ object fr_ManNF: Tfr_ManNF
               Caption = 'Tipo de Embarque'
             end
             object Label101: TLabel
-              Left = 4
+              Left = 309
               Top = 106
-              Width = 63
+              Width = 161
               Height = 14
-              Caption = 'Insurance'
+              Caption = 'Material das Embalagens'
             end
             object Label83: TLabel
               Left = 614
@@ -1853,6 +1853,13 @@ object fr_ManNF: Tfr_ManNF
               Width = 154
               Height = 14
               Caption = 'Idioma para Documentos'
+            end
+            object Label38: TLabel
+              Left = 4
+              Top = 106
+              Width = 63
+              Height = 14
+              Caption = 'Insurance'
             end
             object JvDBUltimGrid2: TJvDBUltimGrid
               Left = 772
@@ -2046,7 +2053,7 @@ object fr_ManNF: Tfr_ManNF
               ParentFont = False
               ParentShowHint = False
               ShowHint = True
-              TabOrder = 13
+              TabOrder = 14
               OnClick = Button1Click
             end
             object Button2: TButton
@@ -2064,7 +2071,7 @@ object fr_ManNF: Tfr_ManNF
               ParentFont = False
               ParentShowHint = False
               ShowHint = True
-              TabOrder = 14
+              TabOrder = 15
               OnClick = Button2Click
             end
             object JvDBComboBox1: TJvDBComboBox
@@ -2089,6 +2096,30 @@ object fr_ManNF: Tfr_ManNF
                 'I'
                 'P'
                 'E')
+            end
+            object dbcMaterialPack: TJvDBComboBox
+              Left = 309
+              Top = 119
+              Width = 458
+              Height = 22
+              ListSettings.OutfilteredValueFont.Charset = DEFAULT_CHARSET
+              ListSettings.OutfilteredValueFont.Color = clRed
+              ListSettings.OutfilteredValueFont.Height = -11
+              ListSettings.OutfilteredValueFont.Name = 'MS Sans Serif'
+              ListSettings.OutfilteredValueFont.Style = []
+              DataField = 'ies_material_pack'
+              DataSource = dtsNFSaida
+              DropDownCount = 4
+              ItemHeight = 14
+              Items.Strings = (
+                'WOODEN PACKAGE: NOT USED'
+                'WOODEN PACKAGE: TREATED AND CERTIFIED'
+                'WOODEN PACKAGE: PROCESSED')
+              TabOrder = 13
+              Values.Strings = (
+                '1'
+                '2'
+                '3')
             end
           end
           object tsPagamentos: TTabSheet
